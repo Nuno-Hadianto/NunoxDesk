@@ -55,5 +55,8 @@ contextBridge.exposeInMainWorld('api', {
 
   // Backup & Restore
   backupDatabase: () => ipcRenderer.invoke('backup-database'),
-  restoreDatabase: () => ipcRenderer.invoke('restore-database')
+  restoreDatabase: () => ipcRenderer.invoke('restore-database'),
+
+  // Export
+  exportExcel: (data) => ipcRenderer.invoke('export-excel', data)
 });

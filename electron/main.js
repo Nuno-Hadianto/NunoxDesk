@@ -1,5 +1,6 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
+const xlsx = require('xlsx');
 const db = require('../database/db');
 const dashboardController = require('../controllers/dashboardController');
 const customerController = require('../controllers/customerController');
@@ -76,6 +77,43 @@ function createWindow() {
   ipcMain.handle('get-payments', (event, serviceId) => paymentController.getPaymentsByServiceId(serviceId));
   ipcMain.handle('add-payment', (event, data) => paymentController.addPayment(data));
   ipcMain.handle('delete-payment', (event, id) => paymentController.deletePayment(id));
+
+  ipcMain.handle('export-excel', async (event, data) => {
+    try {
+      // Prompt user to select save location
+      const { canceled, filePath } = await dialog.showSaveDialog({
+        title: 'Simpan Laporan Excel',
+        defaultPath: 'Laporan_NunoxDesk.xlsx',
+        filters: [{ name: 'Excel Files', extensions: ['xlsx'] }]
+      });
+
+      if (canceled || !filePath) return { success: false, canceled: true };
+
+      // Convert JSON data to worksheet
+      const worksheet = xlsx.utils.json_to_sheet(data);
+      
+      // Auto-size columns slightly
+      const colWidths = [
+        { wch: 15 }, // No Tiket
+        { wch: 15 }, // Tanggal
+        { wch: 20 }, // Pelanggan
+        { wch: 20 }, // Perangkat
+        { wch: 15 }  // Total Biaya
+      ];
+      worksheet['!cols'] = colWidths;
+
+      const workbook = xlsx.utils.book_new();
+      xlsx.utils.book_append_sheet(workbook, worksheet, 'Laporan');
+
+      // Write to file
+      xlsx.writeFile(workbook, filePath);
+      
+      return { success: true, filePath };
+    } catch (error) {
+      console.error('Error exporting excel:', error);
+      return { success: false, error: error.message };
+    }
+  });
 
   // Settings
   ipcMain.handle('get-settings', () => settingsController.getSettings());

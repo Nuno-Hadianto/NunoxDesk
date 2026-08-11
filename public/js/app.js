@@ -1053,6 +1053,107 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    document.getElementById('btn-export-excel').addEventListener('click', async () => {
+        const start = document.getElementById('report-start').value;
+        const end = document.getElementById('report-end').value;
+        if (!start || !end) return;
+
+        try {
+            const services = await window.api.getCompletedServices(start, end);
+            if (services.length === 0) return alert("Tidak ada data untuk diekspor pada tanggal tersebut.");
+            
+            // Format data for excel
+            const excelData = services.map(s => ({
+                'No Tiket': s.ticket_number,
+                'Tanggal Selesai': new Date(s.completed_date).toLocaleDateString('id-ID'),
+                'Pelanggan': s.customer_name,
+                'Perangkat': `${s.brand || ''} ${s.model || ''}`.trim(),
+                'Total Biaya': s.total_cost
+            }));
+
+            const result = await window.api.exportExcel(excelData);
+            if (result.success) {
+                alert(`Laporan berhasil disimpan di:\n${result.filePath}`);
+            } else if (!result.canceled) {
+                alert("Gagal menyimpan file Excel: " + result.error);
+            }
+        } catch (error) {
+            console.error(error);
+            alert("Terjadi kesalahan saat membuat Excel.");
+        }
+    });
+
+    document.getElementById('btn-export-pdf').addEventListener('click', async () => {
+        const start = document.getElementById('report-start').value;
+        const end = document.getElementById('report-end').value;
+        if (!start || !end) return;
+
+        try {
+            const settings = await window.api.getSettings();
+            const incomeData = await window.api.getIncomeReport(start, end);
+            const services = await window.api.getCompletedServices(start, end);
+            
+            const formatRp = (val) => new Intl.NumberFormat('id-ID', {
+                style: 'currency', currency: 'IDR', minimumFractionDigits: 0
+            }).format(val || 0);
+
+            const printArea = document.getElementById('print-area');
+            
+            let itemsHtml = '';
+            services.forEach(s => {
+                itemsHtml += `
+                    <tr>
+                        <td>${s.ticket_number}</td>
+                        <td>${new Date(s.completed_date).toLocaleDateString('id-ID')}</td>
+                        <td>${s.customer_name}</td>
+                        <td>${s.brand || ''} ${s.model || ''}</td>
+                        <td style="text-align:right;">${formatRp(s.total_cost)}</td>
+                    </tr>
+                `;
+            });
+            
+            const html = `
+                <div class="print-header">
+                    <h2>${settings.business_name || 'NUNOX SERVIS'}</h2>
+                    <div>${settings.address || ''}</div>
+                    <div>Telp/WA: ${settings.whatsapp || settings.phone || ''}</div>
+                </div>
+                
+                <h3 style="text-align:center; margin: 20px 0; border-bottom: 2px solid #333; padding-bottom: 10px;">LAPORAN TRANSAKSI SERVIS</h3>
+                
+                <div style="margin-bottom:15px;">
+                    <div><strong>Periode:</strong> ${new Date(start).toLocaleDateString('id-ID')} s/d ${new Date(end).toLocaleDateString('id-ID')}</div>
+                    <div><strong>Total Transaksi Selesai:</strong> ${incomeData.transaction_count || 0} Tiket</div>
+                </div>
+                
+                <table class="print-table">
+                    <thead>
+                        <tr>
+                            <th>No. Tiket</th>
+                            <th>Tanggal Selesai</th>
+                            <th>Pelanggan</th>
+                            <th>Perangkat</th>
+                            <th style="text-align:right;">Total Biaya</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${itemsHtml}
+                    </tbody>
+                </table>
+                
+                <div class="print-total-section" style="margin-top: 20px;">
+                    <div>TOTAL PENDAPATAN: <span style="font-size: 1.2rem;">${formatRp(incomeData.total_income)}</span></div>
+                </div>
+            `;
+            
+            printArea.innerHTML = html;
+            window.print();
+        } catch (error) {
+            console.error("Failed to print pdf:", error);
+            alert("Gagal mencetak laporan.");
+        }
+    });
+
     // ==========================================
     // SETTINGS & BACKUP LOGIC
     // ==========================================
