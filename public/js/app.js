@@ -943,9 +943,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 let desc = i.description;
                 if (i.item_type === 'Sparepart') desc = i.part_name || desc;
                 itemsHtml += `
-                    <tr>
-                        <td>${desc} (${i.quantity})</td>
-                        <td style="text-align:right;">${formatRp(i.total)}</td>
+                    <tr style="border-bottom: 1px solid #e2e8f0;">
+                        <td style="padding: 15px; color: #334155;">
+                            <div style="font-weight: 600; font-size: 1.05rem; margin-bottom: 4px;">${desc}</div>
+                            <div style="font-size: 0.85rem; color: #64748b;">Jumlah: ${i.quantity} x ${formatRp(i.price)}</div>
+                        </td>
+                        <td style="padding: 15px; text-align: right; font-weight: bold; font-size: 1.1rem; color: #1e293b;">${formatRp(i.total)}</td>
                     </tr>
                 `;
             });
@@ -954,42 +957,70 @@ document.addEventListener('DOMContentLoaded', () => {
             let remaining = service.total_cost - totalPaid;
             
             const html = `
-                <div class="print-header">
-                    <h2>${settings.business_name || 'NUNOX SERVIS'}</h2>
-                    <div>${settings.address || ''}</div>
-                    <div>Telp/WA: ${settings.whatsapp || settings.phone || ''}</div>
+                <div style="max-width: 800px; margin: 0 auto; background: #fff; padding: 40px; border: 1px solid #e2e8f0; border-radius: 8px;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 3px solid #4f46e5; padding-bottom: 25px; margin-bottom: 30px;">
+                        <div>
+                            <h2 style="font-size: 2.2rem; color: #1e293b; margin-bottom: 10px; font-weight: 800;">${settings.business_name || 'NUNOX SERVIS'}</h2>
+                            <div style="color: #475569; font-size: 1rem; max-width: 320px; line-height: 1.5;">${settings.address || ''}</div>
+                            <div style="color: #475569; font-size: 1rem; margin-top: 8px; font-weight: 500;">📞 Telp/WA: ${settings.whatsapp || settings.phone || ''}</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <h1 style="font-size: 2.5rem; color: #4f46e5; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 2px; font-weight: 900;">INVOICE</h1>
+                            <div style="font-size: 1.1rem; color: #334155; margin-bottom: 5px;"><strong>No. Tiket:</strong> ${service.ticket_number}</div>
+                            <div style="font-size: 1rem; color: #64748b;">Tanggal: ${new Date().toLocaleString('id-ID')}</div>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 40px; background: #f8fafc; padding: 25px; border-radius: 12px; border: 1px solid #e2e8f0;">
+                        <div>
+                            <h4 style="color: #94a3b8; font-size: 0.85rem; text-transform: uppercase; margin-bottom: 10px; letter-spacing: 1px;">Ditagihkan Kepada:</h4>
+                            <div style="font-size: 1.3rem; font-weight: 700; color: #1e293b;">${service.customer_name}</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <h4 style="color: #94a3b8; font-size: 0.85rem; text-transform: uppercase; margin-bottom: 10px; letter-spacing: 1px;">Detail Perangkat:</h4>
+                            <div style="font-size: 1.3rem; font-weight: 700; color: #1e293b;">${service.brand || ''} ${service.model || ''}</div>
+                        </div>
+                    </div>
+                    
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 40px;">
+                        <thead>
+                            <tr style="background-color: #4f46e5; color: #fff;">
+                                <th style="padding: 15px 20px; text-align: left; border-radius: 8px 0 0 8px; font-size: 1.05rem; letter-spacing: 0.5px;">Deskripsi Item / Jasa</th>
+                                <th style="padding: 15px 20px; text-align: right; border-radius: 0 8px 8px 0; font-size: 1.05rem; letter-spacing: 0.5px;">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${itemsHtml}
+                        </tbody>
+                    </table>
+                    
+                    <div style="display: flex; justify-content: flex-end; margin-bottom: 40px;">
+                        <div style="width: 380px; background: #f8fafc; padding: 25px; border-radius: 12px; border: 1px solid #e2e8f0;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 1.15rem;">
+                                <span style="color: #64748b;">Total Biaya:</span>
+                                <strong>${formatRp(service.total_cost)}</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 1.15rem;">
+                                <span style="color: #64748b;">Sudah Dibayar:</span>
+                                <strong style="color: #10b981;">${formatRp(totalPaid)}</strong>
+                            </div>
+                            <div style="border-top: 2px dashed #cbd5e1; margin: 20px 0;"></div>
+                            <div style="display: flex; justify-content: space-between; font-size: 1.4rem; align-items: center;">
+                                <span style="color: #1e293b; font-weight: 800;">Sisa Tagihan:</span>
+                                <strong style="color: #ef4444;">${formatRp(remaining > 0 ? remaining : 0)}</strong>
+                            </div>
+                            <div style="margin-top: 25px; text-align: right;">
+                                <span style="display: inline-block; padding: 8px 16px; background: ${service.payment_status === 'Lunas' ? '#10b981' : (service.payment_status === 'Belum Bayar' ? '#ef4444' : '#f59e0b')}; color: white; border-radius: 30px; font-size: 0.9rem; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                                    STATUS: ${service.payment_status}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="text-align: center; color: #64748b; font-size: 1rem; border-top: 1px solid #e2e8f0; padding-top: 25px;">
+                        <p>${settings.receipt_footer || 'Terima kasih telah mempercayakan perbaikan perangkat Anda kepada kami.'}</p>
+                    </div>
                 </div>
-                
-                <div style="margin-bottom:10px;">
-                    <div>No. Tiket: <strong>${service.ticket_number}</strong></div>
-                    <div>Tanggal: ${new Date().toLocaleString('id-ID')}</div>
-                    <div>Pelanggan: ${service.customer_name}</div>
-                    <div>Perangkat: ${service.brand || ''} ${service.model || ''}</div>
-                </div>
-                
-                <table class="print-table">
-                    <thead>
-                        <tr>
-                            <th>Item / Jasa</th>
-                            <th style="text-align:right;">Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${itemsHtml}
-                    </tbody>
-                </table>
-                
-                <div class="print-total-section">
-                    <div>TOTAL BIAYA: ${formatRp(service.total_cost)}</div>
-                    <div>SUDAH DIBAYAR: ${formatRp(totalPaid)}</div>
-                    <div>SISA TAGIHAN: ${formatRp(remaining > 0 ? remaining : 0)}</div>
-                    <div>STATUS: ${service.payment_status.toUpperCase()}</div>
-                </div>
-                
-                <div class="print-footer">
-                    <p>${settings.receipt_footer || 'Terima kasih telah menggunakan jasa kami.'}</p>
-                </div>
-            `;
             
             printArea.innerHTML = html;
             window.print();
@@ -1160,54 +1191,61 @@ document.addEventListener('DOMContentLoaded', () => {
             const printArea = document.getElementById('print-area');
             
             const html = `
-                <div class="print-header" style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px;">
-                    <h2 style="font-size: 1.5rem; margin-bottom: 5px;">${settings.business_name || 'NUNOX SERVIS'}</h2>
-                    <div>${settings.address || ''}</div>
-                    <div>Telp/WA: ${settings.whatsapp || settings.phone || ''}</div>
-                </div>
-                
-                <h3 style="text-align:center; margin: 30px 0; font-size: 1.4rem; letter-spacing: 2px; text-decoration: underline;">KWITANSI PEMBAYARAN</h3>
-                
-                <table style="width: 100%; font-size: 1.1rem; line-height: 3;">
-                    <tr>
-                        <td style="width: 200px;"><strong>Telah terima dari</strong></td>
-                        <td style="width: 10px;">:</td>
-                        <td style="border-bottom: 1px dotted #000;"></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Uang Sejumlah</strong></td>
-                        <td>:</td>
-                        <td style="border-bottom: 1px dotted #000; font-style: italic; background: #f9fafb;">
-                            <span style="font-weight: bold; font-size: 1.2rem; margin-left: 10px;">Rp</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="vertical-align: top;"><strong>Untuk Pembayaran</strong></td>
-                        <td style="vertical-align: top;">:</td>
-                        <td style="border-bottom: 1px dotted #000;"></td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td style="border-bottom: 1px dotted #000;"></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Sisa Tagihan</strong></td>
-                        <td>:</td>
-                        <td style="border-bottom: 1px dotted #000;">Rp</td>
-                    </tr>
-                </table>
-                
-                <div style="margin-top: 60px; display: flex; justify-content: flex-end;">
-                    <div style="text-align: center; width: 250px;">
-                        <p>................., ........................... ${new Date().getFullYear()}</p>
-                        <br><br><br><br><br>
-                        <p style="text-decoration: underline; font-weight: bold;">( ......................................... )</p>
+                <div style="max-width: 800px; margin: 0 auto; background: #fff; padding: 40px; border: 1px solid #e2e8f0; border-radius: 8px;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 3px solid #4f46e5; padding-bottom: 25px; margin-bottom: 30px;">
+                        <div>
+                            <h2 style="font-size: 2.2rem; color: #1e293b; margin-bottom: 10px; font-weight: 800;">${settings.business_name || 'NUNOX SERVIS'}</h2>
+                            <div style="color: #475569; font-size: 1rem; max-width: 320px; line-height: 1.5;">${settings.address || ''}</div>
+                            <div style="color: #475569; font-size: 1rem; margin-top: 8px; font-weight: 500;">📞 Telp/WA: ${settings.whatsapp || settings.phone || ''}</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <h1 style="font-size: 2.3rem; color: #4f46e5; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 3px; font-weight: 900;">KWITANSI</h1>
+                            <div style="font-size: 1.1rem; color: #334155;"><strong>No:</strong> ........................................</div>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="print-footer" style="margin-top: 40px; border-top: 1px solid #ccc; padding-top: 15px; text-align: center; font-size: 0.9rem;">
-                    <p>${settings.receipt_footer || 'Terima kasih atas kepercayaannya.'}</p>
+                    
+                    <div style="margin-bottom: 50px; margin-top: 50px;">
+                        <table style="width: 100%; font-size: 1.25rem; line-height: 3;">
+                            <tr>
+                                <td style="width: 250px; color: #475569; font-weight: 600;">Telah terima dari</td>
+                                <td style="width: 30px; text-align: center;">:</td>
+                                <td style="border-bottom: 2px solid #cbd5e1;"></td>
+                            </tr>
+                            <tr>
+                                <td style="color: #475569; font-weight: 600;">Uang Sejumlah</td>
+                                <td style="text-align: center;">:</td>
+                                <td style="border-bottom: 2px solid #cbd5e1; background: #f8fafc; position: relative;">
+                                    <span style="position: absolute; left: 15px; font-weight: 800; color: #4f46e5; font-size: 1.5rem; top: 50%; transform: translateY(-50%);">Rp</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="vertical-align: top; color: #475569; font-weight: 600; padding-top: 20px;">Untuk Pembayaran</td>
+                                <td style="vertical-align: top; text-align: center; padding-top: 20px;">:</td>
+                                <td style="border-bottom: 2px solid #cbd5e1; padding-top: 20px;"></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td style="border-bottom: 2px solid #cbd5e1;"></td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 80px;">
+                        <div style="background: #f8fafc; padding: 20px 30px; border-radius: 12px; border: 2px dashed #94a3b8;">
+                            <span style="color: #64748b; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 8px;">Sisa Tagihan</span>
+                            <span style="font-size: 1.6rem; font-weight: 800; color: #ef4444;">Rp ...................................</span>
+                        </div>
+                        <div style="text-align: center; width: 300px;">
+                            <p style="color: #334155; margin-bottom: 100px; font-size: 1.1rem;">................., ........................... ${new Date().getFullYear()}</p>
+                            <div style="border-bottom: 2px solid #1e293b; margin-bottom: 8px;"></div>
+                            <p style="color: #64748b; font-size: 1rem; font-weight: 500;">Tanda Tangan Penerima</p>
+                        </div>
+                    </div>
+                    
+                    <div style="text-align: center; color: #94a3b8; font-size: 1rem; border-top: 1px solid #e2e8f0; padding-top: 30px; margin-top: 60px;">
+                        <p>${settings.receipt_footer || 'Terima kasih atas kepercayaannya menggunakan jasa kami.'}</p>
+                    </div>
                 </div>
             `;
             
