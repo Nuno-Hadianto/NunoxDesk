@@ -1,0 +1,68 @@
+const db = require('../database/db');
+
+function getServiceItems(serviceOrderId) {
+    const stmt = db.prepare(`
+        SELECT si.*, sp.name as part_name 
+        FROM service_items si 
+        LEFT JOIN spare_parts sp ON si.spare_part_id = sp.id 
+        WHERE si.service_order_id = ?
+        ORDER BY si.id ASC
+    `);
+    return stmt.all(serviceOrderId);
+}
+
+function addServiceItem(data) {
+    const { service_order_id, item_type, spare_part_id, description, quantity, price } = data;
+    
+    // Diskon uses negative total
+    let total = quantity * price;
+    if (item_type === 'Diskon') {
+        total = -Math.abs(total);
+    }
+    
+    const stmt = db.prepare(`
+        INSERT INTO service_items (service_order_id, item_type, spare_part_id, description, quantity, price, total) 
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+    `);
+    
+    const info = stmt.run(service_order_id, item_type, spare_part_id || null, description, quantity, price, total);
+    
+    // Update stock if it's a spare part
+    if (item_type === 'Sparepart' && spare_part_id) {
+        db.prepare(`UPDATE spare_parts SET stock = stock - ? WHERE id = ?`).run(quantity, spare_part_id);
+    }
+    
+    // Recalculate total cost in service_orders
+    recalculateServiceTotal(service_order_id);
+    
+    return info.lastInsertRowid;
+}
+
+function deleteServiceItem(id) {
+    const item = db.prepare(`SELECT * FROM service_items WHERE id = ?`).get(id);
+    if (!item) return false;
+    
+    const stmt = db.prepare(`DELETE FROM service_items WHERE id = ?`);
+    stmt.run(id);
+    
+    // Return stock if it was a spare part
+    if (item.item_type === 'Sparepart' && item.spare_part_id) {
+        db.prepare(`UPDATE spare_parts SET stock = stock + ? WHERE id = ?`).run(item.quantity, item.spare_part_id);
+    }
+    
+    recalculateServiceTotal(item.service_order_id);
+    return true;
+}
+
+function recalculateServiceTotal(serviceOrderId) {
+    const items = db.prepare(`SELECT SUM(total) as grand_total FROM service_items WHERE service_order_id = ?`).get(serviceOrderId);
+    const total = items.grand_total || 0;
+    
+    db.prepare(`UPDATE service_orders SET total_cost = ? WHERE id = ?`).run(total, serviceOrderId);
+}
+
+module.exports = {
+    getServiceItems,
+    addServiceItem,
+    deleteServiceItem
+};

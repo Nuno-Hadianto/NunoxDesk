@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NunoxDesk - Dashboard</title>
+    <link rel="stylesheet" href="../public/css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>NUNOXDESK</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="active"><a href="#" id="nav-dashboard">Dashboard</a></li>
+                    <li class="nav-header">OPERASIONAL</li>
+                    <li><a href="#" id="nav-customers">Pelanggan</a></li>
+                    <li><a href="#" id="nav-devices">Perangkat</a></li>
+                    <li><a href="#" id="nav-services">Servis</a></li>
+                    <li><a href="#" id="nav-parts">Sparepart</a></li>
+                    <li class="nav-header">KEUANGAN</li>
+                    <li><a href="#" id="nav-payments">Pembayaran</a></li>
+                    <li><a href="#" id="nav-receipts">Kwitansi</a></li>
+                    <li><a href="#" id="nav-reports">Laporan</a></li>
+                    <li class="nav-header">SISTEM</li>
+                    <li><a href="#" id="nav-settings">Pengaturan</a></li>
+                    <li><a href="#" id="nav-backup">Backup & Restore</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="topbar">
+                <div class="topbar-title">
+                    <h1 id="page-title">Dashboard</h1>
+                </div>
+                <div class="topbar-actions">
+                    <span id="datetime-display"></span>
+                </div>
+            </header>
+
+            <div class="content-area" id="app-content">
+                <!-- Dashboard View -->
+                <div id="view-dashboard" class="view-section">
+                    <div class="dashboard-stats">
+                        <div class="stat-card">
+                            <h3>Servis Hari Ini</h3>
+                            <p class="stat-value">0</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Sedang Dikerjakan</h3>
+                            <p class="stat-value">0</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Selesai</h3>
+                            <p class="stat-value">0</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Pendapatan Bulan Ini</h3>
+                            <p class="stat-value">Rp 0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Customers View -->
+                <div id="view-customers" class="view-section" style="display: none;">
+                    <div class="action-bar">
+                        <input type="text" id="search-customer" placeholder="Cari pelanggan (Nama / HP)..." class="search-input">
+                        <button id="btn-add-customer" class="btn btn-primary">Tambah Pelanggan</button>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nama</th>
+                                    <th>No. HP</th>
+                                    <th>Alamat</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="customer-list">
+                                <!-- Data will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Devices View -->
+                <div id="view-devices" class="view-section" style="display: none;">
+                    <div class="action-bar">
+                        <input type="text" id="search-device" placeholder="Cari perangkat..." class="search-input">
+                        <button id="btn-add-device" class="btn btn-primary">Tambah Perangkat</button>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Pelanggan</th>
+                                    <th>Merek / Model</th>
+                                    <th>Tipe</th>
+                                    <th>SN</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="device-list">
+                                <!-- Data will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Services View -->
+                <div id="view-services" class="view-section" style="display: none;">
+                    <div class="action-bar">
+                        <input type="text" id="search-service" placeholder="Cari tiket, pelanggan, perangkat..." class="search-input">
+                        <button id="btn-add-service" class="btn btn-primary">Buat Tiket Servis</button>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>No. Tiket</th>
+                                    <th>Pelanggan</th>
+                                    <th>Perangkat</th>
+                                    <th>Status</th>
+                                    <th>Total Biaya</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="service-list">
+                                <!-- Data will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Parts View -->
+                <div id="view-parts" class="view-section" style="display: none;">
+                    <div class="action-bar">
+                        <input type="text" id="search-part" placeholder="Cari sparepart..." class="search-input">
+                        <button id="btn-add-part" class="btn btn-primary">Tambah Sparepart</button>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Kode</th>
+                                    <th>Nama</th>
+                                    <th>Kategori</th>
+                                    <th>Stok</th>
+                                    <th>Harga Jual</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="part-list">
+                                <!-- Data will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Reports View -->
+                <div id="view-reports" class="view-section" style="display: none;">
+                    <div class="action-bar">
+                        <div style="display: flex; gap: 10px;">
+                            <input type="date" id="report-start" class="search-input">
+                            <span style="align-self: center;">S/D</span>
+                            <input type="date" id="report-end" class="search-input">
+                            <button id="btn-generate-report" class="btn btn-primary">Filter</button>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 20px; margin-bottom: 20px;">
+                        <div class="stat-card" style="flex: 1;">
+                            <h3>Total Pendapatan</h3>
+                            <div id="report-total-income" class="stat-value">Rp 0</div>
+                        </div>
+                        <div class="stat-card" style="flex: 1;">
+                            <h3>Jumlah Transaksi Selesai</h3>
+                            <div id="report-total-transactions" class="stat-value">0</div>
+                        </div>
+                    </div>
+
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>No. Tiket</th>
+                                    <th>Tanggal Selesai</th>
+                                    <th>Pelanggan</th>
+                                    <th>Perangkat</th>
+                                    <th>Total Biaya</th>
+                                </tr>
+                            </thead>
+                            <tbody id="report-services-list">
+                                <!-- Data will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Settings View -->
+                <div id="view-settings" class="view-section" style="display: none;">
+                    <div class="stat-card" style="max-width: 600px; margin-bottom: 20px;">
+                        <h2>Pengaturan Identitas Toko</h2>
+                        <form id="settings-form" style="margin-top: 20px;">
+                            <div class="form-group">
+                                <label for="setting-business-name">Nama Usaha / Toko</label>
+                                <input type="text" id="setting-business-name">
+                            </div>
+                            <div class="form-group">
+                                <label for="setting-phone">No. Telp / WhatsApp</label>
+                                <input type="text" id="setting-phone">
+                            </div>
+                            <div class="form-group">
+                                <label for="setting-address">Alamat</label>
+                                <textarea id="setting-address" rows="3"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="setting-footer">Catatan Bawah Kwitansi</label>
+                                <textarea id="setting-footer" rows="2"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Simpan Pengaturan</button>
+                        </form>
+                    </div>
+
+                    <div class="stat-card" style="max-width: 600px;">
+                        <h2>Backup & Restore Database</h2>
+                        <p style="color: var(--text-muted); margin-top: 10px; margin-bottom: 20px;">Amankan data aplikasi Anda dengan melakukan backup secara berkala.</p>
+                        <div style="display: flex; gap: 10px;">
+                            <button id="btn-backup" class="btn btn-primary">Backup Data Sekarang</button>
+                            <button id="btn-restore" class="btn btn-secondary">Restore Data</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Service Detail View -->
+                <div id="view-service-detail" class="view-section" style="display: none;">
+                    <div class="action-bar">
+                        <button class="btn btn-secondary" onclick="document.getElementById('nav-services').click()">Kembali</button>
+                        <div>
+                            <button id="btn-print-receipt" class="btn btn-secondary" style="margin-right: 10px;">Cetak Struk</button>
+                            <button id="btn-update-status" class="btn btn-primary">Update Status</button>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 20px;">
+                        <div style="flex: 2;">
+                            <div class="stat-card" style="margin-bottom: 20px;">
+                                <h2 id="detail-ticket-number" style="margin-bottom: 15px; color: var(--primary);">NSV-0000-0000</h2>
+                                
+                                <h3>Informasi Pelanggan & Perangkat</h3>
+                                <p><strong>Pelanggan:</strong> <span id="detail-customer"></span></p>
+                                <p><strong>Perangkat:</strong> <span id="detail-device"></span></p>
+                                <hr style="margin: 15px 0; border: 0; border-top: 1px solid var(--border-color);">
+                                
+                                <h3>Keluhan</h3>
+                                <p id="detail-complaint" style="background: #f8fafc; padding: 10px; border-radius: 4px;"></p>
+                                
+                                <hr style="margin: 15px 0; border: 0; border-top: 1px solid var(--border-color);">
+                                <h3>Diagnosis & Tindakan</h3>
+                                <div class="form-group">
+                                    <label>Hasil Diagnosis</label>
+                                    <textarea id="detail-diagnosis" rows="2"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label>Tindakan / Perbaikan</label>
+                                    <textarea id="detail-actions" rows="2"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label>Catatan Teknisi</label>
+                                    <textarea id="detail-notes" rows="2"></textarea>
+                                </div>
+                                <button id="btn-save-detail" class="btn btn-primary">Simpan Detail</button>
+                            <div class="stat-card" style="margin-top: 20px;">
+                                <h3>Rincian Biaya</h3>
+                                <div style="display: flex; gap: 10px; margin-top: 10px; margin-bottom: 10px;">
+                                    <select id="item-type" style="padding:6px; border:1px solid #e2e8f0; border-radius:4px;">
+                                        <option value="Jasa">Jasa</option>
+                                        <option value="Sparepart">Sparepart</option>
+                                        <option value="Biaya lainnya">Biaya lainnya</option>
+                                        <option value="Diskon">Diskon</option>
+                                    </select>
+                                    <select id="item-part-id" style="display:none; padding:6px; border:1px solid #e2e8f0; border-radius:4px;">
+                                        <!-- Parts loaded dynamically -->
+                                    </select>
+                                    <input type="text" id="item-desc" placeholder="Keterangan" style="flex: 1; padding:6px; border:1px solid #e2e8f0; border-radius:4px;">
+                                    <input type="number" id="item-qty" placeholder="Qty" value="1" style="width: 60px; padding:6px; border:1px solid #e2e8f0; border-radius:4px;">
+                                    <input type="number" id="item-price" placeholder="Harga" style="width: 120px; padding:6px; border:1px solid #e2e8f0; border-radius:4px;">
+                                    <button id="btn-add-item" class="btn btn-primary" style="padding: 6px 12px;">Tambah</button>
+                                </div>
+                                <table class="data-table" style="font-size: 0.9rem;">
+                                    <thead>
+                                        <tr>
+                                            <th>Tipe</th>
+                                            <th>Keterangan</th>
+                                            <th>Qty</th>
+                                            <th>Harga</th>
+                                            <th>Total</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="detail-items-list">
+                                        <!-- Items loaded here -->
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th colspan="4" style="text-align: right;">GRAND TOTAL</th>
+                                            <th id="detail-grand-total" colspan="2" style="color: var(--primary); font-size: 1.1rem;">Rp 0</th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <div style="flex: 1;">
+                            <div class="stat-card">
+                                <h3>Status Servis</h3>
+                                <div id="detail-status-badge" style="display: inline-block; padding: 6px 12px; border-radius: 4px; background: var(--primary); color: white; font-weight: bold; margin: 10px 0 20px;">
+                                    DITERIMA
+                                </div>
+                                
+                                <h4>Riwayat Status</h4>
+                                <ul id="detail-history" style="list-style: none; padding-left: 0; margin-top: 10px;">
+                                    <!-- History loaded here -->
+                                </ul>
+                            </div>
+                            
+                            <div class="stat-card" style="margin-top: 20px;">
+                                <h3>Pembayaran</h3>
+                                <div id="detail-payment-status" style="display: inline-block; padding: 6px 12px; border-radius: 4px; background: #64748b; color: white; font-weight: bold; margin: 10px 0;">
+                                    BELUM BAYAR
+                                </div>
+                                <div style="margin-bottom: 10px;">
+                                    <strong>Total Tagihan: </strong> <span id="payment-total-bill">Rp 0</span><br>
+                                    <strong>Sudah Dibayar: </strong> <span id="payment-total-paid">Rp 0</span><br>
+                                    <strong style="color: var(--primary);">Sisa Tagihan: </strong> <span id="payment-remaining">Rp 0</span>
+                                </div>
+                                
+                                <button id="btn-show-payment-modal" class="btn btn-primary" style="width: 100%; margin-bottom: 10px;">Bayar / Cicil</button>
+                                
+                                <h4>Riwayat Pembayaran</h4>
+                                <ul id="payment-history" style="list-style: none; padding-left: 0; font-size: 0.9rem;">
+                                    <!-- Payment history loaded here -->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="../public/js/app.js"></script>
+    
+    <!-- Customer Modal -->
+    <div id="customer-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="customer-modal-title">Tambah Pelanggan</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="customer-form">
+                    <input type="hidden" id="customer-id">
+                    <div class="form-group">
+                        <label for="customer-name">Nama Pelanggan *</label>
+                        <input type="text" id="customer-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="customer-phone">No. HP</label>
+                        <input type="text" id="customer-phone">
+                    </div>
+                    <div class="form-group">
+                        <label for="customer-address">Alamat</label>
+                        <textarea id="customer-address" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="customer-notes">Catatan</label>
+                        <textarea id="customer-notes" rows="2"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary close-modal">Batal</button>
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Device Modal -->
+    <div id="device-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="device-modal-title">Tambah Perangkat</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="device-form">
+                    <input type="hidden" id="device-id">
+                    <div class="form-group">
+                        <label for="device-customer-id">Pelanggan *</label>
+                        <select id="device-customer-id" required style="width:100%; padding:8px 12px; border:1px solid #e2e8f0; border-radius:4px;">
+                            <!-- Options -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="device-type">Jenis Perangkat *</label>
+                        <select id="device-type" required style="width:100%; padding:8px 12px; border:1px solid #e2e8f0; border-radius:4px;">
+                            <option value="Laptop">Laptop</option>
+                            <option value="PC Desktop">PC Desktop</option>
+                            <option value="Monitor">Monitor</option>
+                            <option value="Printer">Printer</option>
+                            <option value="Lainnya">Lainnya</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="display: flex; gap: 10px;">
+                        <div style="flex:1;">
+                            <label for="device-brand">Merek</label>
+                            <input type="text" id="device-brand">
+                        </div>
+                        <div style="flex:1;">
+                            <label for="device-model">Model</label>
+                            <input type="text" id="device-model">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="device-serial">Serial Number</label>
+                        <input type="text" id="device-serial">
+                    </div>
+                    <div class="form-group" style="display: flex; gap: 10px;">
+                        <div style="flex:1;">
+                            <label for="device-color">Warna</label>
+                            <input type="text" id="device-color">
+                        </div>
+                        <div style="flex:1;">
+                            <label for="device-accessories">Kelengkapan</label>
+                            <input type="text" id="device-accessories">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="device-condition">Kondisi Fisik (Saat diterima)</label>
+                        <textarea id="device-condition" rows="2"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="device-notes">Catatan</label>
+                        <textarea id="device-notes" rows="2"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary close-modal">Batal</button>
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Service Modal -->
+    <div id="service-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="service-modal-title">Buat Tiket Servis Baru</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="service-form">
+                    <div class="form-group">
+                        <label for="service-customer-id">Pelanggan *</label>
+                        <select id="service-customer-id" required style="width:100%; padding:8px 12px; border:1px solid #e2e8f0; border-radius:4px;">
+                            <!-- Options -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="service-device-id">Perangkat *</label>
+                        <select id="service-device-id" required style="width:100%; padding:8px 12px; border:1px solid #e2e8f0; border-radius:4px;">
+                            <option value="">-- Pilih Pelanggan Terlebih Dahulu --</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="service-complaint">Keluhan Pelanggan *</label>
+                        <textarea id="service-complaint" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="service-technician">Teknisi</label>
+                        <input type="text" id="service-technician">
+                    </div>
+                    <div class="form-group">
+                        <label for="service-estimate-cost">Estimasi Biaya</label>
+                        <input type="number" id="service-estimate-cost" value="0">
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary close-modal">Batal</button>
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Update Status Modal -->
+    <div id="status-modal" class="modal">
+        <div class="modal-content" style="width: 400px;">
+            <div class="modal-header">
+                <h2>Update Status Servis</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="status-form">
+                    <input type="hidden" id="status-service-id">
+                    <div class="form-group">
+                        <label for="status-select">Status Baru</label>
+                        <select id="status-select" required style="width:100%; padding:8px 12px; border:1px solid #e2e8f0; border-radius:4px;">
+                            <option value="Diterima">Diterima</option>
+                            <option value="Diagnosis">Diagnosis</option>
+                            <option value="Menunggu Persetujuan">Menunggu Persetujuan</option>
+                            <option value="Disetujui">Disetujui</option>
+                            <option value="Dikerjakan">Dikerjakan</option>
+                            <option value="Menunggu Sparepart">Menunggu Sparepart</option>
+                            <option value="Selesai">Selesai</option>
+                            <option value="Diambil">Diambil</option>
+                            <option value="Dibatalkan">Dibatalkan</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="status-notes">Catatan (Opsional)</label>
+                        <textarea id="status-notes" rows="2"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary close-modal">Batal</button>
+                        <button type="submit" class="btn btn-primary">Update</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Part Modal -->
+    <div id="part-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="part-modal-title">Tambah Sparepart</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="part-form">
+                    <input type="hidden" id="part-id">
+                    <div class="form-group" style="display: flex; gap: 10px;">
+                        <div style="flex:1;">
+                            <label for="part-code">Kode Sparepart</label>
+                            <input type="text" id="part-code">
+                        </div>
+                        <div style="flex:2;">
+                            <label for="part-name">Nama Sparepart *</label>
+                            <input type="text" id="part-name" required>
+                        </div>
+                    </div>
+                    <div class="form-group" style="display: flex; gap: 10px;">
+                        <div style="flex:1;">
+                            <label for="part-category">Kategori</label>
+                            <input type="text" id="part-category">
+                        </div>
+                        <div style="flex:1;">
+                            <label for="part-unit">Satuan (Pcs, Unit, dll)</label>
+                            <input type="text" id="part-unit" value="Pcs">
+                        </div>
+                        <div style="flex:1;">
+                            <label for="part-stock">Stok</label>
+                            <input type="number" id="part-stock" value="0" required>
+                        </div>
+                    </div>
+                    <div class="form-group" style="display: flex; gap: 10px;">
+                        <div style="flex:1;">
+                            <label for="part-buy-price">Harga Beli</label>
+                            <input type="number" id="part-buy-price" value="0">
+                        </div>
+                        <div style="flex:1;">
+                            <label for="part-sell-price">Harga Jual *</label>
+                            <input type="number" id="part-sell-price" value="0" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="part-notes">Catatan</label>
+                        <textarea id="part-notes" rows="2"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary close-modal">Batal</button>
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div id="payment-modal" class="modal">
+        <div class="modal-content" style="width: 400px;">
+            <div class="modal-header">
+                <h2>Pembayaran</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="payment-form">
+                    <input type="hidden" id="payment-service-id">
+                    <div class="form-group">
+                        <label for="payment-amount">Nominal Pembayaran *</label>
+                        <input type="number" id="payment-amount" required>
+                        <small style="color:#64748b;" id="payment-suggest-amount">Sisa Tagihan: Rp 0</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="payment-method">Metode Pembayaran</label>
+                        <select id="payment-method" style="width:100%; padding:8px 12px; border:1px solid #e2e8f0; border-radius:4px;">
+                            <option value="Tunai">Tunai</option>
+                            <option value="Transfer">Transfer</option>
+                            <option value="QRIS">QRIS</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="payment-notes">Catatan</label>
+                        <textarea id="payment-notes" rows="2"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary close-modal">Batal</button>
+                        <button type="submit" class="btn btn-primary">Simpan Pembayaran</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Print Area (Hidden normally, shown only on print) -->
+    <div id="print-area" style="display: none;">
+        <!-- Content injected by app.js -->
+    </div>
+</body>
+</html>

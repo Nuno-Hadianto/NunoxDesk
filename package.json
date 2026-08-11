@@ -4,7 +4,28 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "electron electron/main.js",
+    "dev": "electron-reload electron/main.js",
+    "build": "electron-builder --win",
+    "build:mac": "electron-builder --mac",
+    "build:linux": "electron-builder --linux"
+  },
+  "build": {
+    "appId": "com.nunoxdesk.app",
+    "productName": "NunoxDesk",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "files": [
+      "electron/**/*",
+      "controllers/**/*",
+      "database/**/*",
+      "public/**/*",
+      "views/**/*"
+    ]
   },
   "repository": {
     "type": "git",
@@ -17,5 +38,13 @@
   "bugs": {
     "url": "https://github.com/Nuno-Hadianto/NunoxDesk/issues"
   },
-  "homepage": "https://github.com/Nuno-Hadianto/NunoxDesk#readme"
+  "homepage": "https://github.com/Nuno-Hadianto/NunoxDesk#readme",
+  "devDependencies": {
+    "electron": "^43.3.0",
+    "electron-builder": "^26.15.3",
+    "electron-reload": "^2.0.0-alpha.1"
+  },
+  "dependencies": {
+    "better-sqlite3": "^13.0.3"
+  }
 }
