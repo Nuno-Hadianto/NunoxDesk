@@ -932,75 +932,72 @@ document.addEventListener('DOMContentLoaded', () => {
             const printArea = document.getElementById('print-area');
             
             const html = `
-                <div style="max-width: 800px; margin: 0 auto; background: #fff; padding: 40px; border: 1px solid #e2e8f0; border-radius: 8px;">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 3px solid #10b981; padding-bottom: 25px; margin-bottom: 30px;">
-                        <div>
-                            <h2 style="font-size: 2.2rem; color: #1e293b; margin-bottom: 10px; font-weight: 800;">${settings.business_name || 'NUNOX SERVIS'}</h2>
-                            <div style="color: #475569; font-size: 1rem; max-width: 320px; line-height: 1.5;">${settings.address || ''}</div>
-                            <div style="color: #475569; font-size: 1rem; margin-top: 8px; font-weight: 500;">📞 Telp/WA: ${settings.whatsapp || settings.phone || ''}</div>
+                <style>
+                    @page { size: A5 landscape; margin: 10mm; }
+                    body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                </style>
+                <div style="width: 100%; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #1e293b; line-height: 1.4;">
+                    <!-- Header -->
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #1e293b; padding-bottom: 15px; margin-bottom: 15px;">
+                        <div style="flex: 1;">
+                            <h2 style="font-size: 1.8rem; margin: 0 0 5px 0; font-weight: 800; color: #0f172a;">${settings.business_name || 'NUNOX SERVIS'}</h2>
+                            <div style="font-size: 0.9rem; color: #475569;">${settings.address || ''}</div>
+                            <div style="font-size: 0.9rem; color: #475569; margin-top: 3px; font-weight: 600;">📞 ${settings.whatsapp || settings.phone || ''}</div>
                         </div>
-                        <div style="text-align: right;">
-                            <h1 style="font-size: 2.2rem; color: #10b981; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 2px; font-weight: 900;">TANDA TERIMA</h1>
-                            <div style="font-size: 1.1rem; color: #334155; margin-bottom: 5px;"><strong>No. Tiket:</strong> ${service.ticket_number}</div>
-                            <div style="font-size: 1rem; color: #64748b;">Tanggal Terima: ${new Date(service.created_at).toLocaleString('id-ID')}</div>
+                        <div style="text-align: right; flex: 1;">
+                            <h1 style="font-size: 2rem; color: #10b981; margin: 0 0 10px 0; text-transform: uppercase; letter-spacing: 2px; font-weight: 900;">TANDA TERIMA</h1>
+                            <div style="font-size: 1rem; color: #334155; margin-bottom: 2px;"><strong>No:</strong> ${service.ticket_number}</div>
+                            <div style="font-size: 0.9rem; color: #64748b;">Tanggal: ${new Date(service.created_at).toLocaleDateString('id-ID')}</div>
                         </div>
                     </div>
                     
-                    <div style="display: flex; gap: 20px; margin-bottom: 30px;">
-                        <div style="flex: 1; background: #f8fafc; padding: 20px; border-radius: 10px; border: 1px solid #e2e8f0;">
-                            <h4 style="color: #64748b; font-size: 0.9rem; text-transform: uppercase; margin-bottom: 15px; letter-spacing: 1px; border-bottom: 1px solid #cbd5e1; padding-bottom: 5px;">Data Pelanggan</h4>
-                            <table style="width: 100%; font-size: 1rem; line-height: 1.8;">
-                                <tr>
-                                    <td style="width: 80px; color: #475569;">Nama</td>
-                                    <td>: <strong>${service.customer_name}</strong></td>
-                                </tr>
-                                <tr>
-                                    <td style="color: #475569;">No. HP</td>
-                                    <td>: ${service.phone || '-'}</td>
-                                </tr>
+                    <!-- Body: 3 Columns -->
+                    <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+                        <!-- Pelanggan -->
+                        <div style="flex: 1; border: 1px solid #cbd5e1; border-radius: 6px; padding: 12px; background: #f8fafc;">
+                            <h4 style="font-size: 0.8rem; text-transform: uppercase; margin: 0 0 8px 0; color: #64748b; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px;">Data Pelanggan</h4>
+                            <table style="width: 100%; font-size: 0.9rem;">
+                                <tr><td style="width: 60px; color: #475569; padding: 3px 0;">Nama</td><td>: <strong>${service.customer_name}</strong></td></tr>
+                                <tr><td style="color: #475569; padding: 3px 0;">No. HP</td><td>: ${service.phone || '-'}</td></tr>
                             </table>
                         </div>
                         
-                        <div style="flex: 1; background: #f8fafc; padding: 20px; border-radius: 10px; border: 1px solid #e2e8f0;">
-                            <h4 style="color: #64748b; font-size: 0.9rem; text-transform: uppercase; margin-bottom: 15px; letter-spacing: 1px; border-bottom: 1px solid #cbd5e1; padding-bottom: 5px;">Data Perangkat</h4>
-                            <table style="width: 100%; font-size: 1rem; line-height: 1.8;">
-                                <tr>
-                                    <td style="width: 100px; color: #475569;">Perangkat</td>
-                                    <td>: <strong>${service.type} - ${service.brand || ''} ${service.model || ''}</strong></td>
-                                </tr>
-                                <tr>
-                                    <td style="color: #475569;">Kelengkapan</td>
-                                    <td>: ${service.accessories || '-'}</td>
-                                </tr>
+                        <!-- Perangkat -->
+                        <div style="flex: 1; border: 1px solid #cbd5e1; border-radius: 6px; padding: 12px; background: #f8fafc;">
+                            <h4 style="font-size: 0.8rem; text-transform: uppercase; margin: 0 0 8px 0; color: #64748b; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px;">Data Perangkat</h4>
+                            <table style="width: 100%; font-size: 0.9rem;">
+                                <tr><td style="width: 70px; color: #475569; padding: 3px 0;">Barang</td><td>: <strong>${service.type} ${service.brand || ''} ${service.model || ''}</strong></td></tr>
+                                <tr><td style="color: #475569; padding: 3px 0;">Kelengkapan</td><td>: ${service.accessories || '-'}</td></tr>
                             </table>
                         </div>
-                    </div>
-                    
-                    <div style="background: #fff; padding: 20px; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 30px;">
-                        <h4 style="color: #64748b; font-size: 0.9rem; text-transform: uppercase; margin-bottom: 10px; letter-spacing: 1px;">Keluhan / Kerusakan</h4>
-                        <p style="font-size: 1.1rem; color: #1e293b; line-height: 1.5; font-weight: 500;">${service.complaint}</p>
-                    </div>
-                    
-                    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 60px;">
-                        <div style="text-align: center; width: 220px;">
-                            <p style="color: #64748b; margin-bottom: 80px; font-size: 1rem;">Hormat Kami,</p>
-                            <div style="border-bottom: 1px solid #1e293b; margin-bottom: 5px;"></div>
-                            <p style="color: #334155; font-size: 1rem; font-weight: 600;">${settings.business_name || 'NUNOX SERVIS'}</p>
-                        </div>
-                        <div style="text-align: center; width: 220px;">
-                            <p style="color: #64748b; margin-bottom: 80px; font-size: 1rem;">Pelanggan,</p>
-                            <div style="border-bottom: 1px solid #1e293b; margin-bottom: 5px;"></div>
-                            <p style="color: #334155; font-size: 1rem; font-weight: 600;">${service.customer_name}</p>
+
+                        <!-- Keluhan -->
+                        <div style="flex: 1.2; border: 1px solid #cbd5e1; border-radius: 6px; padding: 12px; background: #fff;">
+                            <h4 style="font-size: 0.8rem; text-transform: uppercase; margin: 0 0 8px 0; color: #64748b; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px;">Keluhan / Kerusakan</h4>
+                            <p style="font-size: 0.9rem; margin: 0; color: #1e293b;">${service.complaint}</p>
                         </div>
                     </div>
                     
-                    <div style="margin-top: 50px; font-size: 0.85rem; color: #64748b; background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px dashed #cbd5e1;">
-                        <strong style="display: block; margin-bottom: 5px;">Syarat & Ketentuan:</strong>
-                        <ol style="margin-left: 20px; line-height: 1.6;">
-                            <li>Tanda terima ini merupakan bukti sah penyerahan perangkat. Harap dibawa saat pengambilan.</li>
-                            <li>Perangkat yang tidak diambil lebih dari 30 hari sejak pemberitahuan selesai, di luar tanggung jawab kami.</li>
-                            <li>Kami tidak bertanggung jawab atas kehilangan data. Pastikan Anda sudah mem-backup data penting Anda.</li>
-                        </ol>
+                    <!-- Footer / Signatures -->
+                    <div style="display: flex; gap: 20px; align-items: stretch;">
+                        <div style="flex: 2; font-size: 0.75rem; color: #475569; background: #f8fafc; padding: 10px; border-radius: 6px; border: 1px dashed #cbd5e1;">
+                            <strong style="display: block; margin-bottom: 4px; color: #334155;">Syarat & Ketentuan:</strong>
+                            <ol style="margin: 0; padding-left: 15px; line-height: 1.4;">
+                                <li>Tanda terima ini adalah bukti sah. Harap dibawa saat pengambilan.</li>
+                                <li>Perangkat yang tidak diambil > 30 hari di luar tanggung jawab kami.</li>
+                                <li>Kami tidak bertanggung jawab atas kehilangan data (harap di-backup).</li>
+                            </ol>
+                        </div>
+                        
+                        <div style="flex: 1; text-align: center; display: flex; flex-direction: column; justify-content: space-between;">
+                            <div style="font-size: 0.85rem; color: #64748b;">Hormat Kami,</div>
+                            <div style="margin-top: 50px; font-weight: bold; font-size: 0.9rem; border-bottom: 1px solid #000; display: inline-block; padding: 0 10px;">${settings.business_name || 'Toko'}</div>
+                        </div>
+                        
+                        <div style="flex: 1; text-align: center; display: flex; flex-direction: column; justify-content: space-between;">
+                            <div style="font-size: 0.85rem; color: #64748b;">Pelanggan,</div>
+                            <div style="margin-top: 50px; font-weight: bold; font-size: 0.9rem; border-bottom: 1px solid #000; display: inline-block; padding: 0 10px;">${service.customer_name}</div>
+                        </div>
                     </div>
                 </div>
             `;
@@ -1354,77 +1351,74 @@ document.addEventListener('DOMContentLoaded', () => {
             const printArea = document.getElementById('print-area');
             
             const html = `
-                <div style="max-width: 800px; margin: 0 auto; background: #fff; padding: 40px; border: 1px solid #e2e8f0; border-radius: 8px;">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 3px solid #10b981; padding-bottom: 25px; margin-bottom: 30px;">
-                        <div>
-                            <h2 style="font-size: 2.2rem; color: #1e293b; margin-bottom: 10px; font-weight: 800;">${settings.business_name || 'NUNOX SERVIS'}</h2>
-                            <div style="color: #475569; font-size: 1rem; max-width: 320px; line-height: 1.5;">${settings.address || ''}</div>
-                            <div style="color: #475569; font-size: 1rem; margin-top: 8px; font-weight: 500;">📞 Telp/WA: ${settings.whatsapp || settings.phone || ''}</div>
+                <style>
+                    @page { size: A5 landscape; margin: 10mm; }
+                    body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                </style>
+                <div style="width: 100%; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #1e293b; line-height: 1.4;">
+                    <!-- Header -->
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #1e293b; padding-bottom: 15px; margin-bottom: 15px;">
+                        <div style="flex: 1;">
+                            <h2 style="font-size: 1.8rem; margin: 0 0 5px 0; font-weight: 800; color: #0f172a;">${settings.business_name || 'NUNOX SERVIS'}</h2>
+                            <div style="font-size: 0.9rem; color: #475569;">${settings.address || ''}</div>
+                            <div style="font-size: 0.9rem; color: #475569; margin-top: 3px; font-weight: 600;">📞 ${settings.whatsapp || settings.phone || ''}</div>
                         </div>
-                        <div style="text-align: right;">
-                            <h1 style="font-size: 2.2rem; color: #10b981; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 2px; font-weight: 900;">TANDA TERIMA</h1>
-                            <div style="font-size: 1.1rem; color: #334155; margin-bottom: 5px;"><strong>No. Tiket:</strong> ..............................</div>
-                            <div style="font-size: 1rem; color: #64748b;">Tanggal: ..............................</div>
+                        <div style="text-align: right; flex: 1;">
+                            <h1 style="font-size: 2rem; color: #10b981; margin: 0 0 10px 0; text-transform: uppercase; letter-spacing: 2px; font-weight: 900;">TANDA TERIMA</h1>
+                            <div style="font-size: 1rem; color: #334155; margin-bottom: 2px;"><strong>No:</strong> ..............................</div>
+                            <div style="font-size: 0.9rem; color: #64748b;">Tanggal: ..............................</div>
                         </div>
                     </div>
                     
-                    <div style="display: flex; gap: 20px; margin-bottom: 30px;">
-                        <div style="flex: 1; background: #f8fafc; padding: 20px; border-radius: 10px; border: 1px solid #e2e8f0;">
-                            <h4 style="color: #64748b; font-size: 0.9rem; text-transform: uppercase; margin-bottom: 15px; letter-spacing: 1px; border-bottom: 1px solid #cbd5e1; padding-bottom: 5px;">Data Pelanggan</h4>
-                            <table style="width: 100%; font-size: 1rem; line-height: 2.5;">
-                                <tr>
-                                    <td style="width: 80px; color: #475569;">Nama</td>
-                                    <td>: ..............................................................</td>
-                                </tr>
-                                <tr>
-                                    <td style="color: #475569;">No. HP</td>
-                                    <td>: ..............................................................</td>
-                                </tr>
+                    <!-- Body: 3 Columns -->
+                    <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+                        <!-- Pelanggan -->
+                        <div style="flex: 1; border: 1px solid #cbd5e1; border-radius: 6px; padding: 12px; background: #f8fafc;">
+                            <h4 style="font-size: 0.8rem; text-transform: uppercase; margin: 0 0 8px 0; color: #64748b; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px;">Data Pelanggan</h4>
+                            <table style="width: 100%; font-size: 0.9rem; line-height: 2;">
+                                <tr><td style="width: 60px; color: #475569;">Nama</td><td>: ...........................................</td></tr>
+                                <tr><td style="color: #475569;">No. HP</td><td>: ...........................................</td></tr>
                             </table>
                         </div>
                         
-                        <div style="flex: 1; background: #f8fafc; padding: 20px; border-radius: 10px; border: 1px solid #e2e8f0;">
-                            <h4 style="color: #64748b; font-size: 0.9rem; text-transform: uppercase; margin-bottom: 15px; letter-spacing: 1px; border-bottom: 1px solid #cbd5e1; padding-bottom: 5px;">Data Perangkat</h4>
-                            <table style="width: 100%; font-size: 1rem; line-height: 2.5;">
-                                <tr>
-                                    <td style="width: 100px; color: #475569;">Perangkat</td>
-                                    <td>: ..............................................................</td>
-                                </tr>
-                                <tr>
-                                    <td style="color: #475569;">Kelengkapan</td>
-                                    <td>: ..............................................................</td>
-                                </tr>
+                        <!-- Perangkat -->
+                        <div style="flex: 1; border: 1px solid #cbd5e1; border-radius: 6px; padding: 12px; background: #f8fafc;">
+                            <h4 style="font-size: 0.8rem; text-transform: uppercase; margin: 0 0 8px 0; color: #64748b; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px;">Data Perangkat</h4>
+                            <table style="width: 100%; font-size: 0.9rem; line-height: 2;">
+                                <tr><td style="width: 70px; color: #475569;">Barang</td><td>: .........................................</td></tr>
+                                <tr><td style="color: #475569;">Lengkap</td><td>: .........................................</td></tr>
                             </table>
                         </div>
-                    </div>
-                    
-                    <div style="background: #fff; padding: 20px; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 30px;">
-                        <h4 style="color: #64748b; font-size: 0.9rem; text-transform: uppercase; margin-bottom: 15px; letter-spacing: 1px;">Keluhan / Kerusakan</h4>
-                        <div style="border-bottom: 1px dashed #cbd5e1; margin-bottom: 30px;"></div>
-                        <div style="border-bottom: 1px dashed #cbd5e1; margin-bottom: 30px;"></div>
-                        <div style="border-bottom: 1px dashed #cbd5e1; margin-bottom: 10px;"></div>
-                    </div>
-                    
-                    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 60px;">
-                        <div style="text-align: center; width: 220px;">
-                            <p style="color: #64748b; margin-bottom: 80px; font-size: 1rem;">Hormat Kami,</p>
-                            <div style="border-bottom: 1px solid #1e293b; margin-bottom: 5px;"></div>
-                            <p style="color: #334155; font-size: 1rem; font-weight: 600;">${settings.business_name || 'NUNOX SERVIS'}</p>
-                        </div>
-                        <div style="text-align: center; width: 220px;">
-                            <p style="color: #64748b; margin-bottom: 80px; font-size: 1rem;">Pelanggan,</p>
-                            <div style="border-bottom: 1px solid #1e293b; margin-bottom: 5px;"></div>
-                            <p style="color: #334155; font-size: 1rem; font-weight: 600;">( ..................................... )</p>
+
+                        <!-- Keluhan -->
+                        <div style="flex: 1.2; border: 1px solid #cbd5e1; border-radius: 6px; padding: 12px; background: #fff;">
+                            <h4 style="font-size: 0.8rem; text-transform: uppercase; margin: 0 0 8px 0; color: #64748b; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px;">Keluhan / Kerusakan</h4>
+                            <div style="border-bottom: 1px dashed #cbd5e1; margin-bottom: 25px; margin-top: 15px;"></div>
+                            <div style="border-bottom: 1px dashed #cbd5e1; margin-bottom: 25px;"></div>
+                            <div style="border-bottom: 1px dashed #cbd5e1; margin-bottom: 5px;"></div>
                         </div>
                     </div>
                     
-                    <div style="margin-top: 50px; font-size: 0.85rem; color: #64748b; background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px dashed #cbd5e1;">
-                        <strong style="display: block; margin-bottom: 5px;">Syarat & Ketentuan:</strong>
-                        <ol style="margin-left: 20px; line-height: 1.6;">
-                            <li>Tanda terima ini merupakan bukti sah penyerahan perangkat. Harap dibawa saat pengambilan.</li>
-                            <li>Perangkat yang tidak diambil lebih dari 30 hari sejak pemberitahuan selesai, di luar tanggung jawab kami.</li>
-                            <li>Kami tidak bertanggung jawab atas kehilangan data. Pastikan Anda sudah mem-backup data penting Anda.</li>
-                        </ol>
+                    <!-- Footer / Signatures -->
+                    <div style="display: flex; gap: 20px; align-items: stretch;">
+                        <div style="flex: 2; font-size: 0.75rem; color: #475569; background: #f8fafc; padding: 10px; border-radius: 6px; border: 1px dashed #cbd5e1;">
+                            <strong style="display: block; margin-bottom: 4px; color: #334155;">Syarat & Ketentuan:</strong>
+                            <ol style="margin: 0; padding-left: 15px; line-height: 1.4;">
+                                <li>Tanda terima ini adalah bukti sah. Harap dibawa saat pengambilan.</li>
+                                <li>Perangkat yang tidak diambil > 30 hari di luar tanggung jawab kami.</li>
+                                <li>Kami tidak bertanggung jawab atas kehilangan data (harap di-backup).</li>
+                            </ol>
+                        </div>
+                        
+                        <div style="flex: 1; text-align: center; display: flex; flex-direction: column; justify-content: space-between;">
+                            <div style="font-size: 0.85rem; color: #64748b;">Hormat Kami,</div>
+                            <div style="margin-top: 50px; font-weight: bold; font-size: 0.9rem; border-bottom: 1px solid #000; display: inline-block; padding: 0 10px;">${settings.business_name || 'Toko'}</div>
+                        </div>
+                        
+                        <div style="flex: 1; text-align: center; display: flex; flex-direction: column; justify-content: space-between;">
+                            <div style="font-size: 0.85rem; color: #64748b;">Pelanggan,</div>
+                            <div style="margin-top: 50px; font-weight: bold; font-size: 0.9rem; border-bottom: 1px solid #000; display: inline-block; padding: 0 10px;">( .................................... )</div>
+                        </div>
                     </div>
                 </div>
             `;
