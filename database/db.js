@@ -17,7 +17,7 @@ if (app) {
     dbPath = path.join(__dirname, 'nunoxdesk.db');
 }
 
-const db = new Database(dbPath, { verbose: console.log });
+const db = new Database(dbPath);
 
 function initializeDB() {
     try {
