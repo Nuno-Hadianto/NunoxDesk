@@ -1154,6 +1154,71 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    document.getElementById('btn-print-blank-receipt').addEventListener('click', async () => {
+        try {
+            const settings = await window.api.getSettings();
+            const printArea = document.getElementById('print-area');
+            
+            const html = `
+                <div class="print-header" style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px;">
+                    <h2 style="font-size: 1.5rem; margin-bottom: 5px;">${settings.business_name || 'NUNOX SERVIS'}</h2>
+                    <div>${settings.address || ''}</div>
+                    <div>Telp/WA: ${settings.whatsapp || settings.phone || ''}</div>
+                </div>
+                
+                <h3 style="text-align:center; margin: 30px 0; font-size: 1.4rem; letter-spacing: 2px; text-decoration: underline;">KWITANSI PEMBAYARAN</h3>
+                
+                <table style="width: 100%; font-size: 1.1rem; line-height: 3;">
+                    <tr>
+                        <td style="width: 200px;"><strong>Telah terima dari</strong></td>
+                        <td style="width: 10px;">:</td>
+                        <td style="border-bottom: 1px dotted #000;"></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Uang Sejumlah</strong></td>
+                        <td>:</td>
+                        <td style="border-bottom: 1px dotted #000; font-style: italic; background: #f9fafb;">
+                            <span style="font-weight: bold; font-size: 1.2rem; margin-left: 10px;">Rp</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="vertical-align: top;"><strong>Untuk Pembayaran</strong></td>
+                        <td style="vertical-align: top;">:</td>
+                        <td style="border-bottom: 1px dotted #000;"></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td style="border-bottom: 1px dotted #000;"></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sisa Tagihan</strong></td>
+                        <td>:</td>
+                        <td style="border-bottom: 1px dotted #000;">Rp</td>
+                    </tr>
+                </table>
+                
+                <div style="margin-top: 60px; display: flex; justify-content: flex-end;">
+                    <div style="text-align: center; width: 250px;">
+                        <p>................., ........................... ${new Date().getFullYear()}</p>
+                        <br><br><br><br><br>
+                        <p style="text-decoration: underline; font-weight: bold;">( ......................................... )</p>
+                    </div>
+                </div>
+                
+                <div class="print-footer" style="margin-top: 40px; border-top: 1px solid #ccc; padding-top: 15px; text-align: center; font-size: 0.9rem;">
+                    <p>${settings.receipt_footer || 'Terima kasih atas kepercayaannya.'}</p>
+                </div>
+            `;
+            
+            printArea.innerHTML = html;
+            window.print();
+        } catch (error) {
+            console.error("Failed to print blank receipt:", error);
+            alert("Gagal mencetak kwitansi kosong.");
+        }
+    });
+
     // ==========================================
     // SETTINGS & BACKUP LOGIC
     // ==========================================
