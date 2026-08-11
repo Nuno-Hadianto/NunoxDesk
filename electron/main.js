@@ -125,6 +125,10 @@ function createWindow() {
   });
 }
 
+// Menonaktifkan GPU Cache untuk mencegah error peringatan disk_cache di Windows
+app.commandLine.appendSwitch('disable-gpu-shader-disk-cache');
+app.commandLine.appendSwitch('disable-http-cache');
+
 app.whenReady().then(() => {
   createWindow();
 
