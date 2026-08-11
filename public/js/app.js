@@ -1021,6 +1021,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <p>${settings.receipt_footer || 'Terima kasih telah mempercayakan perbaikan perangkat Anda kepada kami.'}</p>
                     </div>
                 </div>
+            `;
             
             printArea.innerHTML = html;
             window.print();
