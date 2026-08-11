@@ -1186,8 +1186,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 style: 'currency', currency: 'IDR', minimumFractionDigits: 0
             }).format(val || 0);
 
-            document.getElementById('report-total-income').textContent = formatRp(incomeData.total_income);
-            document.getElementById('report-total-transactions').textContent = incomeData.transaction_count || 0;
+            // Hitung Omset (Total Tagihan Servis Selesai) dan Total Modal
+            let totalOmset = 0;
+            let totalModal = 0;
+            services.forEach(s => {
+                totalOmset += (s.total_cost || 0);
+                totalModal += (s.total_modal || 0);
+            });
+            let netProfit = totalOmset - totalModal;
+
+            // Kita tampilkan Omset berdasarkan Total Tagihan servis selesai (bukan cash basis) agar sinkron dengan Modal
+            document.getElementById('report-total-income').textContent = formatRp(totalOmset);
+            document.getElementById('report-total-modal').textContent = formatRp(totalModal);
+            document.getElementById('report-net-profit').textContent = formatRp(netProfit);
+            document.getElementById('report-total-transactions').textContent = services.length;
             
             const tbody = document.getElementById('report-services-list');
             tbody.innerHTML = '';

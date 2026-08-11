@@ -15,7 +15,8 @@ function getCompletedServices(startDate, endDate) {
     const stmt = db.prepare(`
         SELECT 
             so.ticket_number, c.name as customer_name, d.brand, d.model, 
-            so.total_cost, so.completed_date
+            so.total_cost, so.completed_date,
+            (SELECT SUM(cost_price) FROM service_items WHERE service_order_id = so.id) as total_modal
         FROM service_orders so
         JOIN customers c ON so.customer_id = c.id
         JOIN devices d ON so.device_id = d.id

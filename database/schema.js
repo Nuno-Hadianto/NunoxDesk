@@ -87,6 +87,7 @@ CREATE TABLE IF NOT EXISTS service_items (
     description TEXT NOT NULL,
     quantity INTEGER DEFAULT 1,
     price REAL NOT NULL,
+    cost_price REAL DEFAULT 0,
     total REAL NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (service_order_id) REFERENCES service_orders(id) ON DELETE CASCADE,

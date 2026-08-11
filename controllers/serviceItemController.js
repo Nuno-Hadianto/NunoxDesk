@@ -20,12 +20,20 @@ function addServiceItem(data) {
         total = -Math.abs(total);
     }
     
+    let cost_price = 0;
+    if (item_type === 'Sparepart' && spare_part_id) {
+        const part = db.prepare(`SELECT buy_price FROM spare_parts WHERE id = ?`).get(spare_part_id);
+        if (part) {
+            cost_price = part.buy_price * quantity;
+        }
+    }
+    
     const stmt = db.prepare(`
-        INSERT INTO service_items (service_order_id, item_type, spare_part_id, description, quantity, price, total) 
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO service_items (service_order_id, item_type, spare_part_id, description, quantity, price, cost_price, total) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `);
     
-    const info = stmt.run(service_order_id, item_type, spare_part_id || null, description, quantity, price, total);
+    const info = stmt.run(service_order_id, item_type, spare_part_id || null, description, quantity, price, cost_price, total);
     
     // Update stock if it's a spare part
     if (item_type === 'Sparepart' && spare_part_id) {
