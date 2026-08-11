@@ -933,64 +933,64 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const html = `
                 <style>
-                    @page { size: A5 landscape; margin: 10mm; }
-                    body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                    @page { size: A5 landscape; margin: 5mm; }
+                    body { -webkit-print-color-adjust: exact; print-color-adjust: exact; margin: 0; padding: 0; }
                 </style>
-                <div style="width: 100%; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #1e293b; line-height: 1.4;">
+                <div style="width: 100%; max-height: 98vh; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #1e293b; line-height: 1.3; box-sizing: border-box;">
                     <!-- Header -->
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #1e293b; padding-bottom: 15px; margin-bottom: 15px;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #1e293b; padding-bottom: 5px; margin-bottom: 8px;">
                         <div style="flex: 1;">
-                            <h2 style="font-size: 1.8rem; margin: 0 0 5px 0; font-weight: 800; color: #0f172a;">${settings.business_name || 'NUNOX SERVIS'}</h2>
-                            <div style="font-size: 0.9rem; color: #475569;">${settings.address || ''}</div>
-                            <div style="font-size: 0.9rem; color: #475569; margin-top: 3px; font-weight: 600;">📞 ${settings.whatsapp || settings.phone || ''}</div>
+                            <h2 style="font-size: 1.5rem; margin: 0 0 2px 0; font-weight: 800; color: #0f172a;">${settings.business_name || 'NUNOX SERVIS'}</h2>
+                            <div style="font-size: 0.85rem; color: #475569;">${settings.address || ''}</div>
+                            <div style="font-size: 0.85rem; color: #475569; margin-top: 2px; font-weight: 600;">📞 ${settings.whatsapp || settings.phone || ''}</div>
                         </div>
                         <div style="text-align: right; flex: 1;">
-                            <h1 style="font-size: 2rem; color: #10b981; margin: 0 0 10px 0; text-transform: uppercase; letter-spacing: 2px; font-weight: 900;">TANDA TERIMA</h1>
-                            <div style="font-size: 1rem; color: #334155; margin-bottom: 2px;"><strong>No:</strong> ${service.ticket_number}</div>
-                            <div style="font-size: 0.9rem; color: #64748b;">Tanggal: ${new Date(service.created_at).toLocaleDateString('id-ID')}</div>
+                            <h1 style="font-size: 1.6rem; color: #10b981; margin: 0 0 5px 0; text-transform: uppercase; letter-spacing: 2px; font-weight: 900;">TANDA TERIMA</h1>
+                            <div style="font-size: 0.9rem; color: #334155; margin-bottom: 2px;"><strong>No:</strong> ${service.ticket_number}</div>
+                            <div style="font-size: 0.8rem; color: #64748b;">Tanggal: ${new Date(service.created_at).toLocaleDateString('id-ID')}</div>
                         </div>
                     </div>
                     
                     <!-- Body: 3 Columns -->
-                    <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+                    <div style="display: flex; gap: 8px; margin-bottom: 8px;">
                         <!-- Pelanggan -->
-                        <div style="flex: 1; border: 1px solid #cbd5e1; border-radius: 6px; padding: 12px; background: #f8fafc;">
-                            <h4 style="font-size: 0.8rem; text-transform: uppercase; margin: 0 0 8px 0; color: #64748b; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px;">Data Pelanggan</h4>
-                            <table style="width: 100%; font-size: 0.9rem;">
-                                <tr><td style="width: 60px; color: #475569; padding: 3px 0; vertical-align: top;">Nama</td><td style="vertical-align: top;">: <strong>${service.customer_name}</strong></td></tr>
-                                <tr><td style="color: #475569; padding: 3px 0; vertical-align: top;">No. HP</td><td style="vertical-align: top;">: ${service.phone || '-'}</td></tr>
-                                <tr><td style="color: #475569; padding: 3px 0; vertical-align: top;">Alamat</td><td style="vertical-align: top;">: ${service.customer_address || '-'}</td></tr>
+                        <div style="flex: 1; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 8px; background: #f8fafc;">
+                            <h4 style="font-size: 0.75rem; text-transform: uppercase; margin: 0 0 4px 0; color: #64748b; border-bottom: 1px solid #e2e8f0; padding-bottom: 2px;">Data Pelanggan</h4>
+                            <table style="width: 100%; font-size: 0.8rem;">
+                                <tr><td style="width: 50px; color: #475569; padding: 2px 0; vertical-align: top;">Nama</td><td style="vertical-align: top;">: <strong>${service.customer_name}</strong></td></tr>
+                                <tr><td style="color: #475569; padding: 2px 0; vertical-align: top;">No. HP</td><td style="vertical-align: top;">: ${service.phone || '-'}</td></tr>
+                                <tr><td style="color: #475569; padding: 2px 0; vertical-align: top;">Alamat</td><td style="vertical-align: top;">: ${service.customer_address || '-'}</td></tr>
                             </table>
                         </div>
                         
                         <!-- Perangkat -->
-                        <div style="flex: 1; border: 1px solid #cbd5e1; border-radius: 6px; padding: 12px; background: #f8fafc;">
-                            <h4 style="font-size: 0.8rem; text-transform: uppercase; margin: 0 0 8px 0; color: #64748b; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px;">Data Perangkat</h4>
-                            <table style="width: 100%; font-size: 0.9rem;">
-                                <tr><td style="width: 70px; color: #475569; padding: 3px 0; vertical-align: top;">Barang</td><td style="vertical-align: top;">: <strong>${service.type} ${service.brand || ''} ${service.model || ''}</strong></td></tr>
-                                <tr><td style="color: #475569; padding: 3px 0; vertical-align: top;">S/N</td><td style="vertical-align: top;">: ${service.serial_number || '-'}</td></tr>
-                                <tr><td style="color: #475569; padding: 3px 0; vertical-align: top;">Warna</td><td style="vertical-align: top;">: ${service.color || '-'}</td></tr>
-                                <tr><td style="color: #475569; padding: 3px 0; vertical-align: top;">Kelengkapan</td><td style="vertical-align: top;">: ${service.accessories || '-'}</td></tr>
+                        <div style="flex: 1; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 8px; background: #f8fafc;">
+                            <h4 style="font-size: 0.75rem; text-transform: uppercase; margin: 0 0 4px 0; color: #64748b; border-bottom: 1px solid #e2e8f0; padding-bottom: 2px;">Data Perangkat</h4>
+                            <table style="width: 100%; font-size: 0.8rem;">
+                                <tr><td style="width: 55px; color: #475569; padding: 2px 0; vertical-align: top;">Barang</td><td style="vertical-align: top;">: <strong>${service.type} ${service.brand || ''} ${service.model || ''}</strong></td></tr>
+                                <tr><td style="color: #475569; padding: 2px 0; vertical-align: top;">S/N</td><td style="vertical-align: top;">: ${service.serial_number || '-'}</td></tr>
+                                <tr><td style="color: #475569; padding: 2px 0; vertical-align: top;">Warna</td><td style="vertical-align: top;">: ${service.color || '-'}</td></tr>
+                                <tr><td style="color: #475569; padding: 2px 0; vertical-align: top;">Lengkap</td><td style="vertical-align: top;">: ${service.accessories || '-'}</td></tr>
                             </table>
                         </div>
 
                         <!-- Keluhan -->
-                        <div style="flex: 1.2; border: 1px solid #cbd5e1; border-radius: 6px; padding: 12px; background: #fff;">
-                            <h4 style="font-size: 0.8rem; text-transform: uppercase; margin: 0 0 8px 0; color: #64748b; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px;">Keluhan / Kerusakan</h4>
-                            <p style="font-size: 0.9rem; margin: 0; color: #1e293b;">${service.complaint}</p>
+                        <div style="flex: 1.2; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 8px; background: #fff;">
+                            <h4 style="font-size: 0.75rem; text-transform: uppercase; margin: 0 0 4px 0; color: #64748b; border-bottom: 1px solid #e2e8f0; padding-bottom: 2px;">Keluhan / Kerusakan</h4>
+                            <p style="font-size: 0.8rem; margin: 0; color: #1e293b;">${service.complaint}</p>
                             
-                            <div style="margin-top: 15px; padding-top: 10px; border-top: 1px dashed #cbd5e1;">
-                                <div style="font-size: 0.8rem; color: #64748b; margin-bottom: 3px;">Estimasi Biaya:</div>
-                                <div style="font-weight: 800; color: #ef4444; font-size: 1.1rem;">${service.estimated_cost ? new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(service.estimated_cost) : 'Menunggu Pengecekan'}</div>
+                            <div style="margin-top: 8px; padding-top: 5px; border-top: 1px dashed #cbd5e1;">
+                                <div style="font-size: 0.75rem; color: #64748b; margin-bottom: 1px;">Estimasi Biaya:</div>
+                                <div style="font-weight: 800; color: #ef4444; font-size: 1rem;">${service.estimated_cost ? new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(service.estimated_cost) : 'Menunggu Pengecekan'}</div>
                             </div>
                         </div>
                     </div>
                     
                     <!-- Footer / Signatures -->
-                    <div style="display: flex; gap: 20px; align-items: stretch;">
-                        <div style="flex: 2; font-size: 0.75rem; color: #475569; background: #f8fafc; padding: 10px; border-radius: 6px; border: 1px dashed #cbd5e1;">
-                            <strong style="display: block; margin-bottom: 4px; color: #334155;">Syarat & Ketentuan:</strong>
-                            <ol style="margin: 0; padding-left: 15px; line-height: 1.4;">
+                    <div style="display: flex; gap: 15px; align-items: stretch;">
+                        <div style="flex: 2; font-size: 0.7rem; color: #475569; background: #f8fafc; padding: 6px 10px; border-radius: 6px; border: 1px dashed #cbd5e1;">
+                            <strong style="display: block; margin-bottom: 2px; color: #334155;">Syarat & Ketentuan:</strong>
+                            <ol style="margin: 0; padding-left: 12px; line-height: 1.3;">
                                 <li>Tanda terima ini adalah bukti sah. Harap dibawa saat pengambilan.</li>
                                 <li>Perangkat yang tidak diambil > 30 hari di luar tanggung jawab kami.</li>
                                 <li>Kami tidak bertanggung jawab atas kehilangan data (harap di-backup).</li>
@@ -998,13 +998,13 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                         
                         <div style="flex: 1; text-align: center; display: flex; flex-direction: column; justify-content: space-between;">
-                            <div style="font-size: 0.85rem; color: #64748b;">Hormat Kami,</div>
-                            <div style="margin-top: 50px; font-weight: bold; font-size: 0.9rem; border-bottom: 1px solid #000; display: inline-block; padding: 0 10px;">${settings.business_name || 'Toko'}</div>
+                            <div style="font-size: 0.75rem; color: #64748b;">Hormat Kami,</div>
+                            <div style="margin-top: 30px; font-weight: bold; font-size: 0.85rem; border-bottom: 1px solid #000; display: inline-block; padding: 0 10px;">${settings.business_name || 'Toko'}</div>
                         </div>
                         
                         <div style="flex: 1; text-align: center; display: flex; flex-direction: column; justify-content: space-between;">
-                            <div style="font-size: 0.85rem; color: #64748b;">Pelanggan,</div>
-                            <div style="margin-top: 50px; font-weight: bold; font-size: 0.9rem; border-bottom: 1px solid #000; display: inline-block; padding: 0 10px;">${service.customer_name}</div>
+                            <div style="font-size: 0.75rem; color: #64748b;">Pelanggan,</div>
+                            <div style="margin-top: 30px; font-weight: bold; font-size: 0.85rem; border-bottom: 1px solid #000; display: inline-block; padding: 0 10px;">${service.customer_name}</div>
                         </div>
                     </div>
                 </div>
@@ -1360,66 +1360,66 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const html = `
                 <style>
-                    @page { size: A5 landscape; margin: 10mm; }
-                    body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                    @page { size: A5 landscape; margin: 5mm; }
+                    body { -webkit-print-color-adjust: exact; print-color-adjust: exact; margin: 0; padding: 0; }
                 </style>
-                <div style="width: 100%; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #1e293b; line-height: 1.4;">
+                <div style="width: 100%; max-height: 98vh; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #1e293b; line-height: 1.3; box-sizing: border-box;">
                     <!-- Header -->
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #1e293b; padding-bottom: 15px; margin-bottom: 15px;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #1e293b; padding-bottom: 5px; margin-bottom: 8px;">
                         <div style="flex: 1;">
-                            <h2 style="font-size: 1.8rem; margin: 0 0 5px 0; font-weight: 800; color: #0f172a;">${settings.business_name || 'NUNOX SERVIS'}</h2>
-                            <div style="font-size: 0.9rem; color: #475569;">${settings.address || ''}</div>
-                            <div style="font-size: 0.9rem; color: #475569; margin-top: 3px; font-weight: 600;">📞 ${settings.whatsapp || settings.phone || ''}</div>
+                            <h2 style="font-size: 1.5rem; margin: 0 0 2px 0; font-weight: 800; color: #0f172a;">${settings.business_name || 'NUNOX SERVIS'}</h2>
+                            <div style="font-size: 0.85rem; color: #475569;">${settings.address || ''}</div>
+                            <div style="font-size: 0.85rem; color: #475569; margin-top: 2px; font-weight: 600;">📞 ${settings.whatsapp || settings.phone || ''}</div>
                         </div>
                         <div style="text-align: right; flex: 1;">
-                            <h1 style="font-size: 2rem; color: #10b981; margin: 0 0 10px 0; text-transform: uppercase; letter-spacing: 2px; font-weight: 900;">TANDA TERIMA</h1>
-                            <div style="font-size: 1rem; color: #334155; margin-bottom: 2px;"><strong>No:</strong> ..............................</div>
-                            <div style="font-size: 0.9rem; color: #64748b;">Tanggal: ..............................</div>
+                            <h1 style="font-size: 1.6rem; color: #10b981; margin: 0 0 5px 0; text-transform: uppercase; letter-spacing: 2px; font-weight: 900;">TANDA TERIMA</h1>
+                            <div style="font-size: 0.9rem; color: #334155; margin-bottom: 2px;"><strong>No:</strong> ..............................</div>
+                            <div style="font-size: 0.8rem; color: #64748b;">Tanggal: ..............................</div>
                         </div>
                     </div>
                     
                     <!-- Body: 3 Columns -->
-                    <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+                    <div style="display: flex; gap: 8px; margin-bottom: 8px;">
                         <!-- Pelanggan -->
-                        <div style="flex: 1; border: 1px solid #cbd5e1; border-radius: 6px; padding: 12px; background: #f8fafc;">
-                            <h4 style="font-size: 0.8rem; text-transform: uppercase; margin: 0 0 8px 0; color: #64748b; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px;">Data Pelanggan</h4>
-                            <table style="width: 100%; font-size: 0.9rem; line-height: 2;">
-                                <tr><td style="width: 60px; color: #475569; vertical-align: top;">Nama</td><td style="vertical-align: top;">: ...........................................</td></tr>
-                                <tr><td style="color: #475569; vertical-align: top;">No. HP</td><td style="vertical-align: top;">: ...........................................</td></tr>
-                                <tr><td style="color: #475569; vertical-align: top;">Alamat</td><td style="vertical-align: top;">: ...........................................<br>  ...........................................</td></tr>
+                        <div style="flex: 1; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 8px; background: #f8fafc;">
+                            <h4 style="font-size: 0.75rem; text-transform: uppercase; margin: 0 0 4px 0; color: #64748b; border-bottom: 1px solid #e2e8f0; padding-bottom: 2px;">Data Pelanggan</h4>
+                            <table style="width: 100%; font-size: 0.8rem;">
+                                <tr><td style="width: 50px; color: #475569; padding: 2px 0; vertical-align: top;">Nama</td><td style="vertical-align: top;">: .......................................</td></tr>
+                                <tr><td style="color: #475569; padding: 2px 0; vertical-align: top;">No. HP</td><td style="vertical-align: top;">: .......................................</td></tr>
+                                <tr><td style="color: #475569; padding: 2px 0; vertical-align: top;">Alamat</td><td style="vertical-align: top;">: .......................................<br>  .......................................</td></tr>
                             </table>
                         </div>
                         
                         <!-- Perangkat -->
-                        <div style="flex: 1; border: 1px solid #cbd5e1; border-radius: 6px; padding: 12px; background: #f8fafc;">
-                            <h4 style="font-size: 0.8rem; text-transform: uppercase; margin: 0 0 8px 0; color: #64748b; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px;">Data Perangkat</h4>
-                            <table style="width: 100%; font-size: 0.9rem; line-height: 2;">
-                                <tr><td style="width: 70px; color: #475569; vertical-align: top;">Barang</td><td style="vertical-align: top;">: .........................................</td></tr>
-                                <tr><td style="color: #475569; vertical-align: top;">S/N</td><td style="vertical-align: top;">: .........................................</td></tr>
-                                <tr><td style="color: #475569; vertical-align: top;">Warna</td><td style="vertical-align: top;">: .........................................</td></tr>
-                                <tr><td style="color: #475569; vertical-align: top;">Lengkap</td><td style="vertical-align: top;">: .........................................</td></tr>
+                        <div style="flex: 1; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 8px; background: #f8fafc;">
+                            <h4 style="font-size: 0.75rem; text-transform: uppercase; margin: 0 0 4px 0; color: #64748b; border-bottom: 1px solid #e2e8f0; padding-bottom: 2px;">Data Perangkat</h4>
+                            <table style="width: 100%; font-size: 0.8rem;">
+                                <tr><td style="width: 55px; color: #475569; padding: 2px 0; vertical-align: top;">Barang</td><td style="vertical-align: top;">: .......................................</td></tr>
+                                <tr><td style="color: #475569; padding: 2px 0; vertical-align: top;">S/N</td><td style="vertical-align: top;">: .......................................</td></tr>
+                                <tr><td style="color: #475569; padding: 2px 0; vertical-align: top;">Warna</td><td style="vertical-align: top;">: .......................................</td></tr>
+                                <tr><td style="color: #475569; padding: 2px 0; vertical-align: top;">Lengkap</td><td style="vertical-align: top;">: .......................................</td></tr>
                             </table>
                         </div>
 
                         <!-- Keluhan -->
-                        <div style="flex: 1.2; border: 1px solid #cbd5e1; border-radius: 6px; padding: 12px; background: #fff;">
-                            <h4 style="font-size: 0.8rem; text-transform: uppercase; margin: 0 0 8px 0; color: #64748b; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px;">Keluhan / Kerusakan</h4>
-                            <div style="border-bottom: 1px dashed #cbd5e1; margin-bottom: 25px; margin-top: 15px;"></div>
-                            <div style="border-bottom: 1px dashed #cbd5e1; margin-bottom: 25px;"></div>
-                            <div style="border-bottom: 1px dashed #cbd5e1; margin-bottom: 25px;"></div>
+                        <div style="flex: 1.2; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 8px; background: #fff;">
+                            <h4 style="font-size: 0.75rem; text-transform: uppercase; margin: 0 0 4px 0; color: #64748b; border-bottom: 1px solid #e2e8f0; padding-bottom: 2px;">Keluhan / Kerusakan</h4>
+                            <div style="border-bottom: 1px dashed #cbd5e1; margin-bottom: 15px; margin-top: 10px;"></div>
+                            <div style="border-bottom: 1px dashed #cbd5e1; margin-bottom: 15px;"></div>
+                            <div style="border-bottom: 1px dashed #cbd5e1; margin-bottom: 10px;"></div>
                             
-                            <div style="margin-top: 15px; padding-top: 15px; border-top: 1px dashed #cbd5e1;">
-                                <div style="font-size: 0.8rem; color: #64748b; margin-bottom: 5px;">Estimasi Biaya:</div>
-                                <div style="font-weight: 800; color: #ef4444; font-size: 1.1rem;">Rp ........................................</div>
+                            <div style="margin-top: 8px; padding-top: 5px; border-top: 1px dashed #cbd5e1;">
+                                <div style="font-size: 0.75rem; color: #64748b; margin-bottom: 2px;">Estimasi Biaya:</div>
+                                <div style="font-weight: 800; color: #ef4444; font-size: 1rem;">Rp ........................................</div>
                             </div>
                         </div>
                     </div>
                     
                     <!-- Footer / Signatures -->
-                    <div style="display: flex; gap: 20px; align-items: stretch;">
-                        <div style="flex: 2; font-size: 0.75rem; color: #475569; background: #f8fafc; padding: 10px; border-radius: 6px; border: 1px dashed #cbd5e1;">
-                            <strong style="display: block; margin-bottom: 4px; color: #334155;">Syarat & Ketentuan:</strong>
-                            <ol style="margin: 0; padding-left: 15px; line-height: 1.4;">
+                    <div style="display: flex; gap: 15px; align-items: stretch;">
+                        <div style="flex: 2; font-size: 0.7rem; color: #475569; background: #f8fafc; padding: 6px 10px; border-radius: 6px; border: 1px dashed #cbd5e1;">
+                            <strong style="display: block; margin-bottom: 2px; color: #334155;">Syarat & Ketentuan:</strong>
+                            <ol style="margin: 0; padding-left: 12px; line-height: 1.3;">
                                 <li>Tanda terima ini adalah bukti sah. Harap dibawa saat pengambilan.</li>
                                 <li>Perangkat yang tidak diambil > 30 hari di luar tanggung jawab kami.</li>
                                 <li>Kami tidak bertanggung jawab atas kehilangan data (harap di-backup).</li>
@@ -1427,13 +1427,13 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                         
                         <div style="flex: 1; text-align: center; display: flex; flex-direction: column; justify-content: space-between;">
-                            <div style="font-size: 0.85rem; color: #64748b;">Hormat Kami,</div>
-                            <div style="margin-top: 50px; font-weight: bold; font-size: 0.9rem; border-bottom: 1px solid #000; display: inline-block; padding: 0 10px;">${settings.business_name || 'Toko'}</div>
+                            <div style="font-size: 0.75rem; color: #64748b;">Hormat Kami,</div>
+                            <div style="margin-top: 30px; font-weight: bold; font-size: 0.85rem; border-bottom: 1px solid #000; display: inline-block; padding: 0 10px;">${settings.business_name || 'Toko'}</div>
                         </div>
                         
                         <div style="flex: 1; text-align: center; display: flex; flex-direction: column; justify-content: space-between;">
-                            <div style="font-size: 0.85rem; color: #64748b;">Pelanggan,</div>
-                            <div style="margin-top: 50px; font-weight: bold; font-size: 0.9rem; border-bottom: 1px solid #000; display: inline-block; padding: 0 10px;">( .................................... )</div>
+                            <div style="font-size: 0.75rem; color: #64748b;">Pelanggan,</div>
+                            <div style="margin-top: 30px; font-weight: bold; font-size: 0.85rem; border-bottom: 1px solid #000; display: inline-block; padding: 0 10px;">( .................................... )</div>
                         </div>
                     </div>
                 </div>
