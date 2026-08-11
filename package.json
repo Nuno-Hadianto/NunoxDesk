@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "test": "set NODE_ENV=test&& jest",
+    "test:e2e": "playwright test",
     "start": "electron electron/main.js",
     "dev": "electron-reload electron/main.js",
     "build": "electron-builder --win",
@@ -40,9 +42,11 @@
   },
   "homepage": "https://github.com/Nuno-Hadianto/NunoxDesk#readme",
   "devDependencies": {
+    "@playwright/test": "^1.62.1",
     "electron": "^43.3.0",
     "electron-builder": "^26.15.3",
-    "electron-reload": "^2.0.0-alpha.1"
+    "electron-reload": "^2.0.0-alpha.1",
+    "jest": "^30.4.2"
   },
   "dependencies": {
     "better-sqlite3": "^13.0.3"

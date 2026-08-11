@@ -5,7 +5,9 @@ const { app } = require('electron');
 const schema = require('./schema');
 
 let dbPath;
-if (app) {
+if (process.env.NODE_ENV === 'test') {
+    dbPath = ':memory:';
+} else if (app) {
     const userDataPath = app.getPath('userData');
     const dbDir = path.join(userDataPath, 'database');
     if (!fs.existsSync(dbDir)) {
@@ -13,7 +15,7 @@ if (app) {
     }
     dbPath = path.join(dbDir, 'nunoxdesk.db');
 } else {
-    // Fallback for testing
+    // Fallback for development
     dbPath = path.join(__dirname, 'nunoxdesk.db');
 }
 
