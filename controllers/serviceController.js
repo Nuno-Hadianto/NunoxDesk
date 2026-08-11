@@ -34,7 +34,9 @@ function getServices(searchQuery = '') {
 
 function getServiceById(id) {
     const stmt = db.prepare(`
-        SELECT so.*, c.name as customer_name, c.phone as customer_phone, d.brand, d.model, d.device_type, d.serial_number
+        SELECT so.*, 
+               c.name as customer_name, c.phone as customer_phone, c.address as customer_address, 
+               d.brand, d.model, d.device_type, d.serial_number, d.color, d.accessories
         FROM service_orders so
         JOIN customers c ON so.customer_id = c.id
         JOIN devices d ON so.device_id = d.id

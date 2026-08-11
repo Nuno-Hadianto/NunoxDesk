@@ -957,8 +957,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div style="flex: 1; border: 1px solid #cbd5e1; border-radius: 6px; padding: 12px; background: #f8fafc;">
                             <h4 style="font-size: 0.8rem; text-transform: uppercase; margin: 0 0 8px 0; color: #64748b; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px;">Data Pelanggan</h4>
                             <table style="width: 100%; font-size: 0.9rem;">
-                                <tr><td style="width: 60px; color: #475569; padding: 3px 0;">Nama</td><td>: <strong>${service.customer_name}</strong></td></tr>
-                                <tr><td style="color: #475569; padding: 3px 0;">No. HP</td><td>: ${service.phone || '-'}</td></tr>
+                                <tr><td style="width: 60px; color: #475569; padding: 3px 0; vertical-align: top;">Nama</td><td style="vertical-align: top;">: <strong>${service.customer_name}</strong></td></tr>
+                                <tr><td style="color: #475569; padding: 3px 0; vertical-align: top;">No. HP</td><td style="vertical-align: top;">: ${service.phone || '-'}</td></tr>
+                                <tr><td style="color: #475569; padding: 3px 0; vertical-align: top;">Alamat</td><td style="vertical-align: top;">: ${service.customer_address || '-'}</td></tr>
                             </table>
                         </div>
                         
@@ -966,8 +967,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div style="flex: 1; border: 1px solid #cbd5e1; border-radius: 6px; padding: 12px; background: #f8fafc;">
                             <h4 style="font-size: 0.8rem; text-transform: uppercase; margin: 0 0 8px 0; color: #64748b; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px;">Data Perangkat</h4>
                             <table style="width: 100%; font-size: 0.9rem;">
-                                <tr><td style="width: 70px; color: #475569; padding: 3px 0;">Barang</td><td>: <strong>${service.type} ${service.brand || ''} ${service.model || ''}</strong></td></tr>
-                                <tr><td style="color: #475569; padding: 3px 0;">Kelengkapan</td><td>: ${service.accessories || '-'}</td></tr>
+                                <tr><td style="width: 70px; color: #475569; padding: 3px 0; vertical-align: top;">Barang</td><td style="vertical-align: top;">: <strong>${service.type} ${service.brand || ''} ${service.model || ''}</strong></td></tr>
+                                <tr><td style="color: #475569; padding: 3px 0; vertical-align: top;">S/N</td><td style="vertical-align: top;">: ${service.serial_number || '-'}</td></tr>
+                                <tr><td style="color: #475569; padding: 3px 0; vertical-align: top;">Warna</td><td style="vertical-align: top;">: ${service.color || '-'}</td></tr>
+                                <tr><td style="color: #475569; padding: 3px 0; vertical-align: top;">Kelengkapan</td><td style="vertical-align: top;">: ${service.accessories || '-'}</td></tr>
                             </table>
                         </div>
 
@@ -975,6 +978,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div style="flex: 1.2; border: 1px solid #cbd5e1; border-radius: 6px; padding: 12px; background: #fff;">
                             <h4 style="font-size: 0.8rem; text-transform: uppercase; margin: 0 0 8px 0; color: #64748b; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px;">Keluhan / Kerusakan</h4>
                             <p style="font-size: 0.9rem; margin: 0; color: #1e293b;">${service.complaint}</p>
+                            
+                            <div style="margin-top: 15px; padding-top: 10px; border-top: 1px dashed #cbd5e1;">
+                                <div style="font-size: 0.8rem; color: #64748b; margin-bottom: 3px;">Estimasi Biaya:</div>
+                                <div style="font-weight: 800; color: #ef4444; font-size: 1.1rem;">${service.estimated_cost ? new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(service.estimated_cost) : 'Menunggu Pengecekan'}</div>
+                            </div>
                         </div>
                     </div>
                     
@@ -1376,8 +1384,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div style="flex: 1; border: 1px solid #cbd5e1; border-radius: 6px; padding: 12px; background: #f8fafc;">
                             <h4 style="font-size: 0.8rem; text-transform: uppercase; margin: 0 0 8px 0; color: #64748b; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px;">Data Pelanggan</h4>
                             <table style="width: 100%; font-size: 0.9rem; line-height: 2;">
-                                <tr><td style="width: 60px; color: #475569;">Nama</td><td>: ...........................................</td></tr>
-                                <tr><td style="color: #475569;">No. HP</td><td>: ...........................................</td></tr>
+                                <tr><td style="width: 60px; color: #475569; vertical-align: top;">Nama</td><td style="vertical-align: top;">: ...........................................</td></tr>
+                                <tr><td style="color: #475569; vertical-align: top;">No. HP</td><td style="vertical-align: top;">: ...........................................</td></tr>
+                                <tr><td style="color: #475569; vertical-align: top;">Alamat</td><td style="vertical-align: top;">: ...........................................<br>  ...........................................</td></tr>
                             </table>
                         </div>
                         
@@ -1385,8 +1394,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div style="flex: 1; border: 1px solid #cbd5e1; border-radius: 6px; padding: 12px; background: #f8fafc;">
                             <h4 style="font-size: 0.8rem; text-transform: uppercase; margin: 0 0 8px 0; color: #64748b; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px;">Data Perangkat</h4>
                             <table style="width: 100%; font-size: 0.9rem; line-height: 2;">
-                                <tr><td style="width: 70px; color: #475569;">Barang</td><td>: .........................................</td></tr>
-                                <tr><td style="color: #475569;">Lengkap</td><td>: .........................................</td></tr>
+                                <tr><td style="width: 70px; color: #475569; vertical-align: top;">Barang</td><td style="vertical-align: top;">: .........................................</td></tr>
+                                <tr><td style="color: #475569; vertical-align: top;">S/N</td><td style="vertical-align: top;">: .........................................</td></tr>
+                                <tr><td style="color: #475569; vertical-align: top;">Warna</td><td style="vertical-align: top;">: .........................................</td></tr>
+                                <tr><td style="color: #475569; vertical-align: top;">Lengkap</td><td style="vertical-align: top;">: .........................................</td></tr>
                             </table>
                         </div>
 
@@ -1395,7 +1406,12 @@ document.addEventListener('DOMContentLoaded', () => {
                             <h4 style="font-size: 0.8rem; text-transform: uppercase; margin: 0 0 8px 0; color: #64748b; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px;">Keluhan / Kerusakan</h4>
                             <div style="border-bottom: 1px dashed #cbd5e1; margin-bottom: 25px; margin-top: 15px;"></div>
                             <div style="border-bottom: 1px dashed #cbd5e1; margin-bottom: 25px;"></div>
-                            <div style="border-bottom: 1px dashed #cbd5e1; margin-bottom: 5px;"></div>
+                            <div style="border-bottom: 1px dashed #cbd5e1; margin-bottom: 25px;"></div>
+                            
+                            <div style="margin-top: 15px; padding-top: 15px; border-top: 1px dashed #cbd5e1;">
+                                <div style="font-size: 0.8rem; color: #64748b; margin-bottom: 5px;">Estimasi Biaya:</div>
+                                <div style="font-weight: 800; color: #ef4444; font-size: 1.1rem;">Rp ........................................</div>
+                            </div>
                         </div>
                     </div>
                     
