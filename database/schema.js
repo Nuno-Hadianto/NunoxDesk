@@ -128,7 +128,7 @@ CREATE TABLE IF NOT EXISTS settings (
 const insertDefaultSettings = `
 INSERT OR IGNORE INTO settings (key, value) VALUES 
 ('business_name', 'NUNOX_SERVIS'),
-('app_name', 'NunoxDesk'),
+('app_name', 'nuNox_servis'),
 ('business_type', 'Laptop & Computer Service'),
 ('owner_name', ''),
 ('phone', ''),

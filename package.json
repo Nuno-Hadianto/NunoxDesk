@@ -1,5 +1,5 @@
 {
-  "name": "nunoxdesk",
+  "name": "nunox_servis",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -13,8 +13,8 @@
     "build:linux": "electron-builder --linux"
   },
   "build": {
-    "appId": "com.nunoxdesk.app",
-    "productName": "NunoxDesk",
+    "appId": "com.nunox_servis.app",
+    "productName": "nuNox_servis",
     "directories": {
       "output": "dist"
     },
@@ -31,16 +31,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Nuno-Hadianto/NunoxDesk.git"
+    "url": "git+https://github.com/Nuno-Hadianto/nuNox_servis.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "bugs": {
-    "url": "https://github.com/Nuno-Hadianto/NunoxDesk/issues"
+    "url": "https://github.com/Nuno-Hadianto/nuNox_servis/issues"
   },
-  "homepage": "https://github.com/Nuno-Hadianto/NunoxDesk#readme",
+  "homepage": "https://github.com/Nuno-Hadianto/nuNox_servis#readme",
   "devDependencies": {
     "@playwright/test": "^1.62.1",
     "electron": "^43.3.0",

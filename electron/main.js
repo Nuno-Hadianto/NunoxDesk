@@ -21,7 +21,7 @@ function createWindow() {
     height: 800,
     minWidth: 900,
     minHeight: 600,
-    title: 'NunoxDesk - NUNOX_SERVIS',
+    title: 'nuNox_servis - NUNOX_SERVIS',
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
@@ -83,7 +83,7 @@ function createWindow() {
       // Prompt user to select save location
       const { canceled, filePath } = await dialog.showSaveDialog({
         title: 'Simpan Laporan Excel',
-        defaultPath: 'Laporan_NunoxDesk.xlsx',
+        defaultPath: 'Laporan_nuNox_servis.xlsx',
         filters: [{ name: 'Excel Files', extensions: ['xlsx'] }]
       });
 
@@ -125,8 +125,8 @@ function createWindow() {
 
   // Backup & Restore
   ipcMain.handle('backup-database', async () => {
-    const dbPath = path.join(app.getPath('userData'), 'nunoxdesk.db');
-    const defaultPath = `NunoxDesk_Backup_${new Date().toISOString().split('T')[0]}.db`;
+    const dbPath = path.join(app.getPath('userData'), 'nunox_servis.db');
+    const defaultPath = `nuNox_servis_Backup_${new Date().toISOString().split('T')[0]}.db`;
     const { filePath } = await dialog.showSaveDialog({
       title: 'Backup Database',
       defaultPath: defaultPath,
@@ -148,7 +148,7 @@ function createWindow() {
     });
     
     if (filePaths && filePaths.length > 0) {
-      const dbPath = path.join(app.getPath('userData'), 'nunoxdesk.db');
+      const dbPath = path.join(app.getPath('userData'), 'nunox_servis.db');
       fs.copyFileSync(filePaths[0], dbPath);
       // App needs restart to load new db, we'll return true
       app.relaunch();

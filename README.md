@@ -1,6 +1,6 @@
 <div align="center">
-  <img src="https://img.icons8.com/color/96/000000/laptop-settings--v1.png" alt="NunoxDesk Logo" />
-  <h1>NunoxDesk</h1>
+  <img src="https://img.icons8.com/color/96/000000/laptop-settings--v1.png" alt="nuNox_servis Logo" />
+  <h1>nuNox_servis</h1>
   <p><strong>Aplikasi Manajemen Usaha Servis Komputer & Laptop 100% Offline</strong></p>
   
   <p>
@@ -13,7 +13,7 @@
 ---
 
 ## 📖 Tentang Aplikasi
-**NunoxDesk** adalah sistem kasir sekaligus *Customer Relationship Management* (CRM) khusus untuk teknisi atau pemilik usaha servis laptop/PC. Dirancang agar berjalan **100% offline** (tanpa koneksi internet atau server *cloud*), memastikan seluruh data pelanggan dan omset usaha tersimpan aman secara lokal di komputer Anda.
+**nuNox_servis** adalah sistem kasir sekaligus *Customer Relationship Management* (CRM) khusus untuk teknisi atau pemilik usaha servis laptop/PC. Dirancang agar berjalan **100% offline** (tanpa koneksi internet atau server *cloud*), memastikan seluruh data pelanggan dan omset usaha tersimpan aman secara lokal di komputer Anda.
 
 ## ✨ Fitur Utama
 - 📊 **Dashboard Analitik**: Pantau tiket aktif dan total omset dengan cepat.
@@ -27,8 +27,8 @@
 
 1. **Clone repositori**
    ```bash
-   git clone https://github.com/Nuno-Hadianto/NunoxDesk.git
-   cd NunoxDesk
+   git clone https://github.com/Nuno-Hadianto/nuNox_servis.git
+   cd nuNox_servis
    ```
 
 2. **Install Dependensi**
@@ -47,7 +47,7 @@ Jika Anda ingin menjadikan program ini aplikasi *Standalone* untuk sistem operas
 ```bash
 npm run build
 ```
-File installer `NunoxDesk Setup.exe` akan di-generate dan tersimpan di dalam folder `dist/`.
+File installer `nuNox_servis Setup.exe` akan di-generate dan tersimpan di dalam folder `dist/`.
 
 ## 🛠️ Arsitektur Teknologi
 - **Frontend**: Vanilla HTML5, CSS3, JavaScript (Sangat ringan, minim *dependency*).

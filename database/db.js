@@ -13,10 +13,10 @@ if (process.env.NODE_ENV === 'test') {
     if (!fs.existsSync(dbDir)) {
         fs.mkdirSync(dbDir, { recursive: true });
     }
-    dbPath = path.join(dbDir, 'nunoxdesk.db');
+    dbPath = path.join(dbDir, 'nunox_servis.db');
 } else {
     // Fallback for development
-    dbPath = path.join(__dirname, 'nunoxdesk.db');
+    dbPath = path.join(__dirname, 'nunox_servis.db');
 }
 
 const db = new Database(dbPath);
