@@ -1620,7 +1620,15 @@ document.addEventListener('DOMContentLoaded', () => {
         if (await window.customConfirm("WARNING: Restore akan menimpa semua data saat ini. Aplikasi akan ditutup dan dibuka ulang. Yakin ingin melanjutkan?")) {
             try {
                 const success = await window.api.restoreDatabase();
-                if (!success) {
+                if (success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Restore Berhasil!',
+                        text: 'Aplikasi akan dimuat ulang secara otomatis untuk menerapkan data baru...',
+                        showConfirmButton: false,
+                        timer: 2500
+                    });
+                } else {
                     console.log("Restore dibatalkan.");
                 }
             } catch (error) {

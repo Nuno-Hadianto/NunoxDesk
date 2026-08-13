@@ -177,9 +177,11 @@ function createWindow() {
     if (filePaths && filePaths.length > 0) {
       const dbPath = path.join(app.getPath('userData'), 'database', 'nunox_servis.db');
       fs.copyFileSync(filePaths[0], dbPath);
-      // App needs restart to load new db, we'll return true
-      app.relaunch();
-      app.exit(0);
+      // App needs restart to load new db. Delay to allow frontend notification.
+      setTimeout(() => {
+        app.relaunch();
+        app.exit(0);
+      }, 2500);
       return true;
     }
     return false;
