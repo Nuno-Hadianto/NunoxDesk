@@ -22,12 +22,15 @@ function createWindow() {
     minWidth: 900,
     minHeight: 600,
     title: 'nuNox_servis - NUNOX_SERVIS',
+    autoHideMenuBar: true, // Sembunyikan menu bar bawaan agar lebih bersih
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
       preload: path.join(__dirname, 'preload.js')
     }
   });
+
+  mainWindow.maximize(); // Otomatis layar penuh (maximized) saat dibuka
 
   mainWindow.loadFile(path.join(__dirname, '..', 'views', 'index.html'));
 
