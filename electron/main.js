@@ -145,13 +145,14 @@ function createWindow() {
   });
 
   // Print Preview
-  ipcMain.handle('print-preview', async () => {
+  ipcMain.handle('print-preview', async (event, options = {}) => {
     try {
       const pdfPath = path.join(os.tmpdir(), `nunox_print_${Date.now()}.pdf`);
       
       const pdfData = await mainWindow.webContents.printToPDF({
         printBackground: true,
-        pageSize: 'A4',
+        pageSize: options.pageSize || 'A4',
+        landscape: options.landscape || false,
         marginsType: 1 // Default margins
       });
       

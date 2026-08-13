@@ -61,5 +61,5 @@ contextBridge.exposeInMainWorld('api', {
   exportExcel: (data) => ipcRenderer.invoke('export-excel', data),
   
   // Print Preview
-  printPreview: () => ipcRenderer.invoke('print-preview')
+  printPreview: (options) => ipcRenderer.invoke('print-preview', options)
 });

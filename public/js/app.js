@@ -11,9 +11,9 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // Override window.print for PDF Print Preview
-    window.print = async () => {
+    window.print = async (options = {}) => {
         try {
-            await window.api.printPreview();
+            await window.api.printPreview(options);
         } catch (error) {
             console.error("Print preview failed:", error);
             alert("Gagal memuat Print Preview.");
@@ -1060,7 +1060,7 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             
             printArea.innerHTML = html;
-            window.print();
+            window.print({ landscape: true, pageSize: 'A5' });
         } catch (error) {
             console.error("Failed to print nota:", error);
             alert("Gagal mencetak tanda terima.");
@@ -1197,7 +1197,7 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             
             printArea.innerHTML = html;
-            window.print();
+            window.print({ landscape: true, pageSize: 'A5' });
         } catch (error) {
             console.error("Failed to print receipt:", error);
             alert("Gagal mencetak struk.");
@@ -1465,7 +1465,7 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             
             printArea.innerHTML = html;
-            window.print();
+            window.print({ landscape: true, pageSize: 'A5' });
         } catch (error) {
             console.error("Failed to print blank receipt:", error);
             alert("Gagal mencetak kwitansi kosong.");
@@ -1559,7 +1559,7 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             
             printArea.innerHTML = html;
-            window.print();
+            window.print({ landscape: true, pageSize: 'A5' });
         } catch (error) {
             console.error("Failed to print blank nota:", error);
             alert("Gagal mencetak nota kosong.");
