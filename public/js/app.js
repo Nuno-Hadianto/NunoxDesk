@@ -195,7 +195,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 loadCustomers(document.getElementById('search-customer').value);
             } catch (error) {
                 console.error(error);
-                alert("Gagal menghapus data.");
+                let msg = "Gagal menghapus data.";
+                if (error.message) {
+                    msg = error.message.split('Error:').pop().trim();
+                }
+                alert(msg);
             }
         }
     };
@@ -324,7 +328,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 loadDevices(document.getElementById('search-device').value);
             } catch (error) {
                 console.error(error);
-                alert("Gagal menghapus data.");
+                let msg = "Gagal menghapus data.";
+                if (error.message) {
+                    msg = error.message.split('Error:').pop().trim();
+                }
+                alert(msg);
             }
         }
     };

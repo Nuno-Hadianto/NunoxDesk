@@ -29,6 +29,12 @@ function updateCustomer(id, data) {
 }
 
 function deleteCustomer(id) {
+    const checkStmt = db.prepare(`SELECT COUNT(*) as count FROM service_orders WHERE customer_id = ?`);
+    const result = checkStmt.get(id);
+    if (result.count > 0) {
+        throw new Error("Pelanggan tidak bisa dihapus karena masih memiliki riwayat tiket servis.");
+    }
+    
     const stmt = db.prepare(`DELETE FROM customers WHERE id = ?`);
     stmt.run(id);
     return true;
