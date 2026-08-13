@@ -56,6 +56,8 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (navId === 'nav-settings') {
             document.getElementById('view-settings').style.display = 'block';
             loadSettings();
+        } else if (navId === 'nav-backup') {
+            document.getElementById('view-backup').style.display = 'block';
         }
     }
 
@@ -1558,4 +1560,5 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     });
+
 });
