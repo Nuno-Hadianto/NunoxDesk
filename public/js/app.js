@@ -1336,13 +1336,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     .report-header h2 { margin: 0; font-size: 28px; color: #0f172a; text-transform: uppercase; letter-spacing: 2px; }
                     .report-header p { margin: 5px 0 0 0; color: #64748b; font-size: 14px; }
                     .report-title { background: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 30px; border: 1px solid #e2e8f0; text-align: center; }
-                    .report-title h3 { margin: 0 0 15px 0; color: #3b82f6; font-size: 20px; letter-spacing: 1px; }
+                    .report-title h3 { margin: 0 0 15px 0; color: #a855f7; font-size: 20px; letter-spacing: 1px; }
                     .report-summary { display: flex; justify-content: center; gap: 50px; font-size: 14px; }
                     .summary-box { text-align: center; }
                     .summary-box span { display: block; font-size: 12px; color: #64748b; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
                     .summary-box strong { font-size: 16px; color: #0f172a; }
                     .report-table { width: 100%; border-collapse: collapse; margin-bottom: 40px; font-size: 13px; }
-                    .report-table th { background-color: #3b82f6 !important; color: #ffffff !important; padding: 14px 12px; text-align: left; -webkit-print-color-adjust: exact; print-color-adjust: exact; border: 1px solid #2563eb; }
+                    .report-table th { background-color: #a855f7 !important; color: #ffffff !important; padding: 14px 12px; text-align: left; -webkit-print-color-adjust: exact; print-color-adjust: exact; border: 1px solid #9333ea; }
                     .report-table td { padding: 12px; border: 1px solid #e2e8f0; color: #334155; }
                     .report-table tr:nth-child(even) { background-color: #f8fafc !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
                     .report-total { display: flex; justify-content: flex-end; align-items: center; padding: 20px; background-color: #f1f5f9 !important; border-radius: 8px; -webkit-print-color-adjust: exact; print-color-adjust: exact; border: 1px solid #e2e8f0; }
