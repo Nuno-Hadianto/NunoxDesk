@@ -1,4 +1,30 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Override alert to use SweetAlert2
+    window.alert = (message) => {
+        const isError = message.toLowerCase().includes('gagal') || message.toLowerCase().includes('error') || message.toLowerCase().includes('kesalahan');
+        Swal.fire({
+            text: message,
+            icon: isError ? 'error' : (message.toLowerCase().includes('berhasil') ? 'success' : 'info'),
+            confirmButtonText: 'Tutup',
+            confirmButtonColor: '#4f46e5'
+        });
+    };
+
+    // Custom async confirm using SweetAlert2
+    window.customConfirm = async (message) => {
+        const result = await Swal.fire({
+            title: 'Konfirmasi',
+            text: message,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Ya',
+            cancelButtonText: 'Batal'
+        });
+        return result.isConfirmed;
+    };
+
     // Update Datetime
     const datetimeDisplay = document.getElementById('datetime-display');
     const updateTime = () => {
@@ -191,7 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     window.deleteCustomer = async (id) => {
-        if (confirm("Apakah Anda yakin ingin menghapus pelanggan ini?")) {
+        if (await window.customConfirm("Apakah Anda yakin ingin menghapus pelanggan ini?")) {
             try {
                 await window.api.deleteCustomer(id);
                 loadCustomers(document.getElementById('search-customer').value);
@@ -324,7 +350,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     window.deleteDevice = async (id) => {
-        if (confirm("Apakah Anda yakin ingin menghapus perangkat ini?")) {
+        if (await window.customConfirm("Apakah Anda yakin ingin menghapus perangkat ini?")) {
             try {
                 await window.api.deleteDevice(id);
                 loadDevices(document.getElementById('search-device').value);
@@ -533,7 +559,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     window.deleteServiceItem = async (itemId, serviceId) => {
-        if (confirm('Hapus item ini?')) {
+        if (await window.customConfirm('Hapus item ini?')) {
             try {
                 await window.api.deleteServiceItem(itemId);
                 await loadServiceItems(serviceId);
@@ -805,7 +831,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     window.deletePart = async (id) => {
-        if (confirm("Apakah Anda yakin ingin menghapus sparepart ini?")) {
+        if (await window.customConfirm("Apakah Anda yakin ingin menghapus sparepart ini?")) {
             try {
                 await window.api.deletePart(id);
                 loadParts(document.getElementById('search-part').value);
@@ -921,7 +947,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     window.deletePayment = async (paymentId, serviceId) => {
-        if (confirm("Hapus catatan pembayaran ini?")) {
+        if (await window.customConfirm("Hapus catatan pembayaran ini?")) {
             try {
                 await window.api.deletePayment(paymentId);
                 await loadServicePayments(serviceId);
@@ -1548,7 +1574,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('btn-restore').addEventListener('click', async () => {
-        if (confirm("WARNING: Restore akan menimpa semua data saat ini. Aplikasi akan restart setelah selesai. Yakin ingin melanjutkan?")) {
+        if (await window.customConfirm("WARNING: Restore akan menimpa semua data saat ini. Aplikasi akan ditutup dan dibuka ulang. Yakin ingin melanjutkan?")) {
             try {
                 const success = await window.api.restoreDatabase();
                 if (!success) {
