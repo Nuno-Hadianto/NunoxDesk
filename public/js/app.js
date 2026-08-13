@@ -96,8 +96,11 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Close modal handlers
     document.querySelectorAll('.close-modal').forEach(el => {
-        el.addEventListener('click', () => {
-            customerModal.classList.remove('show');
+        el.addEventListener('click', (e) => {
+            const modal = e.target.closest('.modal');
+            if (modal) {
+                modal.classList.remove('show');
+            }
         });
     });
 
