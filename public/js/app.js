@@ -1406,8 +1406,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const printArea = document.getElementById('print-area');
             
             const html = `
-                <div style="max-width: 800px; margin: 0 auto; background: #fff; padding: 40px; border: 1px solid #e2e8f0; border-radius: 8px;">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 3px solid #4f46e5; padding-bottom: 25px; margin-bottom: 30px;">
+                <div style="max-width: 800px; margin: 0 auto; background: #fff; padding: 15px 30px; border: 1px solid #e2e8f0; border-radius: 8px;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 3px solid #4f46e5; padding-bottom: 10px; margin-bottom: 15px;">
                         <div>
                             <h2 style="font-size: 2.2rem; color: #1e293b; margin-bottom: 10px; font-weight: 800;">${settings.business_name || 'NUNOX SERVIS'}</h2>
                             <div style="color: #475569; font-size: 1rem; max-width: 320px; line-height: 1.5;">${settings.address || ''}</div>
@@ -1419,8 +1419,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     </div>
                     
-                    <div style="margin-bottom: 50px; margin-top: 50px;">
-                        <table style="width: 100%; font-size: 1.25rem; line-height: 3;">
+                    <div style="margin-bottom: 15px; margin-top: 15px;">
+                        <table style="width: 100%; font-size: 1.25rem; line-height: 2;">
                             <tr>
                                 <td style="width: 250px; color: #475569; font-weight: 600;">Telah terima dari</td>
                                 <td style="width: 30px; text-align: center;">:</td>
@@ -1446,19 +1446,19 @@ document.addEventListener('DOMContentLoaded', () => {
                         </table>
                     </div>
                     
-                    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 80px;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 30px;">
                         <div style="background: #f8fafc; padding: 20px 30px; border-radius: 12px; border: 2px dashed #94a3b8;">
                             <span style="color: #64748b; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 8px;">Sisa Tagihan</span>
                             <span style="font-size: 1.6rem; font-weight: 800; color: #ef4444;">Rp ...................................</span>
                         </div>
                         <div style="text-align: center; width: 300px;">
-                            <p style="color: #334155; margin-bottom: 100px; font-size: 1.1rem;">................., ........................... ${new Date().getFullYear()}</p>
+                            <p style="color: #334155; margin-bottom: 40px; font-size: 1.1rem;">................., ........................... ${new Date().getFullYear()}</p>
                             <div style="border-bottom: 2px solid #1e293b; margin-bottom: 8px;"></div>
                             <p style="color: #64748b; font-size: 1rem; font-weight: 500;">Tanda Tangan Penerima</p>
                         </div>
                     </div>
                     
-                    <div style="text-align: center; color: #94a3b8; font-size: 1rem; border-top: 1px solid #e2e8f0; padding-top: 30px; margin-top: 60px;">
+                    <div style="text-align: center; color: #94a3b8; font-size: 1rem; border-top: 1px solid #e2e8f0; padding-top: 10px; margin-top: 20px;">
                         <p>${settings.receipt_footer || 'Terima kasih atas kepercayaannya menggunakan jasa kami.'}</p>
                     </div>
                 </div>
@@ -1552,7 +1552,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         
                         <div style="flex: 1; text-align: center; display: flex; flex-direction: column; justify-content: space-between;">
                             <div style="font-size: 0.75rem; color: #64748b;">Pelanggan,</div>
-                            <div style="margin-top: 30px; font-weight: bold; font-size: 0.85rem; border-bottom: 1px solid #000; display: inline-block; padding: 0 10px;">( .................................... )</div>
+                            <div style="margin-top: 30px; font-weight: bold; font-size: 0.85rem; border-bottom: 1px solid #000; display: inline-block; padding: 0 10px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
                         </div>
                     </div>
                 </div>
