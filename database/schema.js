@@ -123,6 +123,12 @@ CREATE TABLE IF NOT EXISTS settings (
     value TEXT,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE INDEX IF NOT EXISTS idx_devices_customer ON devices(customer_id);
+CREATE INDEX IF NOT EXISTS idx_service_orders_customer ON service_orders(customer_id);
+CREATE INDEX IF NOT EXISTS idx_service_orders_device ON service_orders(device_id);
+CREATE INDEX IF NOT EXISTS idx_service_items_order ON service_items(service_order_id);
+CREATE INDEX IF NOT EXISTS idx_payments_order ON payments(service_order_id);
 `;
 
 const insertDefaultSettings = `
