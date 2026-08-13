@@ -1330,36 +1330,65 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             
             const html = `
-                <div class="print-header">
-                    <h2>${settings.business_name || 'NUNOX SERVIS'}</h2>
-                    <div>${settings.address || ''}</div>
-                    <div>Telp/WA: ${settings.whatsapp || settings.phone || ''}</div>
-                </div>
-                
-                <h3 style="text-align:center; margin: 20px 0; border-bottom: 2px solid #333; padding-bottom: 10px;">LAPORAN TRANSAKSI SERVIS</h3>
-                
-                <div style="margin-bottom:15px;">
-                    <div><strong>Periode:</strong> ${new Date(start).toLocaleDateString('id-ID')} s/d ${new Date(end).toLocaleDateString('id-ID')}</div>
-                    <div><strong>Total Transaksi Selesai:</strong> ${incomeData.transaction_count || 0} Tiket</div>
-                </div>
-                
-                <table class="print-table">
-                    <thead>
-                        <tr>
-                            <th>No. Tiket</th>
-                            <th>Tanggal Selesai</th>
-                            <th>Pelanggan</th>
-                            <th>Perangkat</th>
-                            <th style="text-align:right;">Total Biaya</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${itemsHtml}
-                    </tbody>
-                </table>
-                
-                <div class="print-total-section" style="margin-top: 20px;">
-                    <div>TOTAL PENDAPATAN: <span style="font-size: 1.2rem;">${formatRp(incomeData.total_income)}</span></div>
+                <style>
+                    .report-wrapper { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #1e293b; padding: 20px; }
+                    .report-header { text-align: center; padding-bottom: 20px; border-bottom: 2px solid #e2e8f0; margin-bottom: 30px; }
+                    .report-header h2 { margin: 0; font-size: 28px; color: #0f172a; text-transform: uppercase; letter-spacing: 2px; }
+                    .report-header p { margin: 5px 0 0 0; color: #64748b; font-size: 14px; }
+                    .report-title { background: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 30px; border: 1px solid #e2e8f0; text-align: center; }
+                    .report-title h3 { margin: 0 0 15px 0; color: #3b82f6; font-size: 20px; letter-spacing: 1px; }
+                    .report-summary { display: flex; justify-content: center; gap: 50px; font-size: 14px; }
+                    .summary-box { text-align: center; }
+                    .summary-box span { display: block; font-size: 12px; color: #64748b; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
+                    .summary-box strong { font-size: 16px; color: #0f172a; }
+                    .report-table { width: 100%; border-collapse: collapse; margin-bottom: 40px; font-size: 13px; }
+                    .report-table th { background-color: #3b82f6 !important; color: #ffffff !important; padding: 14px 12px; text-align: left; -webkit-print-color-adjust: exact; print-color-adjust: exact; border: 1px solid #2563eb; }
+                    .report-table td { padding: 12px; border: 1px solid #e2e8f0; color: #334155; }
+                    .report-table tr:nth-child(even) { background-color: #f8fafc !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                    .report-total { display: flex; justify-content: flex-end; align-items: center; padding: 20px; background-color: #f1f5f9 !important; border-radius: 8px; -webkit-print-color-adjust: exact; print-color-adjust: exact; border: 1px solid #e2e8f0; }
+                    .report-total-label { font-size: 15px; color: #64748b; margin-right: 20px; font-weight: 600; text-transform: uppercase; }
+                    .report-total-value { font-size: 26px; font-weight: bold; color: #10b981; }
+                </style>
+                <div class="report-wrapper">
+                    <div class="report-header">
+                        <h2>${settings.business_name || 'NUNOX SERVIS'}</h2>
+                        <p>${settings.address || 'Alamat Belum Diatur'}</p>
+                        <p>Telp/WA: ${settings.whatsapp || settings.phone || '-'}</p>
+                    </div>
+                    
+                    <div class="report-title">
+                        <h3>LAPORAN TRANSAKSI SERVIS</h3>
+                        <div class="report-summary">
+                            <div class="summary-box">
+                                <span>Periode</span>
+                                <strong>${new Date(start).toLocaleDateString('id-ID')} - ${new Date(end).toLocaleDateString('id-ID')}</strong>
+                            </div>
+                            <div class="summary-box">
+                                <span>Total Transaksi</span>
+                                <strong>${incomeData.transaction_count || 0} Tiket</strong>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <table class="report-table">
+                        <thead>
+                            <tr>
+                                <th>No. Tiket</th>
+                                <th>Tanggal Selesai</th>
+                                <th>Pelanggan</th>
+                                <th>Perangkat</th>
+                                <th style="text-align:right;">Total Biaya</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${itemsHtml}
+                        </tbody>
+                    </table>
+                    
+                    <div class="report-total">
+                        <div class="report-total-label">Total Pendapatan:</div>
+                        <div class="report-total-value">${formatRp(incomeData.total_income)}</div>
+                    </div>
                 </div>
             `;
             
