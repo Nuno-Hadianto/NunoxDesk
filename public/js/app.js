@@ -10,6 +10,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
+    // Override window.print for PDF Print Preview
+    window.print = async () => {
+        try {
+            await window.api.printPreview();
+        } catch (error) {
+            console.error("Print preview failed:", error);
+            alert("Gagal memuat Print Preview.");
+        }
+    };
+
     // Custom async confirm using SweetAlert2
     window.customConfirm = async (message) => {
         const result = await Swal.fire({

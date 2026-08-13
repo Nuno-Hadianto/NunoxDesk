@@ -1,5 +1,6 @@
-const { app, BrowserWindow, ipcMain, dialog } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, shell } = require('electron');
 const path = require('path');
+const os = require('os');
 const xlsx = require('xlsx');
 const db = require('../database/db');
 const dashboardController = require('../controllers/dashboardController');
@@ -141,6 +142,28 @@ function createWindow() {
       return true;
     }
     return false;
+  });
+
+  // Print Preview
+  ipcMain.handle('print-preview', async () => {
+    try {
+      const pdfPath = path.join(os.tmpdir(), `nunox_print_${Date.now()}.pdf`);
+      
+      const pdfData = await mainWindow.webContents.printToPDF({
+        printBackground: true,
+        pageSize: 'A4',
+        marginsType: 1 // Default margins
+      });
+      
+      fs.writeFileSync(pdfPath, pdfData);
+      
+      // Open in system default PDF viewer (provides the best print preview and printing options)
+      await shell.openPath(pdfPath);
+      return true;
+    } catch (error) {
+      console.error('Error generating print preview:', error);
+      throw error;
+    }
   });
 
   ipcMain.handle('restore-database', async () => {
