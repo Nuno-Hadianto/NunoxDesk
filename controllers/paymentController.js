@@ -25,25 +25,33 @@ function addPayment(data) {
     const { service_order_id, amount, payment_method, notes } = data;
     const payment_number = generatePaymentNumber();
     
-    const stmt = db.prepare(`
-        INSERT INTO payments (service_order_id, payment_number, amount, payment_method, notes) 
-        VALUES (?, ?, ?, ?, ?)
-    `);
-    const info = stmt.run(service_order_id, payment_number, amount, payment_method, notes);
+    const tx = db.transaction(() => {
+        const stmt = db.prepare(`
+            INSERT INTO payments (service_order_id, payment_number, amount, payment_method, notes) 
+            VALUES (?, ?, ?, ?, ?)
+        `);
+        const info = stmt.run(service_order_id, payment_number, amount, payment_method, notes);
+        
+        // Check payment status (Belum Bayar, DP, Lunas)
+        updateServicePaymentStatus(service_order_id);
+        
+        return info.lastInsertRowid;
+    });
     
-    // Check payment status (Belum Bayar, DP, Lunas)
-    updateServicePaymentStatus(service_order_id);
-    
-    return info.lastInsertRowid;
+    return tx();
 }
 
 function deletePayment(id) {
     const payment = db.prepare(`SELECT service_order_id FROM payments WHERE id = ?`).get(id);
     if (!payment) return false;
     
-    db.prepare(`DELETE FROM payments WHERE id = ?`).run(id);
-    updateServicePaymentStatus(payment.service_order_id);
-    return true;
+    const tx = db.transaction(() => {
+        db.prepare(`DELETE FROM payments WHERE id = ?`).run(id);
+        updateServicePaymentStatus(payment.service_order_id);
+        return true;
+    });
+    
+    return tx();
 }
 
 function updateServicePaymentStatus(serviceOrderId) {

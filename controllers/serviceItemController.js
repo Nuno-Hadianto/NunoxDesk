@@ -28,38 +28,46 @@ function addServiceItem(data) {
         }
     }
     
-    const stmt = db.prepare(`
-        INSERT INTO service_items (service_order_id, item_type, spare_part_id, description, quantity, price, cost_price, total) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    `);
+    const tx = db.transaction(() => {
+        const stmt = db.prepare(`
+            INSERT INTO service_items (service_order_id, item_type, spare_part_id, description, quantity, price, cost_price, total) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        `);
+        
+        const info = stmt.run(service_order_id, item_type, spare_part_id || null, description, quantity, price, cost_price, total);
+        
+        // Update stock if it's a spare part
+        if (item_type === 'Sparepart' && spare_part_id) {
+            db.prepare(`UPDATE spare_parts SET stock = stock - ? WHERE id = ?`).run(quantity, spare_part_id);
+        }
+        
+        // Recalculate total cost in service_orders
+        recalculateServiceTotal(service_order_id);
+        
+        return info.lastInsertRowid;
+    });
     
-    const info = stmt.run(service_order_id, item_type, spare_part_id || null, description, quantity, price, cost_price, total);
-    
-    // Update stock if it's a spare part
-    if (item_type === 'Sparepart' && spare_part_id) {
-        db.prepare(`UPDATE spare_parts SET stock = stock - ? WHERE id = ?`).run(quantity, spare_part_id);
-    }
-    
-    // Recalculate total cost in service_orders
-    recalculateServiceTotal(service_order_id);
-    
-    return info.lastInsertRowid;
+    return tx();
 }
 
 function deleteServiceItem(id) {
     const item = db.prepare(`SELECT * FROM service_items WHERE id = ?`).get(id);
     if (!item) return false;
     
-    const stmt = db.prepare(`DELETE FROM service_items WHERE id = ?`);
-    stmt.run(id);
+    const tx = db.transaction(() => {
+        const stmt = db.prepare(`DELETE FROM service_items WHERE id = ?`);
+        stmt.run(id);
+        
+        // Return stock if it was a spare part
+        if (item.item_type === 'Sparepart' && item.spare_part_id) {
+            db.prepare(`UPDATE spare_parts SET stock = stock + ? WHERE id = ?`).run(item.quantity, item.spare_part_id);
+        }
+        
+        recalculateServiceTotal(item.service_order_id);
+        return true;
+    });
     
-    // Return stock if it was a spare part
-    if (item.item_type === 'Sparepart' && item.spare_part_id) {
-        db.prepare(`UPDATE spare_parts SET stock = stock + ? WHERE id = ?`).run(item.quantity, item.spare_part_id);
-    }
-    
-    recalculateServiceTotal(item.service_order_id);
-    return true;
+    return tx();
 }
 
 function recalculateServiceTotal(serviceOrderId) {

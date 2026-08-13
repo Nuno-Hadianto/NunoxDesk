@@ -54,33 +54,41 @@ function addService(data) {
     const { customer_id, device_id, estimated_completion_date, technician, customer_complaint, estimated_cost } = data;
     const ticket_number = generateTicketNumber();
     
-    const stmt = db.prepare(`
-        INSERT INTO service_orders (ticket_number, customer_id, device_id, estimated_completion_date, technician, customer_complaint, estimated_cost, service_status) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, 'Diterima')
-    `);
+    const tx = db.transaction(() => {
+        const stmt = db.prepare(`
+            INSERT INTO service_orders (ticket_number, customer_id, device_id, estimated_completion_date, technician, customer_complaint, estimated_cost, service_status) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, 'Diterima')
+        `);
+        
+        const info = stmt.run(ticket_number, customer_id, device_id, estimated_completion_date, technician, customer_complaint, estimated_cost || 0);
+        
+        // Add history
+        const historyStmt = db.prepare(`INSERT INTO service_status_history (service_order_id, status, notes) VALUES (?, ?, ?)`);
+        historyStmt.run(info.lastInsertRowid, 'Diterima', 'Servis diterima');
+        
+        return info.lastInsertRowid;
+    });
     
-    const info = stmt.run(ticket_number, customer_id, device_id, estimated_completion_date, technician, customer_complaint, estimated_cost || 0);
-    
-    // Add history
-    const historyStmt = db.prepare(`INSERT INTO service_status_history (service_order_id, status, notes) VALUES (?, ?, ?)`);
-    historyStmt.run(info.lastInsertRowid, 'Diterima', 'Servis diterima');
-    
-    return info.lastInsertRowid;
+    return tx();
 }
 
 function updateServiceStatus(id, status, notes) {
-    const stmt = db.prepare(`UPDATE service_orders SET service_status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?`);
-    stmt.run(status, id);
+    const tx = db.transaction(() => {
+        const stmt = db.prepare(`UPDATE service_orders SET service_status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?`);
+        stmt.run(status, id);
+        
+        const historyStmt = db.prepare(`INSERT INTO service_status_history (service_order_id, status, notes) VALUES (?, ?, ?)`);
+        historyStmt.run(id, status, notes);
+        
+        if (status === 'Selesai') {
+            const finishStmt = db.prepare(`UPDATE service_orders SET completed_date = CURRENT_TIMESTAMP WHERE id = ?`);
+            finishStmt.run(id);
+        }
+        
+        return true;
+    });
     
-    const historyStmt = db.prepare(`INSERT INTO service_status_history (service_order_id, status, notes) VALUES (?, ?, ?)`);
-    historyStmt.run(id, status, notes);
-    
-    if (status === 'Selesai') {
-        const finishStmt = db.prepare(`UPDATE service_orders SET completed_date = CURRENT_TIMESTAMP WHERE id = ?`);
-        finishStmt.run(id);
-    }
-    
-    return true;
+    return tx();
 }
 
 function updateServiceDetails(id, data) {
