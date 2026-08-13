@@ -982,7 +982,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const html = `
                 <style>
-                    @page { size: A5 landscape; margin: 5mm; }
+                    @page { margin: 15mm; }
                     body { -webkit-print-color-adjust: exact; print-color-adjust: exact; margin: 0; padding: 0; }
                 </style>
                 <div style="width: 100%; max-height: 98vh; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #1e293b; line-height: 1.3; box-sizing: border-box;">
@@ -1102,7 +1102,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const html = `
                 <style>
-                    @page { size: A5 portrait; margin: 5mm; }
+                    @page { margin: 15mm; }
                     body { -webkit-print-color-adjust: exact; print-color-adjust: exact; margin: 0; padding: 0; }
                 </style>
                 <div style="width: 100%; max-height: 98vh; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #1e293b; line-height: 1.3; box-sizing: border-box;">
@@ -1479,7 +1479,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const html = `
                 <style>
-                    @page { size: A5 landscape; margin: 5mm; }
+                    @page { margin: 15mm; }
                     body { -webkit-print-color-adjust: exact; print-color-adjust: exact; margin: 0; padding: 0; }
                 </style>
                 <div style="width: 100%; max-height: 98vh; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #1e293b; line-height: 1.3; box-sizing: border-box;">
