@@ -994,7 +994,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <div style="font-size: 0.85rem; color: #475569; margin-top: 2px; font-weight: 600;">📞 ${settings.whatsapp || settings.phone || ''}</div>
                         </div>
                         <div style="text-align: right; flex: 1;">
-                            <h1 style="font-size: 1.6rem; color: #10b981; margin: 0 0 5px 0; text-transform: uppercase; letter-spacing: 2px; font-weight: 900;">TANDA TERIMA</h1>
+                            <h1 style="font-size: 1.6rem; color: #a855f7; margin: 0 0 5px 0; text-transform: uppercase; letter-spacing: 2px; font-weight: 900;">TANDA TERIMA</h1>
                             <div style="font-size: 0.9rem; color: #334155; margin-bottom: 2px;"><strong>No:</strong> ${service.ticket_number}</div>
                             <div style="font-size: 0.8rem; color: #64748b;">Tanggal: ${new Date(service.created_at).toLocaleDateString('id-ID')}</div>
                         </div>
@@ -1495,7 +1495,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <div style="font-size: 0.85rem; color: #475569; margin-top: 2px; font-weight: 600;">📞 ${settings.whatsapp || settings.phone || ''}</div>
                         </div>
                         <div style="text-align: right; flex: 1;">
-                            <h1 style="font-size: 1.6rem; color: #10b981; margin: 0 0 5px 0; text-transform: uppercase; letter-spacing: 2px; font-weight: 900;">TANDA TERIMA</h1>
+                            <h1 style="font-size: 1.6rem; color: #a855f7; margin: 0 0 5px 0; text-transform: uppercase; letter-spacing: 2px; font-weight: 900;">TANDA TERIMA</h1>
                             <div style="font-size: 0.9rem; color: #334155; margin-bottom: 2px;"><strong>No:</strong> ..............................</div>
                             <div style="font-size: 0.8rem; color: #64748b;">Tanggal: ..............................</div>
                         </div>
