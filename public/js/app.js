@@ -982,7 +982,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const html = `
                 <style>
-                    @page { margin: 15mm; }
+                    @page { margin: 5mm; }
                     body { -webkit-print-color-adjust: exact; print-color-adjust: exact; margin: 0; padding: 0; }
                 </style>
                 <div style="width: 100%; max-height: 98vh; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #1e293b; line-height: 1.3; box-sizing: border-box;">
@@ -1102,7 +1102,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const html = `
                 <style>
-                    @page { margin: 15mm; }
+                    @page { margin: 5mm; }
                     body { -webkit-print-color-adjust: exact; print-color-adjust: exact; margin: 0; padding: 0; }
                 </style>
                 <div style="width: 100%; max-height: 98vh; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #1e293b; line-height: 1.3; box-sizing: border-box;">
@@ -1406,60 +1406,64 @@ document.addEventListener('DOMContentLoaded', () => {
             const printArea = document.getElementById('print-area');
             
             const html = `
-                <div style="max-width: 800px; margin: 0 auto; background: #fff; padding: 15px 30px; border: 1px solid #e2e8f0; border-radius: 8px;">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 3px solid #4f46e5; padding-bottom: 10px; margin-bottom: 15px;">
+                <style>
+                    @page { margin: 5mm; }
+                    body { -webkit-print-color-adjust: exact; print-color-adjust: exact; margin: 0; padding: 0; }
+                </style>
+                <div style="max-width: 100%; margin: 0; background: #fff; padding: 5px 10px; box-sizing: border-box;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #4f46e5; padding-bottom: 8px; margin-bottom: 12px;">
                         <div>
-                            <h2 style="font-size: 2.2rem; color: #1e293b; margin-bottom: 10px; font-weight: 800;">${settings.business_name || 'NUNOX SERVIS'}</h2>
-                            <div style="color: #475569; font-size: 1rem; max-width: 320px; line-height: 1.5;">${settings.address || ''}</div>
-                            <div style="color: #475569; font-size: 1rem; margin-top: 8px; font-weight: 500;">📞 Telp/WA: ${settings.whatsapp || settings.phone || ''}</div>
+                            <h2 style="font-size: 1.4rem; color: #1e293b; margin: 0 0 5px 0; font-weight: 800;">${settings.business_name || 'NUNOX SERVIS'}</h2>
+                            <div style="color: #475569; font-size: 0.85rem; max-width: 320px; line-height: 1.4;">${settings.address || ''}</div>
+                            <div style="color: #475569; font-size: 0.85rem; margin-top: 4px; font-weight: 600;">📞 Telp/WA: ${settings.whatsapp || settings.phone || ''}</div>
                         </div>
                         <div style="text-align: right;">
-                            <h1 style="font-size: 2.3rem; color: #4f46e5; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 3px; font-weight: 900;">KWITANSI</h1>
-                            <div style="font-size: 1.1rem; color: #334155;"><strong>No:</strong> ........................................</div>
+                            <h1 style="font-size: 1.6rem; color: #4f46e5; margin: 0 0 10px 0; text-transform: uppercase; letter-spacing: 2px; font-weight: 900;">KWITANSI</h1>
+                            <div style="font-size: 0.95rem; color: #334155;"><strong>No:</strong> ....................................</div>
                         </div>
                     </div>
                     
-                    <div style="margin-bottom: 15px; margin-top: 15px;">
-                        <table style="width: 100%; font-size: 1.25rem; line-height: 2;">
+                    <div style="margin-bottom: 15px;">
+                        <table style="width: 100%; font-size: 0.95rem; line-height: 2;">
                             <tr>
-                                <td style="width: 250px; color: #475569; font-weight: 600;">Telah terima dari</td>
-                                <td style="width: 30px; text-align: center;">:</td>
-                                <td style="border-bottom: 2px solid #cbd5e1;"></td>
+                                <td style="width: 150px; color: #475569; font-weight: 600;">Telah terima dari</td>
+                                <td style="width: 15px; text-align: center;">:</td>
+                                <td style="border-bottom: 1px solid #cbd5e1;"></td>
                             </tr>
                             <tr>
                                 <td style="color: #475569; font-weight: 600;">Uang Sejumlah</td>
                                 <td style="text-align: center;">:</td>
-                                <td style="border-bottom: 2px solid #cbd5e1; background: #f8fafc; position: relative;">
-                                    <span style="position: absolute; left: 15px; font-weight: 800; color: #4f46e5; font-size: 1.5rem; top: 50%; transform: translateY(-50%);">Rp</span>
+                                <td style="border-bottom: 1px solid #cbd5e1; background: #f8fafc; position: relative;">
+                                    <span style="position: absolute; left: 10px; font-weight: 800; color: #4f46e5; font-size: 1.1rem; top: 50%; transform: translateY(-50%);">Rp</span>
                                 </td>
                             </tr>
                             <tr>
-                                <td style="vertical-align: top; color: #475569; font-weight: 600; padding-top: 20px;">Untuk Pembayaran</td>
-                                <td style="vertical-align: top; text-align: center; padding-top: 20px;">:</td>
-                                <td style="border-bottom: 2px solid #cbd5e1; padding-top: 20px;"></td>
+                                <td style="vertical-align: top; color: #475569; font-weight: 600; padding-top: 10px;">Untuk Pembayaran</td>
+                                <td style="vertical-align: top; text-align: center; padding-top: 10px;">:</td>
+                                <td style="border-bottom: 1px solid #cbd5e1; padding-top: 10px;"></td>
                             </tr>
                             <tr>
                                 <td></td>
                                 <td></td>
-                                <td style="border-bottom: 2px solid #cbd5e1;"></td>
+                                <td style="border-bottom: 1px solid #cbd5e1;"></td>
                             </tr>
                         </table>
                     </div>
                     
-                    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 30px;">
-                        <div style="background: #f8fafc; padding: 20px 30px; border-radius: 12px; border: 2px dashed #94a3b8;">
-                            <span style="color: #64748b; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 8px;">Sisa Tagihan</span>
-                            <span style="font-size: 1.6rem; font-weight: 800; color: #ef4444;">Rp ...................................</span>
+                    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 20px;">
+                        <div style="background: #f8fafc; padding: 12px 20px; border-radius: 8px; border: 1px dashed #94a3b8;">
+                            <span style="color: #64748b; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 5px;">Sisa Tagihan</span>
+                            <span style="font-size: 1.2rem; font-weight: 800; color: #ef4444;">Rp .................................</span>
                         </div>
-                        <div style="text-align: center; width: 300px;">
-                            <p style="color: #334155; margin-bottom: 40px; font-size: 1.1rem;">................., ........................... ${new Date().getFullYear()}</p>
-                            <div style="border-bottom: 2px solid #1e293b; margin-bottom: 8px;"></div>
-                            <p style="color: #64748b; font-size: 1rem; font-weight: 500;">Tanda Tangan Penerima</p>
+                        <div style="text-align: center; width: 250px;">
+                            <p style="color: #334155; margin-bottom: 30px; font-size: 0.9rem;">................., ......................... ${new Date().getFullYear()}</p>
+                            <div style="border-bottom: 1px solid #1e293b; margin-bottom: 5px;"></div>
+                            <p style="color: #64748b; font-size: 0.85rem; font-weight: 500; margin: 0;">Tanda Tangan Penerima</p>
                         </div>
                     </div>
                     
-                    <div style="text-align: center; color: #94a3b8; font-size: 1rem; border-top: 1px solid #e2e8f0; padding-top: 10px; margin-top: 20px;">
-                        <p>${settings.receipt_footer || 'Terima kasih atas kepercayaannya menggunakan jasa kami.'}</p>
+                    <div style="text-align: center; color: #94a3b8; font-size: 0.8rem; border-top: 1px solid #e2e8f0; padding-top: 10px; margin-top: 15px;">
+                        <p style="margin: 0;">${settings.receipt_footer || 'Terima kasih atas kepercayaannya menggunakan jasa kami.'}</p>
                     </div>
                 </div>
             `;
@@ -1479,7 +1483,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const html = `
                 <style>
-                    @page { margin: 15mm; }
+                    @page { margin: 5mm; }
                     body { -webkit-print-color-adjust: exact; print-color-adjust: exact; margin: 0; padding: 0; }
                 </style>
                 <div style="width: 100%; max-height: 98vh; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #1e293b; line-height: 1.3; box-sizing: border-box;">
