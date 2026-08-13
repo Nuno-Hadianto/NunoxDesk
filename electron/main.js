@@ -129,7 +129,7 @@ function createWindow() {
 
   // Backup & Restore
   ipcMain.handle('backup-database', async () => {
-    const dbPath = path.join(app.getPath('userData'), 'nunox_servis.db');
+    const dbPath = path.join(app.getPath('userData'), 'database', 'nunox_servis.db');
     const defaultPath = `nuNox_servis_Backup_${new Date().toISOString().split('T')[0]}.db`;
     const { filePath } = await dialog.showSaveDialog({
       title: 'Backup Database',
@@ -175,7 +175,7 @@ function createWindow() {
     });
     
     if (filePaths && filePaths.length > 0) {
-      const dbPath = path.join(app.getPath('userData'), 'nunox_servis.db');
+      const dbPath = path.join(app.getPath('userData'), 'database', 'nunox_servis.db');
       fs.copyFileSync(filePaths[0], dbPath);
       // App needs restart to load new db, we'll return true
       app.relaunch();
