@@ -46,6 +46,15 @@ document.addEventListener('DOMContentLoaded', () => {
     updateTime();
     setInterval(updateTime, 60000);
 
+    // Debounce Utility Function
+    function debounce(func, wait) {
+        let timeout;
+        return function(...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), wait);
+        };
+    }
+
     // Simple routing / navigation highlighting for now
     const navLinks = document.querySelectorAll('.sidebar-nav li a');
     navLinks.forEach(link => {
@@ -179,9 +188,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Search Customers
-    document.getElementById('search-customer').addEventListener('input', (e) => {
+    document.getElementById('search-customer').addEventListener('input', debounce((e) => {
         loadCustomers(e.target.value);
-    });
+    }, 300));
 
     // Save Customer
     customerForm.addEventListener('submit', async (e) => {
@@ -301,9 +310,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    document.getElementById('search-device').addEventListener('input', (e) => {
+    document.getElementById('search-device').addEventListener('input', debounce((e) => {
         loadDevices(e.target.value);
-    });
+    }, 300));
 
     deviceForm.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -457,9 +466,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    document.getElementById('search-service').addEventListener('input', (e) => {
+    document.getElementById('search-service').addEventListener('input', debounce((e) => {
         loadServices(e.target.value);
-    });
+    }, 300));
 
     serviceForm.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -787,9 +796,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    document.getElementById('search-part').addEventListener('input', (e) => {
+    document.getElementById('search-part').addEventListener('input', debounce((e) => {
         loadParts(e.target.value);
-    });
+    }, 300));
 
     partForm.addEventListener('submit', async (e) => {
         e.preventDefault();
