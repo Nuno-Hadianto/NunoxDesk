@@ -241,6 +241,29 @@ app.whenReady().then(() => {
 });
 
 app.on('window-all-closed', () => {
+  // Auto Backup before quitting
+  try {
+    const fs = require('fs');
+    const path = require('path');
+    
+    const dbPath = path.join(app.getPath('userData'), 'database', 'nunox_servis.db');
+    const backupDir = path.join(app.getPath('documents'), 'nuNox_servis_Backups');
+    
+    if (!fs.existsSync(backupDir)) {
+      fs.mkdirSync(backupDir, { recursive: true });
+    }
+    
+    const today = new Date().toISOString().split('T')[0];
+    const backupPath = path.join(backupDir, `AutoBackup_${today}.db`);
+    
+    if (fs.existsSync(dbPath)) {
+      fs.copyFileSync(dbPath, backupPath);
+      console.log('Auto backup saved to:', backupPath);
+    }
+  } catch (error) {
+    console.error('Failed to perform auto backup:', error);
+  }
+
   if (process.platform !== 'darwin') {
     app.quit();
   }
