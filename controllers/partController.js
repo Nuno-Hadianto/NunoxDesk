@@ -44,6 +44,12 @@ function updatePartStock(id, change) {
 }
 
 function deletePart(id) {
+    const checkStmt = db.prepare(`SELECT COUNT(*) as count FROM service_items WHERE spare_part_id = ?`);
+    const result = checkStmt.get(id);
+    if (result.count > 0) {
+        throw new Error("Sparepart tidak bisa dihapus karena sudah tercatat dalam riwayat rincian biaya servis.");
+    }
+    
     const stmt = db.prepare(`DELETE FROM spare_parts WHERE id = ?`);
     stmt.run(id);
     return true;
