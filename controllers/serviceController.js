@@ -103,9 +103,23 @@ function updateServiceDetails(id, data) {
 }
 
 function deleteService(id) {
-    const stmt = db.prepare(`DELETE FROM service_orders WHERE id = ?`);
-    stmt.run(id);
-    return true;
+    const tx = db.transaction(() => {
+        // Ambil semua item sparepart untuk dikembalikan stoknya sebelum order dihapus
+        const items = db.prepare(`SELECT * FROM service_items WHERE service_order_id = ? AND item_type = 'Sparepart' AND spare_part_id IS NOT NULL`).all(id);
+        
+        const updateStock = db.prepare(`UPDATE spare_parts SET stock = stock + ? WHERE id = ?`);
+        for (const item of items) {
+            updateStock.run(item.quantity, item.spare_part_id);
+        }
+        
+        // Hapus service_order (service_items akan terhapus otomatis karena ON DELETE CASCADE)
+        const stmt = db.prepare(`DELETE FROM service_orders WHERE id = ?`);
+        stmt.run(id);
+        
+        return true;
+    });
+    
+    return tx();
 }
 
 module.exports = {

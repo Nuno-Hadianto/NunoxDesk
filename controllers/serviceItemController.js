@@ -22,8 +22,11 @@ function addServiceItem(data) {
 
     let cost_price = 0;
     if (item_type === 'Sparepart' && spare_part_id) {
-        const part = db.prepare(`SELECT buy_price FROM spare_parts WHERE id = ?`).get(spare_part_id);
+        const part = db.prepare(`SELECT stock, buy_price FROM spare_parts WHERE id = ?`).get(spare_part_id);
         if (part) {
+            if (part.stock < quantity) {
+                throw new Error(`Stok sparepart tidak mencukupi (Tersisa: ${part.stock})`);
+            }
             cost_price = part.buy_price * quantity;
         }
     }
