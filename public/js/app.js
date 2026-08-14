@@ -191,19 +191,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 const stats = await window.api.getDashboardStats();
                 
                 const statValues = document.querySelectorAll('#view-dashboard .dashboard-stats .stat-value');
-                if (statValues.length >= 4) {
+                if (statValues.length >= 5) {
                     statValues[0].textContent = stats.todayServices;
                     statValues[1].textContent = stats.inProgress;
                     statValues[2].textContent = stats.completed;
                     
                     // Format currency
-                    const formattedIncome = new Intl.NumberFormat('id-ID', {
+                    const formatRp = (val) => new Intl.NumberFormat('id-ID', {
                         style: 'currency',
                         currency: 'IDR',
                         minimumFractionDigits: 0
-                    }).format(stats.incomeMonth);
+                    }).format(val || 0);
                     
-                    statValues[3].textContent = formattedIncome;
+                    statValues[3].textContent = formatRp(stats.incomeMonth);
+                    statValues[4].textContent = formatRp(stats.labaBersih);
                 }
 
                 if (stats.chartData && window.Chart) {
@@ -900,6 +901,133 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const text = `Halo Bpk/Ibu ${customerName}, perihal perbaikan perangkat ${device}, nomor tiket ${ticket} saat ini berstatus ${status}. Terima kasih.`;
         window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, '_blank');
+    });
+
+    // Export PDF Invoice
+    document.getElementById('btn-export-pdf-invoice').addEventListener('click', async () => {
+        const id = document.getElementById('btn-update-status').dataset.id;
+        if (!id) return;
+        
+        try {
+            const settings = await window.api.getSettings();
+            const service = await window.api.getService(id);
+            const items = await window.api.getServiceItems(id);
+            const payments = await window.api.getPayments(id);
+            
+            const formatRp = (val) => new Intl.NumberFormat('id-ID', {
+                style: 'currency', currency: 'IDR', minimumFractionDigits: 0
+            }).format(val);
+            
+            let itemsHtml = '';
+            items.forEach(i => {
+                let desc = i.description;
+                if (i.item_type === 'Sparepart') desc = i.part_name || desc;
+                itemsHtml += `
+                    <tr style="border-bottom: 1px dashed #cbd5e1;">
+                        <td style="padding: 8px 4px; color: #334155;">
+                            <div style="font-weight: 600; font-size: 0.85rem; margin-bottom: 2px;">${desc}</div>
+                            <div style="font-size: 0.75rem; color: #64748b;">${i.item_type} - Jumlah: ${i.quantity} x ${formatRp(i.price)}</div>
+                        </td>
+                        <td style="padding: 8px 4px; text-align: right; font-weight: bold; font-size: 0.9rem; color: #1e293b;">${formatRp(i.total)}</td>
+                    </tr>
+                `;
+            });
+            
+            let totalPaid = payments.reduce((acc, p) => acc + p.amount, 0);
+            let remaining = service.total_cost - totalPaid;
+            
+            const html = \`
+                <style>
+                    @page { margin: 5mm; }
+                    body { -webkit-print-color-adjust: exact; print-color-adjust: exact; margin: 0; padding: 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+                </style>
+                <div style="width: 100%; box-sizing: border-box;">
+                    <!-- Header -->
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #4f46e5; padding-bottom: 8px; margin-bottom: 10px;">
+                        <div style="flex: 1;">
+                            <h2 style="font-size: 1.5rem; margin: 0 0 2px 0; font-weight: 800; color: #0f172a;">\${settings.business_name || 'NUNOX SERVIS'}</h2>
+                            <div style="font-size: 0.85rem; color: #475569;">\${settings.address || ''}</div>
+                            <div style="font-size: 0.85rem; color: #475569; margin-top: 2px; font-weight: 600;">📱 \${settings.whatsapp || settings.phone || ''}</div>
+                        </div>
+                        <div style="text-align: right; flex: 1;">
+                            <h1 style="font-size: 1.8rem; color: #4f46e5; margin: 0 0 5px 0; text-transform: uppercase; letter-spacing: 2px; font-weight: 900;">INVOICE</h1>
+                            <div style="font-size: 0.9rem; color: #334155; margin-bottom: 2px;"><strong>No:</strong> \${service.ticket_number}</div>
+                            <div style="font-size: 0.8rem; color: #64748b;">Tanggal: \${new Date().toLocaleDateString('id-ID')}</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Customer Info -->
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 15px; background: #f8fafc; padding: 8px; border-radius: 6px; border: 1px solid #e2e8f0;">
+                        <div style="flex: 1;">
+                            <div style="font-size: 0.75rem; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px;">Tagihan Kepada</div>
+                            <div style="font-weight: bold; color: #0f172a; font-size: 0.95rem;">\${service.customer_name}</div>
+                            <div style="font-size: 0.85rem; color: #475569;">\${service.customer_phone || '-'}</div>
+                        </div>
+                        <div style="flex: 1; text-align: right;">
+                            <div style="font-size: 0.75rem; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px;">Perangkat</div>
+                            <div style="font-weight: bold; color: #0f172a; font-size: 0.95rem;">\${service.device_type} \${service.brand || ''}</div>
+                            <div style="font-size: 0.85rem; color: #475569;">\${service.model || ''}</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Items -->
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px;">
+                        <thead>
+                            <tr style="border-bottom: 2px solid #e2e8f0;">
+                                <th style="text-align: left; padding: 6px 4px; font-size: 0.8rem; color: #64748b; text-transform: uppercase;">Deskripsi</th>
+                                <th style="text-align: right; padding: 6px 4px; font-size: 0.8rem; color: #64748b; text-transform: uppercase;">Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            \${itemsHtml}
+                        </tbody>
+                    </table>
+                    
+                    <!-- Totals -->
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                        <div style="flex: 1; padding-right: 20px;">
+                            <div style="font-size: 0.75rem; color: #64748b; margin-bottom: 3px;">Catatan:</div>
+                            <div style="font-size: 0.8rem; color: #475569; background: #f8fafc; padding: 6px; border-radius: 4px; border: 1px dashed #cbd5e1;">
+                                \${settings.receipt_footer || 'Terima kasih telah menggunakan jasa kami.'}
+                            </div>
+                        </div>
+                        <div style="flex: 1;">
+                            <table style="width: 100%; font-size: 0.9rem;">
+                                <tr>
+                                    <td style="padding: 4px 0; color: #64748b;">Total Biaya:</td>
+                                    <td style="text-align: right; padding: 4px 0; font-weight: bold; color: #1e293b;">\${formatRp(service.total_cost)}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 4px 0; color: #64748b;">Telah Dibayar:</td>
+                                    <td style="text-align: right; padding: 4px 0; font-weight: bold; color: #10b981;">\${formatRp(totalPaid)}</td>
+                                </tr>
+                                <tr style="border-top: 2px solid #e2e8f0;">
+                                    <td style="padding: 6px 0 0 0; color: #0f172a; font-weight: bold; font-size: 1rem;">Sisa Tagihan:</td>
+                                    <td style="text-align: right; padding: 6px 0 0 0; font-weight: bold; font-size: 1.1rem; color: \${remaining > 0 ? '#ef4444' : '#10b981'};">\${formatRp(Math.max(0, remaining))}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Footer -->
+                    <div style="text-align: center; margin-top: 10px; font-size: 0.75rem; color: #94a3b8; border-top: 1px solid #e2e8f0; padding-top: 10px;">
+                        Dicetak pada: \${new Date().toLocaleString('id-ID')}
+                    </div>
+                </div>
+            \`;
+            
+            const filename = \`Invoice_\${service.ticket_number}_\${service.customer_name.replace(/\\s+/g, '_')}.pdf\`;
+            const result = await window.api.exportPdf({ html, filename });
+            
+            if (result.success) {
+                window.toast('PDF berhasil disimpan!');
+            } else if (!result.canceled) {
+                alert("Gagal menyimpan PDF: " + result.error);
+            }
+        } catch (error) {
+            console.error("Failed to export pdf:", error);
+            alert("Terjadi kesalahan saat memproses PDF.");
+        }
     });
 
     // ==========================================

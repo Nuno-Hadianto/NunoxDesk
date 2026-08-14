@@ -59,6 +59,7 @@ contextBridge.exposeInMainWorld('api', {
 
   // Export
   exportExcel: (data) => ipcRenderer.invoke('export-excel', data),
+  exportPdf: (data) => ipcRenderer.invoke('export-pdf', data),
   
   // Print Preview
   printPreview: (options) => ipcRenderer.invoke('print-preview', options)

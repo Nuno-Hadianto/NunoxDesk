@@ -119,6 +119,40 @@ function createWindow() {
     }
   });
 
+  ipcMain.handle('export-pdf', async (event, { html, filename }) => {
+    try {
+      const { canceled, filePath } = await dialog.showSaveDialog({
+        title: 'Simpan PDF',
+        defaultPath: filename || 'Invoice.pdf',
+        filters: [{ name: 'PDF Files', extensions: ['pdf'] }]
+      });
+
+      if (canceled || !filePath) return { success: false, canceled: true };
+
+      // Buat window tersembunyi untuk merender HTML ke PDF
+      const pdfWindow = new BrowserWindow({ show: false, webPreferences: { nodeIntegration: false } });
+      
+      // Load HTML (menggunakan data URI)
+      await pdfWindow.loadURL(`data:text/html;charset=utf-8,${encodeURIComponent(html)}`);
+      
+      // Beri sedikit waktu jika ada font/gambar eksternal yang perlu diload
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      const pdfData = await pdfWindow.webContents.printToPDF({
+        printBackground: true,
+        pageSize: 'A4'
+      });
+      
+      fs.writeFileSync(filePath, pdfData);
+      pdfWindow.close();
+      
+      return { success: true, filePath };
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      return { success: false, error: error.message };
+    }
+  });
+
   // Settings
   ipcMain.handle('get-settings', () => settingsController.getSettings());
   ipcMain.handle('update-settings', (event, data) => settingsController.updateSettings(data));

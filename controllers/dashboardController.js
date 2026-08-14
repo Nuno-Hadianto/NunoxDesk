@@ -20,6 +20,18 @@ function getDashboardStats() {
     const incomeMonthQuery = db.prepare(`SELECT SUM(amount) as total FROM payments WHERE strftime('%Y-%m', payment_date) = ?`);
     const incomeMonth = incomeMonthQuery.get(currentMonth).total || 0;
 
+    // HPP (Modal Sparepart) untuk transaksi yang dibayar bulan ini
+    const hppMonthQuery = db.prepare(`
+        SELECT SUM(cost_price) as hpp 
+        FROM service_items 
+        WHERE service_order_id IN (
+            SELECT DISTINCT service_order_id FROM payments 
+            WHERE strftime('%Y-%m', payment_date) = ?
+        )
+    `);
+    const hppMonth = hppMonthQuery.get(currentMonth).hpp || 0;
+    const labaBersih = incomeMonth - hppMonth;
+
     // Chart Data (Income last 6 months)
     const chartQuery = db.prepare(`
         SELECT strftime('%Y-%m', payment_date) as month, SUM(amount) as total 
@@ -48,6 +60,7 @@ function getDashboardStats() {
         inProgress,
         completed,
         incomeMonth,
+        labaBersih,
         chartData: { labels: chartLabels, values: chartValues }
     };
 }
