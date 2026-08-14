@@ -4,7 +4,7 @@ contextBridge.exposeInMainWorld('api', {
   getDashboardStats: () => ipcRenderer.invoke('get-dashboard-stats'),
   
   // Customers
-  getCustomers: (searchQuery) => ipcRenderer.invoke('get-customers', searchQuery),
+  getCustomers: (searchQuery, page, limit) => ipcRenderer.invoke('get-customers', searchQuery, page, limit),
   getCustomer: (id) => ipcRenderer.invoke('get-customer', id),
   addCustomer: (data) => ipcRenderer.invoke('add-customer', data),
   updateCustomer: (id, data) => ipcRenderer.invoke('update-customer', id, data),
@@ -19,7 +19,7 @@ contextBridge.exposeInMainWorld('api', {
   deleteDevice: (id) => ipcRenderer.invoke('delete-device', id),
 
   // Services
-  getServices: (searchQuery) => ipcRenderer.invoke('get-services', searchQuery),
+  getServices: (searchQuery, page, limit) => ipcRenderer.invoke('get-services', searchQuery, page, limit),
   getService: (id) => ipcRenderer.invoke('get-service', id),
   getServiceHistory: (id) => ipcRenderer.invoke('get-service-history', id),
   addService: (data) => ipcRenderer.invoke('add-service', data),

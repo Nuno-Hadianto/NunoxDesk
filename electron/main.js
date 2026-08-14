@@ -41,7 +41,7 @@ function createWindow() {
   });
 
   // Customer IPC handlers
-  ipcMain.handle('get-customers', (event, searchQuery) => customerController.getCustomers(searchQuery));
+  ipcMain.handle('get-customers', (event, searchQuery, page, limit) => customerController.getCustomers(searchQuery, page, limit));
   ipcMain.handle('get-customer', (event, id) => customerController.getCustomerById(id));
   ipcMain.handle('add-customer', (event, data) => customerController.addCustomer(data));
   ipcMain.handle('update-customer', (event, id, data) => customerController.updateCustomer(id, data));
@@ -56,7 +56,7 @@ function createWindow() {
   ipcMain.handle('delete-device', (event, id) => deviceController.deleteDevice(id));
 
   // Service IPC handlers
-  ipcMain.handle('get-services', (event, searchQuery) => serviceController.getServices(searchQuery));
+  ipcMain.handle('get-services', (event, searchQuery, page, limit) => serviceController.getServices(searchQuery, page, limit));
   ipcMain.handle('get-service', (event, id) => serviceController.getServiceById(id));
   ipcMain.handle('get-service-history', (event, id) => serviceController.getServiceStatusHistory(id));
   ipcMain.handle('add-service', (event, data) => serviceController.addService(data));

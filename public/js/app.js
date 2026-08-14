@@ -2,12 +2,18 @@ document.addEventListener('DOMContentLoaded', () => {
     // Override alert to use SweetAlert2
     window.alert = (message) => {
         const isError = message.toLowerCase().includes('gagal') || message.toLowerCase().includes('error') || message.toLowerCase().includes('kesalahan');
-        Swal.fire({
-            text: message,
-            icon: isError ? 'error' : (message.toLowerCase().includes('berhasil') ? 'success' : 'info'),
-            confirmButtonText: 'Tutup',
-            confirmButtonColor: '#4f46e5'
-        });
+        const isSuccess = message.toLowerCase().includes('berhasil');
+        
+        if (isSuccess) {
+            window.toast(message, 'success');
+        } else {
+            Swal.fire({
+                text: message,
+                icon: isError ? 'error' : 'info',
+                confirmButtonText: 'Tutup',
+                confirmButtonColor: '#4f46e5'
+            });
+        }
     };
 
     // Override window.print for PDF Print Preview
@@ -46,6 +52,19 @@ document.addEventListener('DOMContentLoaded', () => {
     updateTime();
     setInterval(updateTime, 60000);
 
+    // Toast Utility Function
+    window.toast = (message, type = 'success') => {
+        Swal.fire({
+            text: message,
+            icon: type,
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 2000,
+            timerProgressBar: true
+        });
+    };
+
     // Debounce Utility Function
     function debounce(func, wait) {
         let timeout;
@@ -53,6 +72,38 @@ document.addEventListener('DOMContentLoaded', () => {
             clearTimeout(timeout);
             timeout = setTimeout(() => func.apply(this, args), wait);
         };
+    }
+
+    // Render Pagination Utility
+    function renderPagination(containerId, total, page, limit, onPageClick) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        container.innerHTML = '';
+        
+        const totalPages = Math.ceil(total / limit) || 1;
+        if (totalPages <= 1 && total === 0) return;
+        if (totalPages <= 1) return;
+        
+        const prevBtn = document.createElement('button');
+        prevBtn.className = 'btn btn-secondary btn-sm';
+        prevBtn.textContent = 'Sebelumnya';
+        prevBtn.disabled = page <= 1;
+        prevBtn.onclick = () => onPageClick(page - 1);
+        
+        const info = document.createElement('span');
+        info.textContent = `Halaman ${page} dari ${totalPages}`;
+        info.style.fontSize = '0.85rem';
+        info.style.color = '#475569';
+        
+        const nextBtn = document.createElement('button');
+        nextBtn.className = 'btn btn-secondary btn-sm';
+        nextBtn.textContent = 'Selanjutnya';
+        nextBtn.disabled = page >= totalPages;
+        nextBtn.onclick = () => onPageClick(page + 1);
+        
+        container.appendChild(prevBtn);
+        container.appendChild(info);
+        container.appendChild(nextBtn);
     }
 
     // Simple routing / navigation highlighting for now
@@ -159,11 +210,16 @@ document.addEventListener('DOMContentLoaded', () => {
         customerModal.classList.add('show');
     });
 
+    let currentCustomerPage = 1;
+    const ITEMS_PER_PAGE = 50;
+
     // Load Customers
-    async function loadCustomers(searchQuery = '') {
+    async function loadCustomers(searchQuery = '', page = 1) {
         if (window.api && window.api.getCustomers) {
             try {
-                const customers = await window.api.getCustomers(searchQuery);
+                currentCustomerPage = page;
+                const result = await window.api.getCustomers(searchQuery, page, ITEMS_PER_PAGE);
+                const customers = result.data || [];
                 const tbody = document.getElementById('customer-list');
                 tbody.innerHTML = '';
                 
@@ -181,6 +237,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     `;
                     tbody.appendChild(tr);
                 });
+                renderPagination('customer-pagination', result.total, result.page, result.limit, (newPage) => {
+                    loadCustomers(document.getElementById('search-customer').value, newPage);
+                });
             } catch (error) {
                 console.error("Failed to load customers:", error);
             }
@@ -189,7 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Search Customers
     document.getElementById('search-customer').addEventListener('input', debounce((e) => {
-        loadCustomers(e.target.value);
+        loadCustomers(e.target.value, 1);
     }, 300));
 
     // Save Customer
@@ -210,7 +269,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 await window.api.addCustomer(data);
             }
             customerModal.classList.remove('show');
-            loadCustomers(document.getElementById('search-customer').value);
+            loadCustomers(document.getElementById('search-customer').value, currentCustomerPage);
+            window.toast("Data pelanggan berhasil disimpan!");
         } catch (error) {
             console.error("Error saving customer:", error);
             alert("Gagal menyimpan data pelanggan.");
@@ -431,10 +491,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    async function loadServices(searchQuery = '') {
+    let currentServicePage = 1;
+
+    async function loadServices(searchQuery = '', page = 1) {
         if (window.api && window.api.getServices) {
             try {
-                const services = await window.api.getServices(searchQuery);
+                currentServicePage = page;
+                const result = await window.api.getServices(searchQuery, page, ITEMS_PER_PAGE);
+                const services = result.data || [];
                 const tbody = document.getElementById('service-list');
                 tbody.innerHTML = '';
                 
@@ -460,6 +524,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     `;
                     tbody.appendChild(tr);
                 });
+                renderPagination('service-pagination', result.total, result.page, result.limit, (newPage) => {
+                    loadServices(document.getElementById('search-service').value, newPage);
+                });
             } catch (error) {
                 console.error("Failed to load services:", error);
             }
@@ -467,7 +534,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     document.getElementById('search-service').addEventListener('input', debounce((e) => {
-        loadServices(e.target.value);
+        loadServices(e.target.value, 1);
     }, 300));
 
     serviceForm.addEventListener('submit', async (e) => {

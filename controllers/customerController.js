@@ -1,12 +1,17 @@
 const db = require('../database/db');
 
-function getCustomers(searchQuery = '') {
+function getCustomers(searchQuery = '', page = 1, limit = 50) {
+    const offset = (page - 1) * limit;
+    let data, total;
     if (searchQuery) {
-        const stmt = db.prepare(`SELECT * FROM customers WHERE name LIKE ? OR phone LIKE ? ORDER BY name ASC`);
-        return stmt.all(`%${searchQuery}%`, `%${searchQuery}%`);
+        const queryStr = `%${searchQuery}%`;
+        data = db.prepare(`SELECT * FROM customers WHERE name LIKE ? OR phone LIKE ? ORDER BY name ASC LIMIT ? OFFSET ?`).all(queryStr, queryStr, limit, offset);
+        total = db.prepare(`SELECT COUNT(*) as count FROM customers WHERE name LIKE ? OR phone LIKE ?`).get(queryStr, queryStr).count;
+    } else {
+        data = db.prepare(`SELECT * FROM customers ORDER BY name ASC LIMIT ? OFFSET ?`).all(limit, offset);
+        total = db.prepare(`SELECT COUNT(*) as count FROM customers`).get().count;
     }
-    const stmt = db.prepare(`SELECT * FROM customers ORDER BY name ASC`);
-    return stmt.all();
+    return { data, total, page, limit };
 }
 
 function getCustomerById(id) {

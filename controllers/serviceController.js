@@ -16,20 +16,37 @@ function generateTicketNumber() {
     return `${prefix}${nextNum.toString().padStart(4, '0')}`;
 }
 
-function getServices(searchQuery = '') {
+function getServices(searchQuery = '', page = 1, limit = 50) {
+    const offset = (page - 1) * limit;
     let query = `
         SELECT so.*, c.name as customer_name, d.brand, d.model, d.device_type
         FROM service_orders so
         JOIN customers c ON so.customer_id = c.id
         JOIN devices d ON so.device_id = d.id
     `;
+    let countQuery = `
+        SELECT COUNT(*) as count
+        FROM service_orders so
+        JOIN customers c ON so.customer_id = c.id
+        JOIN devices d ON so.device_id = d.id
+    `;
+    
+    let data, total;
     if (searchQuery) {
-        query += ` WHERE so.ticket_number LIKE ? OR c.name LIKE ? OR d.brand LIKE ?`;
-        const stmt = db.prepare(query + ` ORDER BY so.id DESC`);
-        return stmt.all(`%${searchQuery}%`, `%${searchQuery}%`, `%${searchQuery}%`);
+        const whereClause = ` WHERE so.ticket_number LIKE ? OR c.name LIKE ? OR d.brand LIKE ?`;
+        query += whereClause + ` ORDER BY so.id DESC LIMIT ? OFFSET ?`;
+        countQuery += whereClause;
+        
+        const qStr = `%${searchQuery}%`;
+        data = db.prepare(query).all(qStr, qStr, qStr, limit, offset);
+        total = db.prepare(countQuery).get(qStr, qStr, qStr).count;
+    } else {
+        query += ` ORDER BY so.id DESC LIMIT ? OFFSET ?`;
+        data = db.prepare(query).all(limit, offset);
+        total = db.prepare(countQuery).get().count;
     }
-    const stmt = db.prepare(query + ` ORDER BY so.id DESC`);
-    return stmt.all();
+    
+    return { data, total, page, limit };
 }
 
 function getServiceById(id) {
