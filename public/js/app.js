@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+﻿document.addEventListener('DOMContentLoaded', () => {
     // Override alert to use SweetAlert2
     window.alert = (message) => {
         const isError = message.toLowerCase().includes('gagal') || message.toLowerCase().includes('error') || message.toLowerCase().includes('kesalahan');
@@ -48,17 +48,17 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (isDarkMode) {
             document.body.classList.add('dark-mode');
-            themeToggleBtn.textContent = '☀️ Light Mode';
+            themeToggleBtn.textContent = 'â˜€ï¸ Light Mode';
         }
         
         themeToggleBtn.addEventListener('click', () => {
             document.body.classList.toggle('dark-mode');
             if (document.body.classList.contains('dark-mode')) {
                 localStorage.setItem('theme', 'dark');
-                themeToggleBtn.textContent = '☀️ Light Mode';
+                themeToggleBtn.textContent = 'â˜€ï¸ Light Mode';
             } else {
                 localStorage.setItem('theme', 'light');
-                themeToggleBtn.textContent = '🌙 Dark Mode';
+                themeToggleBtn.textContent = 'ðŸŒ™ Dark Mode';
             }
             if (incomeChartInstance) {
                 loadDashboardStats();
@@ -936,7 +936,7 @@ document.addEventListener('DOMContentLoaded', () => {
             let totalPaid = payments.reduce((acc, p) => acc + p.amount, 0);
             let remaining = service.total_cost - totalPaid;
             
-            const html = \`
+            const html = `
                 <style>
                     @page { margin: 5mm; }
                     body { -webkit-print-color-adjust: exact; print-color-adjust: exact; margin: 0; padding: 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
@@ -945,14 +945,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     <!-- Header -->
                     <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #4f46e5; padding-bottom: 8px; margin-bottom: 10px;">
                         <div style="flex: 1;">
-                            <h2 style="font-size: 1.5rem; margin: 0 0 2px 0; font-weight: 800; color: #0f172a;">\${settings.business_name || 'NUNOX SERVIS'}</h2>
-                            <div style="font-size: 0.85rem; color: #475569;">\${settings.address || ''}</div>
-                            <div style="font-size: 0.85rem; color: #475569; margin-top: 2px; font-weight: 600;">📱 \${settings.whatsapp || settings.phone || ''}</div>
+                            <h2 style="font-size: 1.5rem; margin: 0 0 2px 0; font-weight: 800; color: #0f172a;">${settings.business_name || 'NUNOX SERVIS'}</h2>
+                            <div style="font-size: 0.85rem; color: #475569;">${settings.address || ''}</div>
+                            <div style="font-size: 0.85rem; color: #475569; margin-top: 2px; font-weight: 600;">ðŸ“± ${settings.whatsapp || settings.phone || ''}</div>
                         </div>
                         <div style="text-align: right; flex: 1;">
                             <h1 style="font-size: 1.8rem; color: #4f46e5; margin: 0 0 5px 0; text-transform: uppercase; letter-spacing: 2px; font-weight: 900;">INVOICE</h1>
-                            <div style="font-size: 0.9rem; color: #334155; margin-bottom: 2px;"><strong>No:</strong> \${service.ticket_number}</div>
-                            <div style="font-size: 0.8rem; color: #64748b;">Tanggal: \${new Date().toLocaleDateString('id-ID')}</div>
+                            <div style="font-size: 0.9rem; color: #334155; margin-bottom: 2px;"><strong>No:</strong> ${service.ticket_number}</div>
+                            <div style="font-size: 0.8rem; color: #64748b;">Tanggal: ${new Date().toLocaleDateString('id-ID')}</div>
                         </div>
                     </div>
                     
@@ -960,13 +960,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div style="display: flex; justify-content: space-between; margin-bottom: 15px; background: #f8fafc; padding: 8px; border-radius: 6px; border: 1px solid #e2e8f0;">
                         <div style="flex: 1;">
                             <div style="font-size: 0.75rem; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px;">Tagihan Kepada</div>
-                            <div style="font-weight: bold; color: #0f172a; font-size: 0.95rem;">\${service.customer_name}</div>
-                            <div style="font-size: 0.85rem; color: #475569;">\${service.customer_phone || '-'}</div>
+                            <div style="font-weight: bold; color: #0f172a; font-size: 0.95rem;">${service.customer_name}</div>
+                            <div style="font-size: 0.85rem; color: #475569;">${service.customer_phone || '-'}</div>
                         </div>
                         <div style="flex: 1; text-align: right;">
                             <div style="font-size: 0.75rem; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px;">Perangkat</div>
-                            <div style="font-weight: bold; color: #0f172a; font-size: 0.95rem;">\${service.device_type} \${service.brand || ''}</div>
-                            <div style="font-size: 0.85rem; color: #475569;">\${service.model || ''}</div>
+                            <div style="font-weight: bold; color: #0f172a; font-size: 0.95rem;">${service.device_type} ${service.brand || ''}</div>
+                            <div style="font-size: 0.85rem; color: #475569;">${service.model || ''}</div>
                         </div>
                     </div>
                     
@@ -979,7 +979,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             </tr>
                         </thead>
                         <tbody>
-                            \${itemsHtml}
+                            ${itemsHtml}
                         </tbody>
                     </table>
                     
@@ -988,22 +988,22 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div style="flex: 1; padding-right: 20px;">
                             <div style="font-size: 0.75rem; color: #64748b; margin-bottom: 3px;">Catatan:</div>
                             <div style="font-size: 0.8rem; color: #475569; background: #f8fafc; padding: 6px; border-radius: 4px; border: 1px dashed #cbd5e1;">
-                                \${settings.receipt_footer || 'Terima kasih telah menggunakan jasa kami.'}
+                                ${settings.receipt_footer || 'Terima kasih telah menggunakan jasa kami.'}
                             </div>
                         </div>
                         <div style="flex: 1;">
                             <table style="width: 100%; font-size: 0.9rem;">
                                 <tr>
                                     <td style="padding: 4px 0; color: #64748b;">Total Biaya:</td>
-                                    <td style="text-align: right; padding: 4px 0; font-weight: bold; color: #1e293b;">\${formatRp(service.total_cost)}</td>
+                                    <td style="text-align: right; padding: 4px 0; font-weight: bold; color: #1e293b;">${formatRp(service.total_cost)}</td>
                                 </tr>
                                 <tr>
                                     <td style="padding: 4px 0; color: #64748b;">Telah Dibayar:</td>
-                                    <td style="text-align: right; padding: 4px 0; font-weight: bold; color: #10b981;">\${formatRp(totalPaid)}</td>
+                                    <td style="text-align: right; padding: 4px 0; font-weight: bold; color: #10b981;">${formatRp(totalPaid)}</td>
                                 </tr>
                                 <tr style="border-top: 2px solid #e2e8f0;">
                                     <td style="padding: 6px 0 0 0; color: #0f172a; font-weight: bold; font-size: 1rem;">Sisa Tagihan:</td>
-                                    <td style="text-align: right; padding: 6px 0 0 0; font-weight: bold; font-size: 1.1rem; color: \${remaining > 0 ? '#ef4444' : '#10b981'};">\${formatRp(Math.max(0, remaining))}</td>
+                                    <td style="text-align: right; padding: 6px 0 0 0; font-weight: bold; font-size: 1.1rem; color: ${remaining > 0 ? '#ef4444' : '#10b981'};">${formatRp(Math.max(0, remaining))}</td>
                                 </tr>
                             </table>
                         </div>
@@ -1011,12 +1011,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     <!-- Footer -->
                     <div style="text-align: center; margin-top: 10px; font-size: 0.75rem; color: #94a3b8; border-top: 1px solid #e2e8f0; padding-top: 10px;">
-                        Dicetak pada: \${new Date().toLocaleString('id-ID')}
+                        Dicetak pada: ${new Date().toLocaleString('id-ID')}
                     </div>
                 </div>
-            \`;
+            `;
             
-            const filename = \`Invoice_\${service.ticket_number}_\${service.customer_name.replace(/\\s+/g, '_')}.pdf\`;
+            const filename = `Invoice_${service.ticket_number}_${service.customer_name.replace(/\\s+/g, '_')}.pdf`;
             const result = await window.api.exportPdf({ html, filename });
             
             if (result.success) {
@@ -1280,7 +1280,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div style="flex: 1;">
                             <h2 style="font-size: 1.5rem; margin: 0 0 2px 0; font-weight: 800; color: #0f172a;">${settings.business_name || 'NUNOX SERVIS'}</h2>
                             <div style="font-size: 0.85rem; color: #475569;">${settings.address || ''}</div>
-                            <div style="font-size: 0.85rem; color: #475569; margin-top: 2px; font-weight: 600;">📞 ${settings.whatsapp || settings.phone || ''}</div>
+                            <div style="font-size: 0.85rem; color: #475569; margin-top: 2px; font-weight: 600;">ðŸ“ž ${settings.whatsapp || settings.phone || ''}</div>
                         </div>
                         <div style="text-align: right; flex: 1;">
                             <h1 style="font-size: 1.6rem; color: #a855f7; margin: 0 0 5px 0; text-transform: uppercase; letter-spacing: 2px; font-weight: 900;">TANDA TERIMA</h1>
@@ -1400,7 +1400,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div style="flex: 1;">
                             <h2 style="font-size: 1.5rem; margin: 0 0 2px 0; font-weight: 800; color: #0f172a;">${settings.business_name || 'NUNOX SERVIS'}</h2>
                             <div style="font-size: 0.85rem; color: #475569;">${settings.address || ''}</div>
-                            <div style="font-size: 0.85rem; color: #475569; margin-top: 2px; font-weight: 600;">📞 ${settings.whatsapp || settings.phone || ''}</div>
+                            <div style="font-size: 0.85rem; color: #475569; margin-top: 2px; font-weight: 600;">ðŸ“ž ${settings.whatsapp || settings.phone || ''}</div>
                         </div>
                         <div style="text-align: right; flex: 1;">
                             <h1 style="font-size: 1.8rem; color: #4f46e5; margin: 0 0 5px 0; text-transform: uppercase; letter-spacing: 2px; font-weight: 900;">INVOICE</h1>
@@ -1704,7 +1704,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div>
                             <h2 style="font-size: 1.4rem; color: #1e293b; margin: 0 0 5px 0; font-weight: 800;">${settings.business_name || 'NUNOX SERVIS'}</h2>
                             <div style="color: #475569; font-size: 0.85rem; max-width: 320px; line-height: 1.4;">${settings.address || ''}</div>
-                            <div style="color: #475569; font-size: 0.85rem; margin-top: 4px; font-weight: 600;">📞 Telp/WA: ${settings.whatsapp || settings.phone || ''}</div>
+                            <div style="color: #475569; font-size: 0.85rem; margin-top: 4px; font-weight: 600;">ðŸ“ž Telp/WA: ${settings.whatsapp || settings.phone || ''}</div>
                         </div>
                         <div style="text-align: right;">
                             <h1 style="font-size: 1.6rem; color: #4f46e5; margin: 0 0 10px 0; text-transform: uppercase; letter-spacing: 2px; font-weight: 900;">KWITANSI</h1>
@@ -1781,7 +1781,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div style="flex: 1;">
                             <h2 style="font-size: 1.5rem; margin: 0 0 2px 0; font-weight: 800; color: #0f172a;">${settings.business_name || 'NUNOX SERVIS'}</h2>
                             <div style="font-size: 0.85rem; color: #475569;">${settings.address || ''}</div>
-                            <div style="font-size: 0.85rem; color: #475569; margin-top: 2px; font-weight: 600;">📞 ${settings.whatsapp || settings.phone || ''}</div>
+                            <div style="font-size: 0.85rem; color: #475569; margin-top: 2px; font-weight: 600;">ðŸ“ž ${settings.whatsapp || settings.phone || ''}</div>
                         </div>
                         <div style="text-align: right; flex: 1;">
                             <h1 style="font-size: 1.6rem; color: #a855f7; margin: 0 0 5px 0; text-transform: uppercase; letter-spacing: 2px; font-weight: 900;">TANDA TERIMA</h1>
