@@ -1,4 +1,4 @@
-﻿document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
     // Override alert to use SweetAlert2
     window.alert = (message) => {
         const isError = message.toLowerCase().includes('gagal') || message.toLowerCase().includes('error') || message.toLowerCase().includes('kesalahan');

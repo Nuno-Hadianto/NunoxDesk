@@ -22,7 +22,7 @@ function getDashboardStats() {
 
     // HPP (Modal Sparepart) untuk transaksi yang dibayar bulan ini
     const hppMonthQuery = db.prepare(`
-        SELECT SUM(cost_price) as hpp 
+        SELECT SUM(cost_price * quantity) as hpp 
         FROM service_items 
         WHERE service_order_id IN (
             SELECT DISTINCT service_order_id FROM payments 
