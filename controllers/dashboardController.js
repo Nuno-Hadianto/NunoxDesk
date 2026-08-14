@@ -20,11 +20,35 @@ function getDashboardStats() {
     const incomeMonthQuery = db.prepare(`SELECT SUM(amount) as total FROM payments WHERE strftime('%Y-%m', payment_date) = ?`);
     const incomeMonth = incomeMonthQuery.get(currentMonth).total || 0;
 
+    // Chart Data (Income last 6 months)
+    const chartQuery = db.prepare(`
+        SELECT strftime('%Y-%m', payment_date) as month, SUM(amount) as total 
+        FROM payments 
+        WHERE payment_date >= date('now', 'start of month', '-5 months')
+        GROUP BY month 
+        ORDER BY month ASC
+    `);
+    const chartDataRaw = chartQuery.all();
+
+    const chartLabels = [];
+    const chartValues = [];
+    for (let i = 5; i >= 0; i--) {
+        const d = new Date();
+        d.setMonth(d.getMonth() - i);
+        const yyyymm = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+        const monthName = d.toLocaleString('id-ID', { month: 'short' });
+        
+        const row = chartDataRaw.find(r => r.month === yyyymm);
+        chartLabels.push(monthName);
+        chartValues.push(row ? row.total : 0);
+    }
+
     return {
         todayServices,
         inProgress,
         completed,
-        incomeMonth
+        incomeMonth,
+        chartData: { labels: chartLabels, values: chartValues }
     };
 }
 

@@ -6,6 +6,7 @@
     <title>nuNox_servis - Dashboard</title>
     <link rel="stylesheet" href="../public/css/style.css">
     <script src="../public/js/lib/sweetalert2.all.min.js"></script>
+    <script src="../public/js/lib/chart.min.js"></script>
 </head>
 <body>
     <div class="app-container">
@@ -40,6 +41,7 @@
                     <h1 id="page-title">Dashboard</h1>
                 </div>
                 <div class="topbar-actions">
+                    <button id="btn-theme-toggle" class="btn btn-secondary btn-sm" style="margin-right: 15px; border-radius: 20px;">🌙 Dark Mode</button>
                     <span id="datetime-display"></span>
                 </div>
             </header>
@@ -64,6 +66,10 @@
                             <h3>Pendapatan Bulan Ini</h3>
                             <p class="stat-value">Rp 0</p>
                         </div>
+                    </div>
+                    <div class="chart-container stat-card" style="margin-top: 20px; width: 100%; height: 320px;">
+                        <h3 style="margin-bottom: 15px;">Grafik Pendapatan (6 Bulan Terakhir)</h3>
+                        <canvas id="incomeChart" style="max-height: 250px;"></canvas>
                     </div>
                 </div>
 
@@ -264,6 +270,7 @@
                     <div class="action-bar">
                         <button class="btn btn-secondary" onclick="document.getElementById('nav-services').click()">Kembali</button>
                         <div>
+                            <button id="btn-whatsapp" class="btn" style="background-color: #25D366; color: white; margin-right: 10px;">💬 Kirim WA</button>
                             <button id="btn-print-nota" class="btn btn-secondary" style="margin-right: 10px;">Cetak Tanda Terima</button>
                             <button id="btn-print-receipt" class="btn btn-secondary" style="margin-right: 10px;">Cetak Invoice</button>
                             <button id="btn-update-status" class="btn btn-primary">Update Status</button>

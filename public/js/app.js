@@ -41,6 +41,31 @@ document.addEventListener('DOMContentLoaded', () => {
         return result.isConfirmed;
     };
 
+    // Dark Mode Toggle
+    const themeToggleBtn = document.getElementById('btn-theme-toggle');
+    if (themeToggleBtn) {
+        const isDarkMode = localStorage.getItem('theme') === 'dark';
+        
+        if (isDarkMode) {
+            document.body.classList.add('dark-mode');
+            themeToggleBtn.textContent = '☀️ Light Mode';
+        }
+        
+        themeToggleBtn.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
+                localStorage.setItem('theme', 'dark');
+                themeToggleBtn.textContent = '☀️ Light Mode';
+            } else {
+                localStorage.setItem('theme', 'light');
+                themeToggleBtn.textContent = '🌙 Dark Mode';
+            }
+            if (incomeChartInstance) {
+                loadDashboardStats();
+            }
+        });
+    }
+
     // Update Datetime
     const datetimeDisplay = document.getElementById('datetime-display');
     const updateTime = () => {
@@ -157,12 +182,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    let incomeChartInstance = null;
+
     // Load Dashboard Stats
     async function loadDashboardStats() {
         if (window.api && window.api.getDashboardStats) {
             try {
                 const stats = await window.api.getDashboardStats();
-                const statValues = document.querySelectorAll('.stat-value');
+                
+                const statValues = document.querySelectorAll('#view-dashboard .dashboard-stats .stat-value');
                 if (statValues.length >= 4) {
                     statValues[0].textContent = stats.todayServices;
                     statValues[1].textContent = stats.inProgress;
@@ -177,8 +205,46 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     statValues[3].textContent = formattedIncome;
                 }
+
+                if (stats.chartData && window.Chart) {
+                    const ctx = document.getElementById('incomeChart');
+                    if (ctx) {
+                        if (incomeChartInstance) {
+                            incomeChartInstance.destroy();
+                        }
+                        const isDark = document.body.classList.contains('dark-mode');
+                        incomeChartInstance = new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: stats.chartData.labels,
+                                datasets: [{
+                                    label: 'Pendapatan (Rp)',
+                                    data: stats.chartData.values,
+                                    backgroundColor: '#4f46e5',
+                                    borderRadius: 4
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: { legend: { display: false } },
+                                scales: {
+                                    y: { 
+                                        beginAtZero: true,
+                                        ticks: { color: isDark ? '#f8fafc' : '#1e293b' },
+                                        grid: { color: isDark ? '#334155' : '#e2e8f0' }
+                                    },
+                                    x: {
+                                        ticks: { color: isDark ? '#f8fafc' : '#1e293b' },
+                                        grid: { display: false }
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
             } catch (error) {
-                console.error("Failed to load stats:", error);
+                console.error("Failed to load dashboard stats:", error);
             }
         }
     }
@@ -815,6 +881,25 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error(error);
             alert("Gagal update status.");
         }
+    });
+
+    // WhatsApp Integration
+    document.getElementById('btn-whatsapp').addEventListener('click', () => {
+        const phoneRaw = document.getElementById('detail-customer').textContent.split('(')[1];
+        if (!phoneRaw) return window.toast('Nomor telepon pelanggan tidak tersedia.', 'error');
+        
+        let phone = phoneRaw.replace(')', '').replace(/[^0-9]/g, '');
+        if (phone.startsWith('0')) {
+            phone = '62' + phone.substring(1);
+        }
+        
+        const customerName = document.getElementById('detail-customer').textContent.split('(')[0].trim();
+        const device = document.getElementById('detail-device').textContent;
+        const ticket = document.getElementById('detail-ticket-number').textContent;
+        const status = document.getElementById('detail-status-badge').textContent;
+        
+        const text = `Halo Bpk/Ibu ${customerName}, perihal perbaikan perangkat ${device}, nomor tiket ${ticket} saat ini berstatus ${status}. Terima kasih.`;
+        window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, '_blank');
     });
 
     // ==========================================
