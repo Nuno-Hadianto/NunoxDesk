@@ -20,14 +20,12 @@ function getDashboardStats() {
     const incomeMonthQuery = db.prepare(`SELECT SUM(amount) as total FROM payments WHERE strftime('%Y-%m', payment_date) = ?`);
     const incomeMonth = incomeMonthQuery.get(currentMonth).total || 0;
 
-    // HPP (Modal Sparepart) untuk transaksi yang dibayar bulan ini
+    // HPP (Modal Sparepart) untuk transaksi yang diselesaikan bulan ini
     const hppMonthQuery = db.prepare(`
-        SELECT SUM(cost_price) as hpp 
-        FROM service_items 
-        WHERE service_order_id IN (
-            SELECT DISTINCT service_order_id FROM payments 
-            WHERE strftime('%Y-%m', payment_date) = ?
-        )
+        SELECT SUM(si.cost_price) as hpp 
+        FROM service_items si
+        JOIN service_orders so ON si.service_order_id = so.id
+        WHERE strftime('%Y-%m', so.completed_date) = ?
     `);
     const hppMonth = hppMonthQuery.get(currentMonth).hpp || 0;
     const labaBersih = incomeMonth - hppMonth;
@@ -46,7 +44,8 @@ function getDashboardStats() {
     const chartValues = [];
     for (let i = 5; i >= 0; i--) {
         const d = new Date();
-        d.setMonth(d.getMonth() - i);
+        d.setDate(1); // Prevent date overflow bug (e.g. March 31 -> Feb 31 -> March 3)
+        d.setMonth(new Date().getMonth() - i);
         const yyyymm = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
         const monthName = d.toLocaleString('id-ID', { month: 'short' });
         
