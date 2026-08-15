@@ -1,11 +1,12 @@
 const db = require('../database/db');
 
 function getDashboardStats() {
-    const today = new Date().toISOString().split('T')[0];
+    const d = new Date();
+    const today = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
     const currentMonth = today.substring(0, 7); // YYYY-MM
 
     // Servis Hari Ini
-    const todayServicesQuery = db.prepare(`SELECT COUNT(*) as count FROM service_orders WHERE DATE(created_at) = ?`);
+    const todayServicesQuery = db.prepare(`SELECT COUNT(*) as count FROM service_orders WHERE DATE(created_at, 'localtime') = ?`);
     const todayServices = todayServicesQuery.get(today).count;
 
     // Sedang Dikerjakan
@@ -17,7 +18,7 @@ function getDashboardStats() {
     const completed = completedQuery.get().count;
 
     // Pendapatan Bulan Ini (Total dari payments)
-    const incomeMonthQuery = db.prepare(`SELECT SUM(amount) as total FROM payments WHERE strftime('%Y-%m', payment_date) = ?`);
+    const incomeMonthQuery = db.prepare(`SELECT SUM(amount) as total FROM payments WHERE strftime('%Y-%m', payment_date, 'localtime') = ?`);
     const incomeMonth = incomeMonthQuery.get(currentMonth).total || 0;
 
     // HPP (Modal Sparepart) untuk transaksi yang diselesaikan bulan ini
@@ -25,16 +26,16 @@ function getDashboardStats() {
         SELECT SUM(si.cost_price) as hpp 
         FROM service_items si
         JOIN service_orders so ON si.service_order_id = so.id
-        WHERE strftime('%Y-%m', so.completed_date) = ?
+        WHERE strftime('%Y-%m', so.completed_date, 'localtime') = ?
     `);
     const hppMonth = hppMonthQuery.get(currentMonth).hpp || 0;
     const labaBersih = incomeMonth - hppMonth;
 
     // Chart Data (Income last 6 months)
     const chartQuery = db.prepare(`
-        SELECT strftime('%Y-%m', payment_date) as month, SUM(amount) as total 
+        SELECT strftime('%Y-%m', payment_date, 'localtime') as month, SUM(amount) as total 
         FROM payments 
-        WHERE payment_date >= date('now', 'start of month', '-5 months')
+        WHERE date(payment_date, 'localtime') >= date('now', 'localtime', 'start of month', '-5 months')
         GROUP BY month 
         ORDER BY month ASC
     `);

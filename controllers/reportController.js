@@ -6,7 +6,7 @@ function getIncomeReport(startDate, endDate) {
             SUM(amount) as total_income,
             COUNT(id) as transaction_count
         FROM payments 
-        WHERE date(payment_date) >= date(?) AND date(payment_date) <= date(?)
+        WHERE date(payment_date, 'localtime') >= date(?) AND date(payment_date, 'localtime') <= date(?)
     `);
     return stmt.get(startDate, endDate);
 }
@@ -21,7 +21,7 @@ function getCompletedServices(startDate, endDate) {
         JOIN customers c ON so.customer_id = c.id
         JOIN devices d ON so.device_id = d.id
         WHERE so.service_status IN ('Selesai', 'Diambil')
-          AND date(so.completed_date) >= date(?) AND date(so.completed_date) <= date(?)
+          AND date(so.completed_date, 'localtime') >= date(?) AND date(so.completed_date, 'localtime') <= date(?)
     `);
     return stmt.all(startDate, endDate);
 }

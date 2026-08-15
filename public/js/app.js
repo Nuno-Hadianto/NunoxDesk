@@ -642,6 +642,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('detail-actions').value = service.actions_taken || '';
                 document.getElementById('detail-notes').value = service.technician_notes || '';
                 
+                document.getElementById('detail-date').textContent = new Date(service.received_date + 'Z').toLocaleDateString('id-ID');
+                
                 document.getElementById('detail-status-badge').textContent = service.service_status.toUpperCase();
                 
                 // Set data-id to save button
@@ -827,7 +829,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     li.style.paddingBottom = '10px';
                     li.style.borderBottom = '1px solid #e2e8f0';
                     
-                    const date = new Date(h.created_at).toLocaleString('id-ID');
+                    const date = new Date(h.created_at + 'Z').toLocaleString('id-ID');
                     li.innerHTML = `
                         <div style="font-size: 0.8rem; color: #64748b;">${date}</div>
                         <div style="font-weight: 500;">${h.status}</div>
@@ -1174,7 +1176,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <span style="color:var(--primary); font-weight:bold;">${formatRp(p.amount)}</span>
                         </div>
                         <div style="display:flex; justify-content:space-between; font-size:0.8rem; color:#64748b;">
-                            <span>${new Date(p.payment_date).toLocaleString('id-ID')} - ${p.payment_method}</span>
+                            <span>${new Date(p.payment_date + 'Z').toLocaleString('id-ID')} - ${p.payment_method}</span>
                             <button class="btn btn-danger" style="padding:2px 5px; font-size:0.7rem;" onclick="deletePayment(${p.id}, ${serviceId})">Hapus</button>
                         </div>
                     `;
@@ -1285,7 +1287,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div style="text-align: right; flex: 1;">
                             <h1 style="font-size: 1.6rem; color: #a855f7; margin: 0 0 5px 0; text-transform: uppercase; letter-spacing: 2px; font-weight: 900;">TANDA TERIMA</h1>
                             <div style="font-size: 0.9rem; color: #334155; margin-bottom: 2px;"><strong>No:</strong> ${service.ticket_number}</div>
-                            <div style="font-size: 0.8rem; color: #64748b;">Tanggal: ${new Date(service.created_at).toLocaleDateString('id-ID')}</div>
+                            <div style="font-size: 0.8rem; color: #64748b;">Tanggal: ${new Date(service.created_at + 'Z').toLocaleDateString('id-ID')}</div>
                         </div>
                     </div>
                     
@@ -1497,8 +1499,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // REPORTS LOGIC
     // ==========================================
     function initReports() {
-        const today = new Date().toISOString().split('T')[0];
-        const firstDay = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split('T')[0];
+        const d = new Date();
+        const today = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        const firstDay = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-01`;
         
         const startInput = document.getElementById('report-start');
         const endInput = document.getElementById('report-end');
@@ -1546,7 +1549,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td>${s.ticket_number}</td>
-                    <td>${new Date(s.completed_date).toLocaleDateString('id-ID')}</td>
+                    <td>${new Date(s.completed_date + 'Z').toLocaleDateString('id-ID')}</td>
                     <td>${s.customer_name}</td>
                     <td>${s.brand || ''} ${s.model || ''}</td>
                     <td>${formatRp(s.total_cost)}</td>
@@ -1571,7 +1574,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Format data for excel
             const excelData = services.map(s => ({
                 'No Tiket': s.ticket_number,
-                'Tanggal Selesai': new Date(s.completed_date).toLocaleDateString('id-ID'),
+                'Tanggal Selesai': new Date(s.completed_date + 'Z').toLocaleDateString('id-ID'),
                 'Pelanggan': s.customer_name,
                 'Perangkat': `${s.brand || ''} ${s.model || ''}`.trim(),
                 'Total Biaya': s.total_cost
@@ -1610,7 +1613,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 itemsHtml += `
                     <tr>
                         <td>${s.ticket_number}</td>
-                        <td>${new Date(s.completed_date).toLocaleDateString('id-ID')}</td>
+                        <td>${new Date(s.completed_date + 'Z').toLocaleDateString('id-ID')}</td>
                         <td>${s.customer_name}</td>
                         <td>${s.brand || ''} ${s.model || ''}</td>
                         <td style="text-align:right;">${formatRp(s.total_cost)}</td>
