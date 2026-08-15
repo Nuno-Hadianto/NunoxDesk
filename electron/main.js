@@ -172,7 +172,7 @@ function createWindow() {
     });
     
     if (filePath) {
-      fs.copyFileSync(dbPath, filePath);
+      await db.backup(filePath);
       return true;
     }
     return false;
@@ -210,6 +210,7 @@ function createWindow() {
     
     if (filePaths && filePaths.length > 0) {
       const dbPath = path.join(app.getPath('userData'), 'database', 'nunox_servis.db');
+      db.close(); // Close database before overwriting to release file lock
       fs.copyFileSync(filePaths[0], dbPath);
       // App needs restart to load new db. Delay to allow frontend notification.
       setTimeout(() => {
@@ -240,7 +241,7 @@ app.whenReady().then(() => {
   });
 });
 
-app.on('window-all-closed', () => {
+app.on('window-all-closed', async () => {
   // Auto Backup before quitting
   try {
     const fs = require('fs');
@@ -257,7 +258,7 @@ app.on('window-all-closed', () => {
     const backupPath = path.join(backupDir, `AutoBackup_${today}.db`);
     
     if (fs.existsSync(dbPath)) {
-      fs.copyFileSync(dbPath, backupPath);
+      await db.backup(backupPath);
       console.log('Auto backup saved to:', backupPath);
     }
   } catch (error) {
