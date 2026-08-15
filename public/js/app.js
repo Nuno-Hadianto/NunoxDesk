@@ -1298,7 +1298,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <h4 style="font-size: 0.75rem; text-transform: uppercase; margin: 0 0 4px 0; color: #64748b; border-bottom: 1px solid #e2e8f0; padding-bottom: 2px;">Data Pelanggan</h4>
                             <table style="width: 100%; font-size: 0.8rem;">
                                 <tr><td style="width: 50px; color: #475569; padding: 2px 0; vertical-align: top;">Nama</td><td style="vertical-align: top;">: <strong>${service.customer_name}</strong></td></tr>
-                                <tr><td style="color: #475569; padding: 2px 0; vertical-align: top;">No. HP</td><td style="vertical-align: top;">: ${service.phone || '-'}</td></tr>
+                                <tr><td style="color: #475569; padding: 2px 0; vertical-align: top;">No. HP</td><td style="vertical-align: top;">: ${service.customer_phone || '-'}</td></tr>
                                 <tr><td style="color: #475569; padding: 2px 0; vertical-align: top;">Alamat</td><td style="vertical-align: top;">: ${service.customer_address || '-'}</td></tr>
                             </table>
                         </div>
@@ -1307,7 +1307,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div style="flex: 1; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 8px; background: #f8fafc;">
                             <h4 style="font-size: 0.75rem; text-transform: uppercase; margin: 0 0 4px 0; color: #64748b; border-bottom: 1px solid #e2e8f0; padding-bottom: 2px;">Data Perangkat</h4>
                             <table style="width: 100%; font-size: 0.8rem;">
-                                <tr><td style="width: 55px; color: #475569; padding: 2px 0; vertical-align: top;">Barang</td><td style="vertical-align: top;">: <strong>${service.type} ${service.brand || ''} ${service.model || ''}</strong></td></tr>
+                                <tr><td style="width: 55px; color: #475569; padding: 2px 0; vertical-align: top;">Barang</td><td style="vertical-align: top;">: <strong>${service.device_type || ''} ${service.brand || ''} ${service.model || ''}</strong></td></tr>
                                 <tr><td style="color: #475569; padding: 2px 0; vertical-align: top;">S/N</td><td style="vertical-align: top;">: ${service.serial_number || '-'}</td></tr>
                                 <tr><td style="color: #475569; padding: 2px 0; vertical-align: top;">Warna</td><td style="vertical-align: top;">: ${service.color || '-'}</td></tr>
                                 <tr><td style="color: #475569; padding: 2px 0; vertical-align: top;">Lengkap</td><td style="vertical-align: top;">: ${service.accessories || '-'}</td></tr>
@@ -1317,7 +1317,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <!-- Keluhan -->
                         <div style="flex: 1.2; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 8px; background: #fff;">
                             <h4 style="font-size: 0.75rem; text-transform: uppercase; margin: 0 0 4px 0; color: #64748b; border-bottom: 1px solid #e2e8f0; padding-bottom: 2px;">Keluhan / Kerusakan</h4>
-                            <p style="font-size: 0.8rem; margin: 0; color: #1e293b;">${service.complaint}</p>
+                            <p style="font-size: 0.8rem; margin: 0; color: #1e293b;">${service.customer_complaint}</p>
                             
                             <div style="margin-top: 8px; padding-top: 5px; border-top: 1px dashed #cbd5e1;">
                                 <div style="font-size: 0.75rem; color: #64748b; margin-bottom: 1px;">Estimasi Biaya:</div>
@@ -1416,14 +1416,14 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div style="flex: 1;">
                             <h4 style="color: #64748b; font-size: 0.75rem; text-transform: uppercase; margin: 0 0 5px 0; letter-spacing: 1px;">Ditagihkan Kepada:</h4>
                             <div style="font-size: 0.95rem; font-weight: 700; color: #1e293b; margin-bottom: 2px;">${service.customer_name}</div>
-                            <div style="font-size: 0.8rem; color: #475569;">HP: ${service.phone || '-'}</div>
+                            <div style="font-size: 0.8rem; color: #475569;">HP: ${service.customer_phone || '-'}</div>
                             <div style="font-size: 0.8rem; color: #475569;">Alamat: ${service.customer_address || '-'}</div>
                         </div>
                         <div style="flex: 1; text-align: right;">
                             <h4 style="color: #64748b; font-size: 0.75rem; text-transform: uppercase; margin: 0 0 5px 0; letter-spacing: 1px;">Detail Perangkat:</h4>
-                            <div style="font-size: 0.95rem; font-weight: 700; color: #1e293b; margin-bottom: 2px;">${service.type} ${service.brand || ''} ${service.model || ''}</div>
+                            <div style="font-size: 0.95rem; font-weight: 700; color: #1e293b; margin-bottom: 2px;">${service.device_type || ''} ${service.brand || ''} ${service.model || ''}</div>
                             <div style="font-size: 0.8rem; color: #475569;">S/N: ${service.serial_number || '-'}</div>
-                            <div style="font-size: 0.8rem; color: #475569;">Keluhan: ${service.complaint || '-'}</div>
+                            <div style="font-size: 0.8rem; color: #475569;">Keluhan: ${service.customer_complaint || '-'}</div>
                         </div>
                     </div>
                     
