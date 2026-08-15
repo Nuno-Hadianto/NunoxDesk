@@ -97,9 +97,14 @@ function updateServiceStatus(id, status, notes) {
         const historyStmt = db.prepare(`INSERT INTO service_status_history (service_order_id, status, notes) VALUES (?, ?, ?)`);
         historyStmt.run(id, status, notes);
         
-        if (status === 'Selesai') {
-            const finishStmt = db.prepare(`UPDATE service_orders SET completed_date = CURRENT_TIMESTAMP WHERE id = ?`);
-            finishStmt.run(id);
+        if (status === 'Selesai' || status === 'Diambil') {
+            // Hanya set completed_date jika masih kosong agar tanggal aslinya tidak berubah-ubah
+            const checkStmt = db.prepare(`SELECT completed_date FROM service_orders WHERE id = ?`);
+            const so = checkStmt.get(id);
+            if (!so.completed_date) {
+                const finishStmt = db.prepare(`UPDATE service_orders SET completed_date = CURRENT_TIMESTAMP WHERE id = ?`);
+                finishStmt.run(id);
+            }
         }
         
         return true;
