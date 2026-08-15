@@ -34,6 +34,7 @@ contextBridge.exposeInMainWorld('api', {
   updatePart: (id, data) => ipcRenderer.invoke('update-part', id, data),
   updatePartStock: (id, change) => ipcRenderer.invoke('update-part-stock', id, change),
   deletePart: (id) => ipcRenderer.invoke('delete-part', id),
+  importPartsExcel: () => ipcRenderer.invoke('import-parts-excel'),
 
   // Service Items
   getServiceItems: (serviceId) => ipcRenderer.invoke('get-service-items', serviceId),

@@ -244,6 +244,24 @@ document.addEventListener('DOMContentLoaded', () => {
                         });
                     }
                 }
+
+                // Render Low Stock Alert
+                if (stats.lowStockParts && stats.lowStockParts.length > 0) {
+                    document.getElementById('low-stock-alert-container').style.display = 'block';
+                    const tbody = document.getElementById('low-stock-list');
+                    tbody.innerHTML = '';
+                    stats.lowStockParts.forEach(part => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td style="padding: 8px;"><strong>${part.part_code || '-'}</strong></td>
+                            <td style="padding: 8px;">${part.name}</td>
+                            <td style="padding: 8px; color: #b91c1c; font-weight: bold;">${part.stock} ${part.unit || 'pcs'}</td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                } else {
+                    document.getElementById('low-stock-alert-container').style.display = 'none';
+                }
             } catch (error) {
                 console.error("Failed to load dashboard stats:", error);
             }
@@ -1037,6 +1055,27 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     const partModal = document.getElementById('part-modal');
     const partForm = document.getElementById('part-form');
+
+    // Import Sparepart Excel
+    const btnImportPart = document.getElementById('btn-import-part');
+    if (btnImportPart) {
+        btnImportPart.addEventListener('click', async () => {
+            try {
+                const res = await window.api.importPartsExcel();
+                if (res.canceled) return;
+                
+                if (res.success) {
+                    window.toast(`Berhasil import: ${res.result.imported} baru, ${res.result.updated} diperbarui.`, 'success');
+                    loadParts();
+                } else {
+                    Swal.fire('Gagal', res.error || 'Terjadi kesalahan saat import.', 'error');
+                }
+            } catch (err) {
+                console.error(err);
+                Swal.fire('Error', 'Gagal memproses file Excel.', 'error');
+            }
+        });
+    }
 
     document.getElementById('btn-add-part').addEventListener('click', () => {
         document.getElementById('part-modal-title').textContent = 'Tambah Sparepart';

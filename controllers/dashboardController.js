@@ -55,13 +55,17 @@ function getDashboardStats() {
         chartValues.push(row ? row.total : 0);
     }
 
+    // Peringatan Stok Menipis (Stok <= 5)
+    const lowStockParts = db.prepare(`SELECT * FROM spare_parts WHERE stock <= 5 ORDER BY stock ASC LIMIT 10`).all();
+
     return {
         todayServices,
         inProgress,
         completed,
         incomeMonth,
         labaBersih,
-        chartData: { labels: chartLabels, values: chartValues }
+        chartData: { labels: chartLabels, values: chartValues },
+        lowStockParts
     };
 }
 
