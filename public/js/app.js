@@ -48,14 +48,14 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (isDarkMode) {
             document.body.classList.add('dark-mode');
-            themeToggleBtn.textContent = 'â˜€ï¸ Light Mode';
+            themeToggleBtn.textContent = '☀️ Light Mode';
         }
         
         themeToggleBtn.addEventListener('click', () => {
             document.body.classList.toggle('dark-mode');
             if (document.body.classList.contains('dark-mode')) {
                 localStorage.setItem('theme', 'dark');
-                themeToggleBtn.textContent = 'â˜€ï¸ Light Mode';
+                themeToggleBtn.textContent = '☀️ Light Mode';
             } else {
                 localStorage.setItem('theme', 'light');
                 themeToggleBtn.textContent = '🌙 Dark Mode';
