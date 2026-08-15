@@ -785,7 +785,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const qty = parseInt(document.getElementById('item-qty').value, 10);
         const price = parseFloat(document.getElementById('item-price').value);
 
-        if (!qty || !price) return alert('Quantity dan Harga harus diisi dengan benar.');
+        if (!qty || isNaN(price)) return alert('Quantity dan Harga harus diisi dengan benar.');
 
         const data = {
             service_order_id: id,

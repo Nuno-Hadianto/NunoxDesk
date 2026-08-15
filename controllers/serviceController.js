@@ -109,13 +109,13 @@ function updateServiceStatus(id, status, notes) {
 }
 
 function updateServiceDetails(id, data) {
-    const { diagnosis_result, actions_taken, technician_notes, estimated_cost } = data;
+    const { diagnosis_result, actions_taken, technician_notes } = data;
     const stmt = db.prepare(`
         UPDATE service_orders SET 
-            diagnosis_result = ?, actions_taken = ?, technician_notes = ?, estimated_cost = ?, updated_at = CURRENT_TIMESTAMP 
+            diagnosis_result = ?, actions_taken = ?, technician_notes = ?, updated_at = CURRENT_TIMESTAMP 
         WHERE id = ?
     `);
-    stmt.run(diagnosis_result, actions_taken, technician_notes, estimated_cost, id);
+    stmt.run(diagnosis_result, actions_taken, technician_notes, id);
     return true;
 }
 
