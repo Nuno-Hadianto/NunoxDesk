@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 themeToggleBtn.textContent = 'â˜€ï¸ Light Mode';
             } else {
                 localStorage.setItem('theme', 'light');
-                themeToggleBtn.textContent = 'ðŸŒ™ Dark Mode';
+                themeToggleBtn.textContent = '🌙 Dark Mode';
             }
             if (incomeChartInstance) {
                 loadDashboardStats();
@@ -949,7 +949,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div style="flex: 1;">
                             <h2 style="font-size: 1.5rem; margin: 0 0 2px 0; font-weight: 800; color: #0f172a;">${settings.business_name || 'NUNOX SERVIS'}</h2>
                             <div style="font-size: 0.85rem; color: #475569;">${settings.address || ''}</div>
-                            <div style="font-size: 0.85rem; color: #475569; margin-top: 2px; font-weight: 600;">ðŸ“± ${settings.whatsapp || settings.phone || ''}</div>
+                            <div style="font-size: 0.85rem; color: #475569; margin-top: 2px; font-weight: 600;">📱 ${settings.whatsapp || settings.phone || ''}</div>
                         </div>
                         <div style="text-align: right; flex: 1;">
                             <h1 style="font-size: 1.8rem; color: #4f46e5; margin: 0 0 5px 0; text-transform: uppercase; letter-spacing: 2px; font-weight: 900;">INVOICE</h1>
@@ -1282,7 +1282,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div style="flex: 1;">
                             <h2 style="font-size: 1.5rem; margin: 0 0 2px 0; font-weight: 800; color: #0f172a;">${settings.business_name || 'NUNOX SERVIS'}</h2>
                             <div style="font-size: 0.85rem; color: #475569;">${settings.address || ''}</div>
-                            <div style="font-size: 0.85rem; color: #475569; margin-top: 2px; font-weight: 600;">ðŸ“ž ${settings.whatsapp || settings.phone || ''}</div>
+                            <div style="font-size: 0.85rem; color: #475569; margin-top: 2px; font-weight: 600;">📞 ${settings.whatsapp || settings.phone || ''}</div>
                         </div>
                         <div style="text-align: right; flex: 1;">
                             <h1 style="font-size: 1.6rem; color: #a855f7; margin: 0 0 5px 0; text-transform: uppercase; letter-spacing: 2px; font-weight: 900;">TANDA TERIMA</h1>
@@ -1402,7 +1402,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div style="flex: 1;">
                             <h2 style="font-size: 1.5rem; margin: 0 0 2px 0; font-weight: 800; color: #0f172a;">${settings.business_name || 'NUNOX SERVIS'}</h2>
                             <div style="font-size: 0.85rem; color: #475569;">${settings.address || ''}</div>
-                            <div style="font-size: 0.85rem; color: #475569; margin-top: 2px; font-weight: 600;">ðŸ“ž ${settings.whatsapp || settings.phone || ''}</div>
+                            <div style="font-size: 0.85rem; color: #475569; margin-top: 2px; font-weight: 600;">📞 ${settings.whatsapp || settings.phone || ''}</div>
                         </div>
                         <div style="text-align: right; flex: 1;">
                             <h1 style="font-size: 1.8rem; color: #4f46e5; margin: 0 0 5px 0; text-transform: uppercase; letter-spacing: 2px; font-weight: 900;">INVOICE</h1>
@@ -1710,7 +1710,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div>
                             <h2 style="font-size: 1.4rem; color: #1e293b; margin: 0 0 5px 0; font-weight: 800;">${settings.business_name || 'NUNOX SERVIS'}</h2>
                             <div style="color: #475569; font-size: 0.85rem; max-width: 320px; line-height: 1.4;">${settings.address || ''}</div>
-                            <div style="color: #475569; font-size: 0.85rem; margin-top: 4px; font-weight: 600;">ðŸ“ž Telp/WA: ${settings.whatsapp || settings.phone || ''}</div>
+                            <div style="color: #475569; font-size: 0.85rem; margin-top: 4px; font-weight: 600;">📞 Telp/WA: ${settings.whatsapp || settings.phone || ''}</div>
                         </div>
                         <div style="text-align: right;">
                             <h1 style="font-size: 1.6rem; color: #4f46e5; margin: 0 0 10px 0; text-transform: uppercase; letter-spacing: 2px; font-weight: 900;">KWITANSI</h1>
@@ -1787,7 +1787,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div style="flex: 1;">
                             <h2 style="font-size: 1.5rem; margin: 0 0 2px 0; font-weight: 800; color: #0f172a;">${settings.business_name || 'NUNOX SERVIS'}</h2>
                             <div style="font-size: 0.85rem; color: #475569;">${settings.address || ''}</div>
-                            <div style="font-size: 0.85rem; color: #475569; margin-top: 2px; font-weight: 600;">ðŸ“ž ${settings.whatsapp || settings.phone || ''}</div>
+                            <div style="font-size: 0.85rem; color: #475569; margin-top: 2px; font-weight: 600;">📞 ${settings.whatsapp || settings.phone || ''}</div>
                         </div>
                         <div style="text-align: right; flex: 1;">
                             <h1 style="font-size: 1.6rem; color: #a855f7; margin: 0 0 5px 0; text-transform: uppercase; letter-spacing: 2px; font-weight: 900;">TANDA TERIMA</h1>
