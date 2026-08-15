@@ -63,5 +63,13 @@ contextBridge.exposeInMainWorld('api', {
   exportPdf: (data) => ipcRenderer.invoke('export-pdf', data),
   
   // Print Preview
-  printPreview: (options) => ipcRenderer.invoke('print-preview', options)
+  printPreview: (options) => ipcRenderer.invoke('print-preview', options),
+
+  // Users & Auth
+  login: (username, password) => ipcRenderer.invoke('login', username, password),
+  getUsers: () => ipcRenderer.invoke('get-users'),
+  getUser: (id) => ipcRenderer.invoke('get-user', id),
+  addUser: (data) => ipcRenderer.invoke('add-user', data),
+  updateUser: (id, data) => ipcRenderer.invoke('update-user', id, data),
+  deleteUser: (id) => ipcRenderer.invoke('delete-user', id)
 });

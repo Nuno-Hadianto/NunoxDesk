@@ -12,6 +12,7 @@ const serviceItemController = require('../controllers/serviceItemController');
 const paymentController = require('../controllers/paymentController');
 const settingsController = require('../controllers/settingsController');
 const reportController = require('../controllers/reportController');
+const userController = require('../controllers/userController');
 const fs = require('fs');
 
 let mainWindow;
@@ -108,6 +109,26 @@ function createWindow() {
   ipcMain.handle('get-payments', (event, serviceId) => paymentController.getPaymentsByServiceId(serviceId));
   ipcMain.handle('add-payment', (event, data) => paymentController.addPayment(data));
   ipcMain.handle('delete-payment', (event, id) => paymentController.deletePayment(id));
+
+  // Users
+  ipcMain.handle('login', (event, username, password) => {
+    try { return { success: true, user: userController.login(username, password) }; }
+    catch (err) { return { success: false, error: err.message }; }
+  });
+  ipcMain.handle('get-users', () => userController.getUsers());
+  ipcMain.handle('get-user', (event, id) => userController.getUserById(id));
+  ipcMain.handle('add-user', (event, data) => {
+    try { return { success: true, id: userController.addUser(data) }; }
+    catch (err) { return { success: false, error: err.message }; }
+  });
+  ipcMain.handle('update-user', (event, id, data) => {
+    try { return { success: true, result: userController.updateUser(id, data) }; }
+    catch (err) { return { success: false, error: err.message }; }
+  });
+  ipcMain.handle('delete-user', (event, id) => {
+    try { return { success: true, result: userController.deleteUser(id) }; }
+    catch (err) { return { success: false, error: err.message }; }
+  });
 
   ipcMain.handle('export-excel', async (event, data) => {
     try {
