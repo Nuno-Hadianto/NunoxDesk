@@ -1609,7 +1609,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const printArea = document.getElementById('print-area');
             
             let itemsHtml = '';
+            let totalOmset = 0;
+            
             services.forEach(s => {
+                totalOmset += (s.total_cost || 0);
                 itemsHtml += `
                     <tr>
                         <td>${s.ticket_number}</td>
@@ -1657,7 +1660,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             </div>
                             <div class="summary-box">
                                 <span>Total Transaksi</span>
-                                <strong>${incomeData.transaction_count || 0} Tiket</strong>
+                                <strong>${services.length || 0} Tiket</strong>
                             </div>
                         </div>
                     </div>
@@ -1679,7 +1682,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     <div class="report-total">
                         <div class="report-total-label">Total Pendapatan:</div>
-                        <div class="report-total-value">${formatRp(incomeData.total_income)}</div>
+                        <div class="report-total-value">${formatRp(totalOmset)}</div>
                     </div>
                 </div>
             `;
