@@ -73,11 +73,16 @@ function deleteServiceItem(id) {
     return tx();
 }
 
+const paymentController = require('./paymentController');
+
 function recalculateServiceTotal(serviceOrderId) {
     const items = db.prepare(`SELECT SUM(total) as grand_total FROM service_items WHERE service_order_id = ?`).get(serviceOrderId);
     const total = items.grand_total || 0;
 
     db.prepare(`UPDATE service_orders SET total_cost = ? WHERE id = ?`).run(total, serviceOrderId);
+    
+    // Payment status might change if total cost changes (e.g. from Lunas to DP / Sebagian)
+    paymentController.updateServicePaymentStatus(serviceOrderId);
 }
 
 module.exports = {

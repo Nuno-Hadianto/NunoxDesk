@@ -80,5 +80,6 @@ function updateServicePaymentStatus(serviceOrderId) {
 module.exports = {
     getPaymentsByServiceId,
     addPayment,
-    deletePayment
+    deletePayment,
+    updateServicePaymentStatus
 };
