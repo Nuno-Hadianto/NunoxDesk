@@ -24,6 +24,7 @@ function createWindow() {
     minWidth: 900,
     minHeight: 600,
     title: 'nuNox_servis - NUNOX_SERVIS',
+    icon: path.join(__dirname, '..', 'public', 'img', 'logo.png'),
     autoHideMenuBar: true, // Sembunyikan menu bar bawaan agar lebih bersih
     webPreferences: {
       nodeIntegration: false,
