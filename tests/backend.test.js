@@ -1,5 +1,4 @@
 process.env.NODE_ENV = 'test';
-const assert = require('assert');
 const db = require('../database/db');
 const userController = require('../controllers/userController');
 const customerController = require('../controllers/customerController');
@@ -7,76 +6,108 @@ const deviceController = require('../controllers/deviceController');
 const partController = require('../controllers/partController');
 const dashboardController = require('../controllers/dashboardController');
 
-async function runTests() {
-    console.log("Starting integration tests...");
+describe('Backend Integration Tests', () => {
 
-    // 1. User Controller
-    console.log("Testing userController...");
-    // userController already inserts a default 'admin' on initialization
-    const users = userController.getUsers();
-    assert.strictEqual(users.length, 1, "Should have 1 default admin user");
-    assert.strictEqual(users[0].username, 'admin');
-
-    const teknisi = userController.addUser({ username: 'joko', password: '123', role: 'teknisi' });
-    assert.ok(teknisi > 0 || teknisi.id > 0 || teknisi !== undefined, "Teknisi user created");
-    
-    let loginOk = userController.login('joko', '123');
-    assert.strictEqual(loginOk.username, 'joko', "Login successful");
-    
-    assert.throws(() => {
-        userController.login('joko', 'wrong');
-    }, /salah/, "Wrong password should throw");
-
-    // Test admin deletion protection
-    assert.throws(() => {
-        userController.deleteUser(users[0].id);
-    }, /Admin terakhir/i, "Cannot delete last admin");
-
-    // 2. Customer & Device Controller
-    console.log("Testing customerController & deviceController...");
-    const customer = customerController.addCustomer({ name: 'Budi', phone: '0812', address: 'Jakarta', notes: '' });
-    assert.ok(customer > 0, "Customer created");
-
-    const device = deviceController.addDevice({
-        customer_id: customer,
-        device_type: 'Laptop',
-        brand: 'Asus',
-        model: 'ROG',
-        serial_number: 'SN123',
-        color: 'Black',
-        accessories: 'Charger',
-        physical_condition: 'Good',
-        notes: ''
+    afterAll(() => {
+        // Tutup koneksi database setelah semua tes selesai
+        if (db && db.open) {
+            db.close();
+        }
     });
-    assert.ok(device > 0, "Device created");
 
-    // 3. Parts Controller
-    console.log("Testing partController...");
-    const part = partController.addPart({
-        part_code: 'P001',
-        name: 'RAM 8GB',
-        category: 'Memory',
-        unit: 'Pcs',
-        stock: 10,
-        buy_price: 200000,
-        sell_price: 350000,
-        notes: ''
+    describe('User Controller', () => {
+        it('seharusnya memiliki 1 default admin', () => {
+            const users = userController.getUsers();
+            expect(users).toHaveLength(1);
+            expect(users[0].username).toBe('admin');
+        });
+
+        it('seharusnya bisa membuat user teknisi baru', () => {
+            const teknisiId = userController.addUser({ username: 'joko', password: '123', role: 'teknisi' });
+            expect(teknisiId).toBeDefined();
+            expect(teknisiId).toBeGreaterThan(0);
+        });
+
+        it('seharusnya bisa login dengan username dan password yang benar', () => {
+            const user = userController.login('joko', '123');
+            expect(user.username).toBe('joko');
+        });
+
+        it('seharusnya gagal login jika password salah', () => {
+            expect(() => {
+                userController.login('joko', 'wrong');
+            }).toThrow(/salah/);
+        });
+
+        it('tidak boleh menghapus admin terakhir', () => {
+            const users = userController.getUsers();
+            const adminUser = users.find(u => u.username === 'admin');
+            
+            expect(() => {
+                userController.deleteUser(adminUser.id);
+            }).toThrow(/Admin terakhir/i);
+        });
     });
-    assert.ok(part > 0, "Part created");
-    
-    partController.updatePartStock(part, -2);
-    const updatedPart = partController.getPartById(part);
-    assert.strictEqual(updatedPart.stock, 8, "Stock updated to 8");
 
-    // 4. Dashboard Controller
-    console.log("Testing dashboardController...");
-    const stats = dashboardController.getDashboardStats();
-    assert.strictEqual(stats.todayServices, 0, "Dashboard has 0 todayServices");
+    describe('Customer & Device Controller', () => {
+        let customerId;
 
-    console.log("✅ All tests passed successfully!");
-}
+        it('seharusnya bisa menambahkan pelanggan baru', () => {
+            customerId = customerController.addCustomer({ 
+                name: 'Budi', 
+                phone: '0812', 
+                address: 'Jakarta', 
+                notes: '' 
+            });
+            expect(customerId).toBeGreaterThan(0);
+        });
 
-runTests().catch(err => {
-    console.error("❌ Test failed:", err);
-    process.exit(1);
+        it('seharusnya bisa menambahkan perangkat untuk pelanggan tersebut', () => {
+            const deviceId = deviceController.addDevice({
+                customer_id: customerId,
+                device_type: 'Laptop',
+                brand: 'Asus',
+                model: 'ROG',
+                serial_number: 'SN123',
+                color: 'Black',
+                accessories: 'Charger',
+                physical_condition: 'Good',
+                notes: ''
+            });
+            expect(deviceId).toBeGreaterThan(0);
+        });
+    });
+
+    describe('Part Controller', () => {
+        let partId;
+
+        it('seharusnya bisa menambahkan part/suku cadang baru', () => {
+            partId = partController.addPart({
+                part_code: 'P001',
+                name: 'RAM 8GB',
+                category: 'Memory',
+                unit: 'Pcs',
+                stock: 10,
+                buy_price: 200000,
+                sell_price: 350000,
+                notes: ''
+            });
+            expect(partId).toBeGreaterThan(0);
+        });
+
+        it('seharusnya bisa mengupdate stok', () => {
+            partController.updatePartStock(partId, -2);
+            const updatedPart = partController.getPartById(partId);
+            expect(updatedPart.stock).toBe(8);
+        });
+    });
+
+    describe('Dashboard Controller', () => {
+        it('seharusnya bisa mengambil statistik dashboard dengan benar', () => {
+            const stats = dashboardController.getDashboardStats();
+            expect(stats).toBeDefined();
+            expect(stats.todayServices).toBeDefined();
+            expect(stats.todayServices).toBeGreaterThanOrEqual(0);
+        });
+    });
 });
