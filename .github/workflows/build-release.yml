@@ -1,0 +1,38 @@
+name: Build and Release Windows App
+
+on:
+  push:
+    tags:
+      - 'v*' # Akan otomatis terpicu jika Anda melakukan git tag (misalnya v1.0.0) dan push
+
+jobs:
+  release:
+    runs-on: windows-latest
+    
+    # Memberikan izin untuk membuat GitHub Release
+    permissions:
+      contents: write 
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Build Windows App (.exe)
+      run: npm run build
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Upload Release to GitHub
+      uses: softprops/action-gh-release@v2
+      with:
+        files: dist/*.exe
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
