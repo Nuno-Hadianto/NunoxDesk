@@ -6,6 +6,10 @@
         
         try {
             const settings = await window.api.getSettings();
+            let logoBase64 = '';
+            if (window.api.getLogoBase64) {
+                logoBase64 = await window.api.getLogoBase64();
+            }
             const service = await window.api.getService(id);
             const printArea = document.getElementById('print-area');
             
@@ -18,6 +22,7 @@
                     <!-- Header -->
                     <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #1e293b; padding-bottom: 5px; margin-bottom: 8px;">
                         <div style="flex: 1;">
+                            ${logoBase64 ? `<img src="${logoBase64}" alt="Logo" style="max-height: 50px; object-fit: contain; margin-bottom: 5px;" />` : ''}
                             <h2 style="font-size: 1.5rem; margin: 0 0 2px 0; font-weight: 800; color: #0f172a;">${settings.business_name || 'NUNOX SERVIS'}</h2>
                             <div style="font-size: 0.85rem; color: #475569;">${settings.address || ''}</div>
                             <div style="font-size: 0.85rem; color: #475569; margin-top: 2px; font-weight: 600;">📞 ${settings.whatsapp || settings.phone || ''}</div>
@@ -101,6 +106,10 @@
         
         try {
             const settings = await window.api.getSettings();
+            let logoBase64 = '';
+            if (window.api.getLogoBase64) {
+                logoBase64 = await window.api.getLogoBase64();
+            }
             const service = await window.api.getService(id);
             const items = await window.api.getServiceItems(id);
             const payments = await window.api.getPayments(id);
@@ -138,6 +147,7 @@
                     <!-- Header -->
                     <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #4f46e5; padding-bottom: 8px; margin-bottom: 10px;">
                         <div style="flex: 1;">
+                            ${logoBase64 ? `<img src="${logoBase64}" alt="Logo" style="max-height: 50px; object-fit: contain; margin-bottom: 5px;" />` : ''}
                             <h2 style="font-size: 1.5rem; margin: 0 0 2px 0; font-weight: 800; color: #0f172a;">${settings.business_name || 'NUNOX SERVIS'}</h2>
                             <div style="font-size: 0.85rem; color: #475569;">${settings.address || ''}</div>
                             <div style="font-size: 0.85rem; color: #475569; margin-top: 2px; font-weight: 600;">📞 ${settings.whatsapp || settings.phone || ''}</div>

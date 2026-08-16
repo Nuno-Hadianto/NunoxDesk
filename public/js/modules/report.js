@@ -101,6 +101,10 @@
 
         try {
             const settings = await window.api.getSettings();
+            let logoBase64 = '';
+            if (window.api.getLogoBase64) {
+                logoBase64 = await window.api.getLogoBase64();
+            }
             const incomeData = await window.api.getIncomeReport(start, end);
             const services = await window.api.getCompletedServices(start, end);
             
@@ -200,6 +204,10 @@
     document.getElementById('btn-print-blank-receipt').addEventListener('click', async () => {
         try {
             const settings = await window.api.getSettings();
+            let logoBase64 = '';
+            if (window.api.getLogoBase64) {
+                logoBase64 = await window.api.getLogoBase64();
+            }
             const printArea = document.getElementById('print-area');
             
             const html = `
@@ -210,6 +218,7 @@
                 <div style="max-width: 100%; margin: 0; background: #fff; padding: 5px 10px; box-sizing: border-box;">
                     <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #4f46e5; padding-bottom: 8px; margin-bottom: 12px;">
                         <div>
+                            ${logoBase64 ? `<img src="${logoBase64}" alt="Logo" style="max-height: 50px; object-fit: contain; margin-bottom: 5px;" />` : ''}
                             <h2 style="font-size: 1.4rem; color: #1e293b; margin: 0 0 5px 0; font-weight: 800;">${settings.business_name || 'NUNOX SERVIS'}</h2>
                             <div style="color: #475569; font-size: 0.85rem; max-width: 320px; line-height: 1.4;">${settings.address || ''}</div>
                             <div style="color: #475569; font-size: 0.85rem; margin-top: 4px; font-weight: 600;">📞 Telp/WA: ${settings.whatsapp || settings.phone || ''}</div>
@@ -276,6 +285,10 @@
     document.getElementById('btn-print-blank-nota').addEventListener('click', async () => {
         try {
             const settings = await window.api.getSettings();
+            let logoBase64 = '';
+            if (window.api.getLogoBase64) {
+                logoBase64 = await window.api.getLogoBase64();
+            }
             const printArea = document.getElementById('print-area');
             
             const html = `
@@ -287,6 +300,7 @@
                     <!-- Header -->
                     <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #1e293b; padding-bottom: 5px; margin-bottom: 8px;">
                         <div style="flex: 1;">
+                            ${logoBase64 ? `<img src="${logoBase64}" alt="Logo" style="max-height: 50px; object-fit: contain; margin-bottom: 5px;" />` : ''}
                             <h2 style="font-size: 1.5rem; margin: 0 0 2px 0; font-weight: 800; color: #0f172a;">${settings.business_name || 'NUNOX SERVIS'}</h2>
                             <div style="font-size: 0.85rem; color: #475569;">${settings.address || ''}</div>
                             <div style="font-size: 0.85rem; color: #475569; margin-top: 2px; font-weight: 600;">📞 ${settings.whatsapp || settings.phone || ''}</div>
