@@ -19,7 +19,7 @@ test.describe('nuNox_servis UI Black-box testing', () => {
     
     // Perform login since the app now requires it
     await window.fill('#login-username', 'admin');
-    await window.fill('#login-password', 'admin');
+    await window.fill('#login-password', 'admin123');
     await window.click('#btn-login');
     
     // Give it time to authenticate and switch view
