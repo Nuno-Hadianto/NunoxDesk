@@ -16,8 +16,14 @@ test.describe('nuNox_servis UI Black-box testing', () => {
     // Wait for the first BrowserWindow
     window = await electronApp.firstWindow();
     await window.waitForLoadState('domcontentloaded');
-    // Give it a tiny bit of time for app.js scripts to attach
-    await window.waitForTimeout(500);
+    
+    // Perform login since the app now requires it
+    await window.fill('#login-username', 'admin');
+    await window.fill('#login-password', 'admin');
+    await window.click('#btn-login');
+    
+    // Give it time to authenticate and switch view
+    await window.waitForTimeout(1000);
   });
 
   test.afterAll(async () => {
