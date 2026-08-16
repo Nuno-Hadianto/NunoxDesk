@@ -61,6 +61,8 @@ contextBridge.exposeInMainWorld('api', {
   // Export
   exportExcel: (data) => ipcRenderer.invoke('export-excel', data),
   exportPdf: (data) => ipcRenderer.invoke('export-pdf', data),
+  openExternalUrl: (url) => ipcRenderer.invoke('open-external-url', url),
+  getLogoBase64: () => ipcRenderer.invoke('get-logo-base64'),
   
   // Print Preview
   printPreview: (options) => ipcRenderer.invoke('print-preview', options),

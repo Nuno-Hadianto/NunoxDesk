@@ -270,6 +270,34 @@ function createWindow() {
     return false;
   });
 
+  // Open External URL (for WhatsApp)
+  ipcMain.handle('open-external-url', async (event, url) => {
+    try {
+      await shell.openExternal(url);
+      return true;
+    } catch (error) {
+      console.error('Failed to open external url:', error);
+      return false;
+    }
+  });
+
+  // Get Logo as Base64 (for PDF)
+  ipcMain.handle('get-logo-base64', async () => {
+    try {
+      const logoPath = path.join(__dirname, '..', 'public', 'img', 'logo.png');
+      if (fs.existsSync(logoPath)) {
+        const ext = path.extname(logoPath).toLowerCase();
+        const mimeType = ext === '.png' ? 'image/png' : (ext === '.jpg' || ext === '.jpeg' ? 'image/jpeg' : 'image/png');
+        const bitmap = fs.readFileSync(logoPath);
+        return `data:${mimeType};base64,${bitmap.toString('base64')}`;
+      }
+      return null;
+    } catch (error) {
+      console.error('Failed to read logo:', error);
+      return null;
+    }
+  });
+
   mainWindow.on('closed', () => {
     mainWindow = null;
   });

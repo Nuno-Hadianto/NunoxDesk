@@ -388,7 +388,7 @@
         const status = document.getElementById('detail-status-badge').textContent;
         
         const text = `Halo Bpk/Ibu ${customerName}, perihal perbaikan perangkat ${device}, nomor tiket ${ticket} saat ini berstatus ${status}. Terima kasih.`;
-        window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, '_blank');
+        window.api.openExternalUrl(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`);
     });
 
     // Export PDF Invoice
@@ -397,10 +397,17 @@
         if (!id) return;
         
         try {
+            
             const settings = await window.api.getSettings();
             const service = await window.api.getService(id);
             const items = await window.api.getServiceItems(id);
             const payments = await window.api.getPayments(id);
+            
+            // Get Logo Base64
+            let logoBase64 = '';
+            if (window.api.getLogoBase64) {
+                logoBase64 = await window.api.getLogoBase64();
+            }
             
             const formatRp = (val) => new Intl.NumberFormat('id-ID', {
                 style: 'currency', currency: 'IDR', minimumFractionDigits: 0
@@ -411,12 +418,12 @@
                 let desc = i.description;
                 if (i.item_type === 'Sparepart') desc = i.part_name || desc;
                 itemsHtml += `
-                    <tr style="border-bottom: 1px dashed #cbd5e1;">
-                        <td style="padding: 8px 4px; color: #334155;">
-                            <div style="font-weight: 600; font-size: 0.85rem; margin-bottom: 2px;">${desc}</div>
-                            <div style="font-size: 0.75rem; color: #64748b;">${i.item_type} - Jumlah: ${i.quantity} x ${formatRp(i.price)}</div>
+                    <tr style="border-bottom: 1px solid #e2e8f0; background: #ffffff;">
+                        <td style="padding: 12px 15px; color: #334155;">
+                            <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; color: #1e293b;">${desc}</div>
+                            <div style="font-size: 0.8rem; color: #64748b;">${i.item_type} &bull; Qty: ${i.quantity} &bull; ${formatRp(i.price)}/item</div>
                         </td>
-                        <td style="padding: 8px 4px; text-align: right; font-weight: bold; font-size: 0.9rem; color: #1e293b;">${formatRp(i.total)}</td>
+                        <td style="padding: 12px 15px; text-align: right; font-weight: 700; font-size: 1rem; color: #0f172a;">${formatRp(i.total)}</td>
                     </tr>
                 `;
             });
@@ -424,46 +431,79 @@
             let totalPaid = payments.reduce((acc, p) => acc + p.amount, 0);
             let remaining = service.total_cost - totalPaid;
             
+            const logoHtml = logoBase64 
+                ? `<img src="${logoBase64}" alt="Logo" style="max-height: 70px; object-fit: contain; margin-bottom: 10px;" />`
+                : `<div style="width: 50px; height: 50px; background: linear-gradient(135deg, #6366f1, #8b5cf6); border-radius: 12px; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 24px;">${(settings.business_name || 'N').charAt(0)}</div>`;
+            
             const html = `
                 <style>
-                    @page { margin: 5mm; }
-                    body { -webkit-print-color-adjust: exact; print-color-adjust: exact; margin: 0; padding: 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+                    @page { margin: 0; size: A4 portrait; }
+                    body { 
+                        -webkit-print-color-adjust: exact; 
+                        print-color-adjust: exact; 
+                        margin: 0; 
+                        padding: 0; 
+                        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+                        background: #f8fafc;
+                    }
+                    .invoice-box {
+                        max-width: 800px;
+                        margin: 0 auto;
+                        padding: 50px;
+                        background: white;
+                        min-height: 100vh;
+                        box-sizing: border-box;
+                        position: relative;
+                    }
+                    .invoice-box::before {
+                        content: '';
+                        position: absolute;
+                        top: 0; left: 0; right: 0;
+                        height: 8px;
+                        background: linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%);
+                    }
                 </style>
-                <div style="width: 100%; box-sizing: border-box;">
-                    <!-- Header -->
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #4f46e5; padding-bottom: 8px; margin-bottom: 10px;">
+                <div class="invoice-box">
+                    
+                    <!-- Header Section -->
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px;">
                         <div style="flex: 1;">
-                            <h2 style="font-size: 1.5rem; margin: 0 0 2px 0; font-weight: 800; color: #0f172a;">${settings.business_name || 'NUNOX SERVIS'}</h2>
-                            <div style="font-size: 0.85rem; color: #475569;">${settings.address || ''}</div>
-                            <div style="font-size: 0.85rem; color: #475569; margin-top: 2px; font-weight: 600;">📱 ${settings.whatsapp || settings.phone || ''}</div>
+                            ${logoHtml}
+                            <h2 style="font-size: 1.8rem; margin: 0 0 5px 0; font-weight: 800; color: #0f172a; letter-spacing: -0.5px;">${settings.business_name || 'NUNOX SERVIS'}</h2>
+                            <div style="font-size: 0.9rem; color: #475569; line-height: 1.5; max-width: 250px;">${settings.address || ''}</div>
+                            <div style="font-size: 0.9rem; color: #4f46e5; margin-top: 5px; font-weight: 600;">${settings.whatsapp || settings.phone || ''}</div>
                         </div>
                         <div style="text-align: right; flex: 1;">
-                            <h1 style="font-size: 1.8rem; color: #4f46e5; margin: 0 0 5px 0; text-transform: uppercase; letter-spacing: 2px; font-weight: 900;">INVOICE</h1>
-                            <div style="font-size: 0.9rem; color: #334155; margin-bottom: 2px;"><strong>No:</strong> ${service.ticket_number}</div>
-                            <div style="font-size: 0.8rem; color: #64748b;">Tanggal: ${new Date().toLocaleDateString('id-ID')}</div>
+                            <h1 style="font-size: 2.5rem; color: #1e1b4b; margin: 0 0 10px 0; font-weight: 900; letter-spacing: 1px;">INVOICE</h1>
+                            <div style="background: #f1f5f9; display: inline-block; padding: 10px 20px; border-radius: 8px; text-align: left;">
+                                <div style="font-size: 0.8rem; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px;">No. Tiket</div>
+                                <div style="font-size: 1.1rem; color: #0f172a; font-weight: 800;">${service.ticket_number}</div>
+                                <div style="font-size: 0.8rem; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-top: 10px; margin-bottom: 2px;">Tanggal</div>
+                                <div style="font-size: 0.95rem; color: #0f172a; font-weight: 600;">${new Date().toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+                            </div>
                         </div>
                     </div>
                     
-                    <!-- Customer Info -->
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 15px; background: #f8fafc; padding: 8px; border-radius: 6px; border: 1px solid #e2e8f0;">
-                        <div style="flex: 1;">
-                            <div style="font-size: 0.75rem; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px;">Tagihan Kepada</div>
-                            <div style="font-weight: bold; color: #0f172a; font-size: 0.95rem;">${service.customer_name}</div>
-                            <div style="font-size: 0.85rem; color: #475569;">${service.customer_phone || '-'}</div>
+                    <!-- Customer & Device Info -->
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 30px; gap: 20px;">
+                        <div style="flex: 1; background: #ffffff; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+                            <div style="font-size: 0.75rem; color: #64748b; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; font-weight: 700;">Tagihan Kepada</div>
+                            <div style="font-weight: 800; color: #0f172a; font-size: 1.1rem; margin-bottom: 4px;">${service.customer_name}</div>
+                            <div style="font-size: 0.9rem; color: #475569;">${service.customer_phone || '-'}</div>
                         </div>
-                        <div style="flex: 1; text-align: right;">
-                            <div style="font-size: 0.75rem; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px;">Perangkat</div>
-                            <div style="font-weight: bold; color: #0f172a; font-size: 0.95rem;">${service.device_type} ${service.brand || ''}</div>
-                            <div style="font-size: 0.85rem; color: #475569;">${service.model || ''}</div>
+                        <div style="flex: 1; background: #ffffff; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+                            <div style="font-size: 0.75rem; color: #64748b; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; font-weight: 700;">Informasi Perangkat</div>
+                            <div style="font-weight: 800; color: #0f172a; font-size: 1.1rem; margin-bottom: 4px;">${service.device_type} ${service.brand || ''}</div>
+                            <div style="font-size: 0.9rem; color: #475569;">${service.model || '-'}</div>
                         </div>
                     </div>
                     
-                    <!-- Items -->
-                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px;">
+                    <!-- Items Table -->
+                    <table style="width: 100%; border-collapse: separate; border-spacing: 0; margin-bottom: 30px; border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0;">
                         <thead>
-                            <tr style="border-bottom: 2px solid #e2e8f0;">
-                                <th style="text-align: left; padding: 6px 4px; font-size: 0.8rem; color: #64748b; text-transform: uppercase;">Deskripsi</th>
-                                <th style="text-align: right; padding: 6px 4px; font-size: 0.8rem; color: #64748b; text-transform: uppercase;">Subtotal</th>
+                            <tr style="background-color: #f8fafc;">
+                                <th style="text-align: left; padding: 15px; font-size: 0.8rem; color: #475569; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; border-bottom: 2px solid #e2e8f0;">Deskripsi Layanan / Suku Cadang</th>
+                                <th style="text-align: right; padding: 15px; font-size: 0.8rem; color: #475569; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; border-bottom: 2px solid #e2e8f0;">Subtotal</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -471,35 +511,43 @@
                         </tbody>
                     </table>
                     
-                    <!-- Totals -->
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
-                        <div style="flex: 1; padding-right: 20px;">
-                            <div style="font-size: 0.75rem; color: #64748b; margin-bottom: 3px;">Catatan:</div>
-                            <div style="font-size: 0.8rem; color: #475569; background: #f8fafc; padding: 6px; border-radius: 4px; border: 1px dashed #cbd5e1;">
-                                ${settings.receipt_footer || 'Terima kasih telah menggunakan jasa kami.'}
+                    <!-- Summary & Totals -->
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 50px;">
+                        <div style="flex: 1.5; padding-right: 40px;">
+                            <div style="font-size: 0.8rem; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; font-weight: 700;">Catatan Tambahan</div>
+                            <div style="font-size: 0.9rem; color: #475569; background: #f8fafc; padding: 15px; border-radius: 8px; border-left: 4px solid #6366f1; line-height: 1.6;">
+                                ${settings.receipt_footer || 'Terima kasih telah mempercayakan perbaikan perangkat Anda kepada kami. Garansi servis berlaku selama 30 hari sejak tanggal pengambilan.'}
                             </div>
                         </div>
-                        <div style="flex: 1;">
-                            <table style="width: 100%; font-size: 0.9rem;">
+                        <div style="flex: 1; background: #f8fafc; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0;">
+                            <table style="width: 100%; font-size: 0.95rem;">
                                 <tr>
-                                    <td style="padding: 4px 0; color: #64748b;">Total Biaya:</td>
-                                    <td style="text-align: right; padding: 4px 0; font-weight: bold; color: #1e293b;">${formatRp(service.total_cost)}</td>
+                                    <td style="padding: 6px 0; color: #64748b; font-weight: 500;">Total Biaya:</td>
+                                    <td style="text-align: right; padding: 6px 0; font-weight: 700; color: #1e293b;">${formatRp(service.total_cost)}</td>
                                 </tr>
                                 <tr>
-                                    <td style="padding: 4px 0; color: #64748b;">Telah Dibayar:</td>
-                                    <td style="text-align: right; padding: 4px 0; font-weight: bold; color: #10b981;">${formatRp(totalPaid)}</td>
+                                    <td style="padding: 6px 0; color: #64748b; font-weight: 500;">Telah Dibayar:</td>
+                                    <td style="text-align: right; padding: 6px 0; font-weight: 700; color: #10b981;">${formatRp(totalPaid)}</td>
                                 </tr>
-                                <tr style="border-top: 2px solid #e2e8f0;">
-                                    <td style="padding: 6px 0 0 0; color: #0f172a; font-weight: bold; font-size: 1rem;">Sisa Tagihan:</td>
-                                    <td style="text-align: right; padding: 6px 0 0 0; font-weight: bold; font-size: 1.1rem; color: ${remaining > 0 ? '#ef4444' : '#10b981'};">${formatRp(Math.max(0, remaining))}</td>
+                                <tr><td colspan="2"><hr style="border: 0; border-top: 1px solid #cbd5e1; margin: 10px 0;"></td></tr>
+                                <tr>
+                                    <td style="padding: 6px 0; color: #0f172a; font-weight: 800; font-size: 1.1rem;">Sisa Tagihan:</td>
+                                    <td style="text-align: right; padding: 6px 0; font-weight: 900; font-size: 1.2rem; color: ${remaining > 0 ? '#ef4444' : '#10b981'};">${formatRp(Math.max(0, remaining))}</td>
                                 </tr>
                             </table>
                         </div>
                     </div>
                     
-                    <!-- Footer -->
-                    <div style="text-align: center; margin-top: 10px; font-size: 0.75rem; color: #94a3b8; border-top: 1px solid #e2e8f0; padding-top: 10px;">
-                        Dicetak pada: ${new Date().toLocaleString('id-ID')}
+                    <!-- Signatures -->
+                    <div style="display: flex; justify-content: space-between; padding: 0 40px; margin-top: 60px;">
+                        <div style="text-align: center; flex: 1;">
+                            <div style="font-size: 0.9rem; color: #64748b; margin-bottom: 70px;">Pelanggan</div>
+                            <div style="border-top: 1px solid #94a3b8; width: 150px; margin: 0 auto; padding-top: 5px; font-weight: 700; color: #1e293b;">${service.customer_name}</div>
+                        </div>
+                        <div style="text-align: center; flex: 1;">
+                            <div style="font-size: 0.9rem; color: #64748b; margin-bottom: 70px;">Teknisi / Kasir</div>
+                            <div style="border-top: 1px solid #94a3b8; width: 150px; margin: 0 auto; padding-top: 5px; font-weight: 700; color: #1e293b;">${settings.business_name || 'NUNOX'}</div>
+                        </div>
                     </div>
                 </div>
             `;
