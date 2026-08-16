@@ -22,8 +22,9 @@ test.describe('nuNox_servis UI Black-box testing', () => {
     await window.fill('#login-password', 'admin123');
     await window.click('#btn-login');
     
-    // Give it time to authenticate and switch view
-    await window.waitForTimeout(1000);
+    // Wait for authentication and view switch
+    const dashboardView = window.locator('#view-dashboard');
+    await expect(dashboardView).toBeVisible({ timeout: 5000 });
   });
 
   test.afterAll(async () => {

@@ -1,4 +1,5 @@
 const db = require('../database/db');
+const bcrypt = require('bcryptjs');
 
 // Inisialisasi: Cek apakah ada user, jika tidak buat default admin
 function init() {
@@ -7,8 +8,9 @@ function init() {
     
     if (result.count === 0) {
         console.log("No users found. Creating default admin...");
+        const hash = bcrypt.hashSync('admin123', 10);
         const stmt = db.prepare(`INSERT INTO users (username, password, role) VALUES (?, ?, ?)`);
-        stmt.run('admin', 'admin123', 'admin');
+        stmt.run('admin', hash, 'admin');
     }
 }
 
@@ -16,12 +18,15 @@ function init() {
 init();
 
 function login(username, password) {
-    const stmt = db.prepare(`SELECT id, username, role FROM users WHERE username = ? AND password = ?`);
-    const user = stmt.get(username, password);
-    if (!user) {
+    const stmt = db.prepare(`SELECT id, username, password, role FROM users WHERE username = ?`);
+    const user = stmt.get(username);
+    if (!user || !bcrypt.compareSync(password, user.password)) {
         throw new Error("Username atau password salah!");
     }
-    return user;
+    
+    // Remove password from user object before returning
+    const { password: _, ...safeUser } = user;
+    return safeUser;
 }
 
 function getUsers() {
@@ -43,8 +48,9 @@ function addUser(data) {
         throw new Error("Username sudah digunakan!");
     }
 
+    const hash = bcrypt.hashSync(password, 10);
     const stmt = db.prepare(`INSERT INTO users (username, password, role) VALUES (?, ?, ?)`);
-    const info = stmt.run(username, password, role);
+    const info = stmt.run(username, hash, role);
     return info.lastInsertRowid;
 }
 
@@ -58,8 +64,9 @@ function updateUser(id, data) {
     }
 
     if (password && password.trim() !== '') {
+        const hash = bcrypt.hashSync(password, 10);
         const stmt = db.prepare(`UPDATE users SET username = ?, password = ?, role = ? WHERE id = ?`);
-        stmt.run(username, password, role, id);
+        stmt.run(username, hash, role, id);
     } else {
         const stmt = db.prepare(`UPDATE users SET username = ?, role = ? WHERE id = ?`);
         stmt.run(username, role, id);

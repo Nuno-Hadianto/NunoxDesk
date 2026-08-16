@@ -49,6 +49,7 @@
     "jest": "^30.4.2"
   },
   "dependencies": {
+    "bcryptjs": "^3.0.3",
     "better-sqlite3": "^13.0.3",
     "sweetalert2": "^11.26.25",
     "xlsx": "^0.18.5"
@@ -60,4 +61,3 @@
     ]
   }
 }
-
