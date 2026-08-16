@@ -78,4 +78,58 @@ test.describe('nuNox_servis UI Black-box testing', () => {
     const closeBtn = modal.locator('.close-modal').first();
     await closeBtn.click();
   });
+
+  test('Should be able to complete a full core business flow (Customer -> Device -> Service)', async () => {
+    // === 1. Buat Pelanggan ===
+    await window.locator('#nav-customers').click();
+    await expect(window.locator('#view-customers')).toBeVisible();
+
+    await window.locator('#btn-add-customer').click();
+    await expect(window.locator('#customer-modal')).toBeVisible();
+
+    await window.fill('#customer-name', 'Budi Santoso');
+    await window.fill('#customer-phone', '08123456789');
+    
+    await window.locator('#customer-form button[type="submit"]').click();
+    await expect(window.locator('#customer-modal')).toBeHidden();
+
+    // === 2. Buat Perangkat ===
+    await window.locator('#nav-devices').click();
+    await expect(window.locator('#view-devices')).toBeVisible();
+    await window.locator('#btn-add-device').click();
+    await expect(window.locator('#device-modal')).toBeVisible();
+
+    // Tunggu opsi pelanggan terisi lalu pilih
+    await window.waitForTimeout(500); 
+    await window.locator('#device-customer-id').selectOption({ index: 1 });
+    await window.locator('#device-type').selectOption({ label: 'Laptop' });
+    await window.fill('#device-brand', 'Asus');
+    await window.fill('#device-model', 'ROG');
+    await window.fill('#device-condition', 'Layar retak');
+    
+    await window.locator('#device-form button[type="submit"]').click();
+    await expect(window.locator('#device-modal')).toBeHidden();
+
+    // === 3. Buat Tiket Servis ===
+    await window.locator('#nav-services').click();
+    await expect(window.locator('#view-services')).toBeVisible();
+    await window.locator('#btn-add-service').click();
+    await expect(window.locator('#service-modal')).toBeVisible();
+
+    await window.waitForTimeout(500);
+    await window.locator('#service-customer-id').selectOption({ index: 1 }); // Pilih pelanggan
+
+    
+    await window.waitForTimeout(500);
+    await window.locator('#service-device-id').selectOption({ index: 1 }); // Index 1 karena index 0 = "-- Pilih --"
+    
+    await window.fill('#service-complaint', 'Layar pecah');
+    
+    await window.locator('#service-form button[type="submit"]').click();
+    await expect(window.locator('#service-modal')).toBeHidden();
+    
+    // Pastikan tiket servis ada di tabel
+    const serviceList = window.locator('#service-list');
+    await expect(serviceList).toContainText('Budi Santoso');
+  });
 });

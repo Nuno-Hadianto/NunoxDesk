@@ -12,7 +12,8 @@
 
     async function loadServiceCustomersDropdown() {
         if (window.api && window.api.getCustomers) {
-            const customers = await window.api.getCustomers();
+            const result = await window.api.getCustomers('', 1, 1000);
+            const customers = result.data || [];
             const select = document.getElementById('service-customer-id');
             select.innerHTML = '<option value="">-- Pilih Pelanggan --</option>';
             customers.forEach(c => {

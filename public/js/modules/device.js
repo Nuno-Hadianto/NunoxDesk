@@ -7,7 +7,8 @@
 
     async function loadCustomersDropdown(selectedId = null) {
         if (window.api && window.api.getCustomers) {
-            const customers = await window.api.getCustomers();
+            const result = await window.api.getCustomers('', 1, 1000); // load all for dropdown
+            const customers = result.data || [];
             const select = document.getElementById('device-customer-id');
             select.innerHTML = '<option value="">-- Pilih Pelanggan --</option>';
             customers.forEach(c => {
