@@ -488,7 +488,7 @@ const printThermal = async () => {
   try {
       const { settings, logoBase64 } = await getCommonData()
       const html = generateThermalNotaHtml(settings, service.value, logoBase64)
-      await printHtml(html, false) // portrait for thermal
+      await printHtml(html, false, true) // portrait for thermal, isThermal = true
   } catch (error) {
       console.error(error)
       window.Swal.fire('Error', 'Gagal mencetak struk thermal.', 'error')

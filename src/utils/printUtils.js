@@ -446,13 +446,19 @@ export const generateReportHtml = (settings, services, startDate, endDate, total
     `;
 }
 
-export const printHtml = async (html, landscape = false) => {
+export const printHtml = async (html, landscape = false, isThermal = false) => {
     const printArea = document.getElementById('print-area');
     if (printArea) {
         printArea.innerHTML = html;
         if (window.api && window.api.printPreview) {
             try {
-                await window.api.printPreview({ landscape, pageSize: landscape ? 'A5' : 'A4' });
+                let pageSize = landscape ? 'A5' : 'A4';
+                if (isThermal) {
+                    // Custom page size for 58mm thermal paper (58mm x 200mm)
+                    // Electron's printToPDF expects size in microns (1mm = 1000 microns)
+                    pageSize = { width: 58000, height: 200000 };
+                }
+                await window.api.printPreview({ landscape: landscape && !isThermal, pageSize });
             } catch (err) {
                 console.error("Print preview error:", err);
             }
