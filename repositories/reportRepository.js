@@ -20,7 +20,7 @@ function getCompletedServices(startDate, endDate) {
         FROM service_orders so
         JOIN customers c ON so.customer_id = c.id
         JOIN devices d ON so.device_id = d.id
-        WHERE so.service_status IN ('Selesai', 'Diambil')
+        WHERE (so.service_status = 'Selesai (Sudah Diambil)' OR so.service_status = 'Selesai (Belum Diambil)' OR so.service_status LIKE '%Selesai%')
           AND date(so.completed_date, 'localtime') >= date(?) AND date(so.completed_date, 'localtime') <= date(?)
     `);
     return stmt.all(startDate, endDate);

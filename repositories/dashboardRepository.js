@@ -10,11 +10,11 @@ function getDashboardStats() {
     const todayServices = todayServicesQuery.get(today).count;
 
     // Sedang Dikerjakan
-    const inProgressQuery = db.prepare(`SELECT COUNT(*) as count FROM service_orders WHERE service_status NOT IN ('Selesai', 'Diambil', 'Dibatalkan')`);
+    const inProgressQuery = db.prepare(`SELECT COUNT(*) as count FROM service_orders WHERE service_status NOT LIKE '%Selesai%' AND service_status NOT IN ('Batal', 'Dibatalkan')`);
     const inProgress = inProgressQuery.get().count;
 
     // Selesai (hari ini atau bulan ini atau total?) Let's say all time total completed, or just completed
-    const completedQuery = db.prepare(`SELECT COUNT(*) as count FROM service_orders WHERE service_status = 'Selesai' OR service_status = 'Diambil'`);
+    const completedQuery = db.prepare(`SELECT COUNT(*) as count FROM service_orders WHERE service_status LIKE '%Selesai%'`);
     const completed = completedQuery.get().count;
 
     // Pendapatan Bulan Ini (Total dari payments)

@@ -97,7 +97,7 @@ function updateServiceStatus(id, status, notes) {
         const historyStmt = db.prepare(`INSERT INTO service_status_history (service_order_id, status, notes) VALUES (?, ?, ?)`);
         historyStmt.run(id, status, notes);
         
-        if (status === 'Selesai' || status === 'Diambil') {
+        if (status === 'Selesai (Belum Diambil)' || status === 'Selesai (Sudah Diambil)' || status.includes('Selesai')) {
             // Hanya set completed_date jika masih kosong agar tanggal aslinya tidak berubah-ubah
             const checkStmt = db.prepare(`SELECT completed_date FROM service_orders WHERE id = ?`);
             const so = checkStmt.get(id);
