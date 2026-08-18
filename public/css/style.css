@@ -126,6 +126,7 @@ body::before {
     letter-spacing: 1px;
     background: linear-gradient(90deg, #a5b4fc, #d8b4fe);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
@@ -289,6 +290,7 @@ body.dark-mode .stat-card:hover {
     font-weight: 800;
     background: var(--primary-gradient);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
@@ -535,6 +537,7 @@ body.dark-mode .data-table tr:hover {
     font-weight: 800;
     background: linear-gradient(90deg, #a5b4fc, #d8b4fe);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     letter-spacing: -0.5px;
 }
@@ -587,7 +590,7 @@ body.dark-mode .data-table tr:hover {
     .print-table th, .print-table td {
         border-bottom: 1px solid #ccc; padding: 8px; text-align: left;
     }
-    .print-table th { background-color: #f3f4f6 !important; -webkit-print-color-adjust: exact; }
+    .print-table th { background-color: #f3f4f6 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     .print-total-section { text-align: right; margin-top: 15px; font-weight: bold; }
     .print-footer { text-align: center; margin-top: 30px; font-size: 11px; color: #555; }
 }
