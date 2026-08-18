@@ -1,0 +1,206 @@
+<template>
+  <div class="view-section">
+      <div class="action-bar">
+          <input type="text" v-model="searchQuery" @input="debounceSearch" placeholder="Cari tiket, pelanggan, perangkat..." class="search-input">
+          <button @click="openAddModal" class="btn btn-primary">Buat Tiket Servis</button>
+      </div>
+      <div class="table-container">
+          <table class="data-table">
+              <thead>
+                  <tr>
+                      <th>No. Tiket</th>
+                      <th>Pelanggan</th>
+                      <th>Perangkat</th>
+                      <th>Status</th>
+                      <th>Total Biaya</th>
+                      <th>Aksi</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr v-if="services.length === 0">
+                      <td colspan="6" style="text-align: center; padding: 20px;">Belum ada data servis.</td>
+                  </tr>
+                  <tr v-for="s in services" :key="s.id">
+                      <td><strong>{{ s.ticket_number }}</strong></td>
+                      <td>{{ s.customer_name }}</td>
+                      <td>{{ s.brand || '' }} {{ s.model || '' }}</td>
+                      <td>
+                          <span style="padding: 4px 8px; border-radius: 4px; background: #e2e8f0; font-size: 0.85rem; font-weight: 500;">
+                              {{ s.service_status }}
+                          </span>
+                      </td>
+                      <td>{{ formatCurrency(s.total_cost) }}</td>
+                      <td>
+                          <button class="btn btn-primary btn-sm" @click="goToDetail(s.id)">Detail</button>
+                      </td>
+                  </tr>
+              </tbody>
+          </table>
+      </div>
+
+      <!-- Custom Pagination -->
+      <div class="pagination-controls" style="margin-top: 15px; display: flex; justify-content: center; gap: 10px; align-items: center;">
+          <button class="btn btn-secondary btn-sm" :disabled="currentPage === 1" @click="loadServices(currentPage - 1)">Sebelumnya</button>
+          <span>Halaman {{ currentPage }} dari {{ totalPages }}</span>
+          <button class="btn btn-secondary btn-sm" :disabled="currentPage >= totalPages" @click="loadServices(currentPage + 1)">Selanjutnya</button>
+      </div>
+
+      <!-- Modal Tambah Tiket -->
+      <div v-if="isModalOpen" class="modal show">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h2>Buat Tiket Servis Baru</h2>
+                  <span class="close-modal" @click="isModalOpen = false">&times;</span>
+              </div>
+              <div class="modal-body">
+                  <form @submit.prevent="saveService">
+                      <div class="form-group">
+                          <label>Pelanggan</label>
+                          <select v-model="form.customer_id" @change="onCustomerChange" required>
+                              <option value="">-- Pilih Pelanggan --</option>
+                              <option v-for="c in customers" :key="c.id" :value="c.id">
+                                  {{ c.name }} ({{ c.phone || '-' }})
+                              </option>
+                          </select>
+                      </div>
+                      <div class="form-group">
+                          <label>Perangkat</label>
+                          <select v-model="form.device_id" required :disabled="!form.customer_id">
+                              <option value="">-- Pilih Perangkat --</option>
+                              <option v-for="d in customerDevices" :key="d.id" :value="d.id">
+                                  {{ d.brand || '' }} {{ d.model || '' }} - {{ d.device_type }} (SN: {{ d.serial_number || '-' }})
+                              </option>
+                          </select>
+                      </div>
+                      <div class="form-group">
+                          <label>Keluhan / Kerusakan (Diisi berdasarkan laporan pelanggan)</label>
+                          <textarea v-model="form.customer_complaint" rows="3" required placeholder="Contoh: Mati total, layar bergaris..."></textarea>
+                      </div>
+                      <div style="display: flex; gap: 15px;">
+                          <div class="form-group" style="flex: 1;">
+                              <label>Teknisi (Opsional)</label>
+                              <input type="text" v-model="form.technician" placeholder="Nama teknisi">
+                          </div>
+                          <div class="form-group" style="flex: 1;">
+                              <label>Estimasi Biaya Awal (Opsional)</label>
+                              <input type="number" v-model="form.estimated_cost" placeholder="Misal: 150000">
+                          </div>
+                      </div>
+                      <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary close-modal" @click="isModalOpen = false">Batal</button>
+                          <button type="submit" class="btn btn-primary">Buat Tiket</button>
+                      </div>
+                  </form>
+              </div>
+          </div>
+      </div>
+  </div>
+</template>
+
+<script setup>
+import { ref, reactive, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+const services = ref([])
+const searchQuery = ref('')
+const currentPage = ref(1)
+const itemsPerPage = 50
+const totalItems = ref(0)
+const totalPages = computed(() => Math.ceil(totalItems.value / itemsPerPage) || 1)
+
+const customers = ref([])
+const customerDevices = ref([])
+
+let searchTimeout = null
+const debounceSearch = () => {
+  clearTimeout(searchTimeout)
+  searchTimeout = setTimeout(() => {
+    loadServices(1)
+  }, 300)
+}
+
+const formatCurrency = (amount) => {
+  return new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+      minimumFractionDigits: 0
+  }).format(amount || 0)
+}
+
+const loadServices = async (page = 1) => {
+  if (window.api && window.api.getServices) {
+      try {
+          const result = await window.api.getServices(searchQuery.value, page, itemsPerPage)
+          services.value = result.data || []
+          totalItems.value = result.total || 0
+          currentPage.value = result.page || 1
+      } catch (error) {
+          console.error("Failed to load services:", error)
+      }
+  }
+}
+
+const loadCustomersDropdown = async () => {
+  if (window.api && window.api.getCustomers) {
+      const result = await window.api.getCustomers('', 1, 1000)
+      customers.value = result.data || []
+  }
+}
+
+const onCustomerChange = async () => {
+  customerDevices.value = []
+  form.device_id = ''
+  if (form.customer_id && window.api && window.api.getDevicesByCustomer) {
+      customerDevices.value = await window.api.getDevicesByCustomer(form.customer_id)
+  }
+}
+
+const goToDetail = (id) => {
+  router.push(`/services/${id}`)
+}
+
+// Modal Form Logic
+const isModalOpen = ref(false)
+const form = reactive({
+  customer_id: '',
+  device_id: '',
+  customer_complaint: '',
+  technician: '',
+  estimated_cost: ''
+})
+
+const openAddModal = async () => {
+  form.customer_id = ''
+  form.device_id = ''
+  form.customer_complaint = ''
+  form.technician = ''
+  form.estimated_cost = ''
+  customerDevices.value = []
+  
+  await loadCustomersDropdown()
+  isModalOpen.value = true
+}
+
+const saveService = async () => {
+  try {
+      await window.api.addService({ ...form })
+      isModalOpen.value = false
+      loadServices()
+      window.Swal.fire({
+          icon: 'success',
+          title: 'Dibuat!',
+          text: 'Tiket servis berhasil dibuat.',
+          timer: 1500,
+          showConfirmButton: false
+      })
+  } catch (error) {
+      console.error(error)
+      window.Swal.fire('Error', 'Gagal membuat tiket servis.', 'error')
+  }
+}
+
+onMounted(() => {
+  loadServices()
+})
+</script>

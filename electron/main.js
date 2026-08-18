@@ -29,7 +29,16 @@ function createWindow() {
   });
 
   mainWindow.maximize();
-  mainWindow.loadFile(path.join(__dirname, '..', 'views', 'index.html'));
+  
+  const isDev = !app.isPackaged && process.env.NODE_ENV !== 'production';
+  if (isDev) {
+    // Memuat Vite Dev Server
+    mainWindow.loadURL('http://localhost:5173');
+    // mainWindow.webContents.openDevTools(); // Optional: buka devtools otomatis
+  } else {
+    // Memuat file hasil build Vite
+    mainWindow.loadFile(path.join(__dirname, '..', 'dist_frontend', 'index.html'));
+  }
 
   // Register IPC handlers
   registerCustomerIpc();

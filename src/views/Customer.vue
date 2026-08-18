@@ -1,0 +1,196 @@
+<template>
+  <div class="view-section">
+      <div class="action-bar">
+          <input type="text" v-model="searchQuery" @input="debounceSearch" placeholder="Cari pelanggan (Nama / HP)..." class="search-input">
+          <button @click="openAddModal" class="btn btn-primary">Tambah Pelanggan</button>
+      </div>
+      <div class="table-container">
+          <table class="data-table">
+              <thead>
+                  <tr>
+                      <th>ID</th>
+                      <th>Nama</th>
+                      <th>No. HP</th>
+                      <th>Alamat</th>
+                      <th>Aksi</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr v-if="customers.length === 0">
+                      <td colspan="5" style="text-align: center; padding: 20px;">Belum ada data pelanggan.</td>
+                  </tr>
+                  <tr v-for="c in customers" :key="c.id">
+                      <td>{{ c.id }}</td>
+                      <td>{{ c.name }}</td>
+                      <td>{{ c.phone || '-' }}</td>
+                      <td>{{ c.address || '-' }}</td>
+                      <td>
+                          <button class="btn btn-secondary btn-sm" @click="editCustomer(c)">Edit</button>
+                          <button class="btn btn-danger btn-sm" @click="deleteCustomer(c.id)">Hapus</button>
+                      </td>
+                  </tr>
+              </tbody>
+          </table>
+      </div>
+      
+      <!-- Custom Pagination -->
+      <div class="pagination-controls" style="margin-top: 15px; display: flex; justify-content: center; gap: 10px; align-items: center;">
+          <button class="btn btn-secondary btn-sm" :disabled="currentPage === 1" @click="loadCustomers(currentPage - 1)">Sebelumnya</button>
+          <span>Halaman {{ currentPage }} dari {{ totalPages }}</span>
+          <button class="btn btn-secondary btn-sm" :disabled="currentPage >= totalPages" @click="loadCustomers(currentPage + 1)">Selanjutnya</button>
+      </div>
+
+      <!-- Modal Tambah/Edit -->
+      <div v-if="isModalOpen" class="modal show">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h2>{{ modalTitle }}</h2>
+                  <span class="close-modal" @click="isModalOpen = false">&times;</span>
+              </div>
+              <div class="modal-body">
+                  <form @submit.prevent="saveCustomer">
+                      <div class="form-group">
+                          <label>Nama Lengkap</label>
+                          <input type="text" v-model="form.name" required placeholder="Contoh: Budi Santoso">
+                      </div>
+                      <div class="form-group">
+                          <label>No. HP/WhatsApp</label>
+                          <input type="text" v-model="form.phone" placeholder="Contoh: 08123456789">
+                      </div>
+                      <div class="form-group">
+                          <label>Alamat</label>
+                          <textarea v-model="form.address" rows="3" placeholder="Alamat lengkap"></textarea>
+                      </div>
+                      <div class="form-group">
+                          <label>Catatan Tambahan</label>
+                          <textarea v-model="form.notes" rows="2" placeholder="Catatan internal..."></textarea>
+                      </div>
+                      <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary close-modal" @click="isModalOpen = false">Batal</button>
+                          <button type="submit" class="btn btn-primary">Simpan</button>
+                      </div>
+                  </form>
+              </div>
+          </div>
+      </div>
+  </div>
+</template>
+
+<script setup>
+import { ref, reactive, computed, onMounted } from 'vue'
+
+const customers = ref([])
+const searchQuery = ref('')
+const currentPage = ref(1)
+const itemsPerPage = 50
+const totalItems = ref(0)
+const totalPages = computed(() => Math.ceil(totalItems.value / itemsPerPage) || 1)
+
+let searchTimeout = null
+const debounceSearch = () => {
+  clearTimeout(searchTimeout)
+  searchTimeout = setTimeout(() => {
+    loadCustomers(1)
+  }, 300)
+}
+
+const loadCustomers = async (page = 1) => {
+  if (window.api && window.api.getCustomers) {
+      try {
+          const result = await window.api.getCustomers(searchQuery.value, page, itemsPerPage)
+          customers.value = result.data || []
+          totalItems.value = result.total || 0
+          currentPage.value = result.page || 1
+      } catch (error) {
+          console.error("Failed to load customers:", error)
+      }
+  }
+}
+
+// Modal Form Logic
+const isModalOpen = ref(false)
+const modalTitle = ref('Tambah Pelanggan')
+const formId = ref(null)
+const form = reactive({
+  name: '',
+  phone: '',
+  address: '',
+  notes: ''
+})
+
+const openAddModal = () => {
+  modalTitle.value = 'Tambah Pelanggan'
+  formId.value = null
+  form.name = ''
+  form.phone = ''
+  form.address = ''
+  form.notes = ''
+  isModalOpen.value = true
+}
+
+const editCustomer = async (c) => {
+  try {
+      const detail = await window.api.getCustomer(c.id)
+      if (detail) {
+          modalTitle.value = 'Edit Pelanggan'
+          formId.value = detail.id
+          form.name = detail.name
+          form.phone = detail.phone
+          form.address = detail.address
+          form.notes = detail.notes
+          isModalOpen.value = true
+      }
+  } catch (error) {
+      console.error(error)
+      window.Swal.fire('Error', 'Gagal memuat detail pelanggan.', 'error')
+  }
+}
+
+const saveCustomer = async () => {
+  try {
+      if (formId.value) {
+          await window.api.updateCustomer(formId.value, { ...form })
+      } else {
+          await window.api.addCustomer({ ...form })
+      }
+      isModalOpen.value = false
+      loadCustomers(currentPage.value)
+      window.Swal.fire({
+          icon: 'success',
+          title: 'Tersimpan!',
+          text: 'Data pelanggan berhasil disimpan.',
+          timer: 1500,
+          showConfirmButton: false
+      })
+  } catch (error) {
+      console.error(error)
+      window.Swal.fire('Error', 'Gagal menyimpan data pelanggan.', 'error')
+  }
+}
+
+const deleteCustomer = async (id) => {
+  const result = await window.Swal.fire({
+      title: 'Hapus Pelanggan?',
+      text: "Data tidak dapat dikembalikan! Semua perangkat terkait mungkin tidak bisa dihapus jika memiliki riwayat servis.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#64748b',
+      confirmButtonText: 'Ya, Hapus!'
+  })
+
+  if (result.isConfirmed) {
+      try {
+          await window.api.deleteCustomer(id)
+          window.Swal.fire('Terhapus!', 'Pelanggan berhasil dihapus.', 'success')
+          loadCustomers(currentPage.value)
+      } catch (error) {
+          window.Swal.fire('Error', error.message || 'Gagal menghapus.', 'error')
+      }
+  }
+}
+
+onMounted(() => {
+  loadCustomers()
+})
+</script>
