@@ -248,24 +248,4 @@ onMounted(() => {
   loadParts()
 })
 
-const importExcel = async () => {
-  try {
-      const result = await window.api.importPartsExcel()
-      if (result && result.success) {
-          window.Swal.fire({
-              icon: 'success',
-              title: 'Import Berhasil',
-              text: `${result.count} data sparepart berhasil diimport.`,
-              timer: 2000,
-              showConfirmButton: false
-          })
-          loadParts()
-      } else if (result && !result.canceled) {
-          window.Swal.fire('Error', result.error || 'Gagal import Excel.', 'error')
-      }
-  } catch (error) {
-      console.error(error)
-      window.Swal.fire('Error', 'Terjadi kesalahan saat import.', 'error')
-  }
-}
 </script>
