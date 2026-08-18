@@ -2,7 +2,8 @@
   <header class="topbar">
       <div class="topbar-title" style="display: flex; align-items: center; gap: 20px;">
           <h1>{{ title }}</h1>
-          <div class="global-search-container">
+          <div class="global-search-container" style="position: relative;">
+              <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); opacity: 0.5;">🔍</span>
               <input 
                   type="text" 
                   class="global-search-input" 
@@ -10,12 +11,15 @@
                   ref="searchInput"
                   v-model="searchQuery"
                   @keyup.enter="handleSearch"
+                  style="padding-left: 35px; border-radius: 20px; border: 1px solid var(--border-color); width: 250px; transition: width 0.3s;"
               >
           </div>
       </div>
-      <div class="topbar-actions">
-          <button @click="$emit('toggle-theme')" class="btn btn-secondary btn-sm" style="margin-right: 15px; border-radius: 20px;">🌙 Dark Mode</button>
-          <span>{{ currentDateTime }}</span>
+      <div class="topbar-actions" style="display: flex; align-items: center; gap: 15px;">
+          <button @click="$emit('toggle-theme')" class="btn btn-secondary btn-sm" style="border-radius: 20px; padding: 6px 16px;">🌙 Mode Gelap</button>
+          <div style="background: var(--card-bg); padding: 6px 16px; border-radius: 20px; font-weight: 500; font-size: 0.9rem; border: 1px solid var(--border-color); color: var(--text-color);">
+              🕒 {{ currentDateTime }}
+          </div>
       </div>
   </header>
 </template>

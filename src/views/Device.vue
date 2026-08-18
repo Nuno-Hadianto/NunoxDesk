@@ -1,8 +1,13 @@
 <template>
   <div class="view-section">
-      <div class="action-bar">
-          <input type="text" v-model="searchQuery" @input="debounceSearch" placeholder="Cari perangkat..." class="search-input">
-          <button @click="openAddModal" class="btn btn-primary">Tambah Perangkat</button>
+      <div class="action-bar" style="display: flex; gap: 15px; align-items: center; margin-bottom: 20px;">
+          <div style="position: relative; flex: 1; max-width: 400px;">
+              <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); opacity: 0.5;">🔍</span>
+              <input type="text" v-model="searchQuery" @input="debounceSearch" placeholder="Cari perangkat..." class="search-input" style="width: 100%; padding-left: 35px; border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+          </div>
+          <button @click="openAddModal" class="btn btn-primary" style="display: flex; align-items: center; gap: 8px;">
+              <span>➕</span> Tambah Perangkat
+          </button>
       </div>
       <div class="table-container">
           <table class="data-table">
@@ -27,12 +32,19 @@
                       <td>{{ d.device_type }}</td>
                       <td>{{ d.serial_number || '-' }}</td>
                       <td>
-                          <button class="btn btn-secondary btn-sm" @click="editDevice(d)">Edit</button>
-                          <button class="btn btn-danger btn-sm" @click="deleteDevice(d.id)">Hapus</button>
+                          <button class="btn btn-secondary btn-sm" @click="editDevice(d)">✏️ Edit</button>
+                          <button class="btn btn-danger btn-sm" @click="deleteDevice(d.id)">🗑️ Hapus</button>
                       </td>
                   </tr>
               </tbody>
           </table>
+      </div>
+
+      <!-- Custom Pagination -->
+      <div class="pagination-controls" style="margin-top: 25px; display: flex; justify-content: center; gap: 15px; align-items: center;">
+          <button class="btn btn-secondary btn-sm" :disabled="currentPage === 1" @click="loadDevices(currentPage - 1)" style="border-radius: 20px; padding: 6px 16px;">&larr; Sebelumnya</button>
+          <span style="font-weight: 500; color: var(--text-muted); background: var(--card-bg); padding: 4px 12px; border-radius: 20px; border: 1px solid var(--border-color);">Halaman {{ currentPage }} dari {{ totalPages }}</span>
+          <button class="btn btn-secondary btn-sm" :disabled="currentPage >= totalPages" @click="loadDevices(currentPage + 1)" style="border-radius: 20px; padding: 6px 16px;">Selanjutnya &rarr;</button>
       </div>
 
       <!-- Modal Tambah/Edit -->
@@ -45,59 +57,45 @@
               <div class="modal-body">
                   <form @submit.prevent="saveDevice">
                       <div class="form-group">
-                          <label>Pemilik (Pelanggan)</label>
-                          <select v-model="form.customer_id" required>
+                          <label>Pelanggan</label>
+                          <select v-model="form.customer_id" required style="border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px; width: 100%;">
                               <option value="">-- Pilih Pelanggan --</option>
                               <option v-for="c in customers" :key="c.id" :value="c.id">
                                   {{ c.name }} ({{ c.phone || '-' }})
                               </option>
                           </select>
                       </div>
-                      <div class="form-group">
-                          <label>Tipe Perangkat</label>
-                          <select v-model="form.device_type" required>
-                              <option value="Laptop">Laptop</option>
-                              <option value="PC Desktop">PC Desktop</option>
-                              <option value="Printer">Printer</option>
-                              <option value="Smartphone">Smartphone</option>
-                              <option value="Lainnya">Lainnya</option>
-                          </select>
-                      </div>
                       <div style="display: flex; gap: 15px;">
                           <div class="form-group" style="flex: 1;">
-                              <label>Merek</label>
-                              <input type="text" v-model="form.brand" placeholder="Contoh: Asus">
+                              <label>Merek (Brand)</label>
+                              <input type="text" v-model="form.brand" placeholder="Misal: Samsung, Asus" style="border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px; width: 100%;">
                           </div>
                           <div class="form-group" style="flex: 1;">
-                              <label>Model / Seri</label>
-                              <input type="text" v-model="form.model" placeholder="Contoh: ROG Strix">
+                              <label>Model</label>
+                              <input type="text" v-model="form.model" placeholder="Misal: Galaxy S21" style="border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px; width: 100%;">
                           </div>
                       </div>
                       <div style="display: flex; gap: 15px;">
+                          <div class="form-group" style="flex: 1;">
+                              <label>Tipe Perangkat</label>
+                              <input type="text" v-model="form.device_type" required placeholder="Misal: Smartphone, Laptop" style="border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px; width: 100%;">
+                          </div>
                           <div class="form-group" style="flex: 1;">
                               <label>Serial Number (SN)</label>
-                              <input type="text" v-model="form.serial_number" placeholder="SN Perangkat">
+                              <input type="text" v-model="form.serial_number" placeholder="Opsional" style="border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px; width: 100%;">
                           </div>
-                          <div class="form-group" style="flex: 1;">
-                              <label>Warna</label>
-                              <input type="text" v-model="form.color" placeholder="Warna">
-                          </div>
-                      </div>
-                      <div class="form-group">
-                          <label>Kelengkapan (Bawaan pelanggan)</label>
-                          <input type="text" v-model="form.accessories" placeholder="Contoh: Tas, Charger, Mouse">
                       </div>
                       <div class="form-group">
                           <label>Kondisi Fisik Saat Diterima</label>
-                          <textarea v-model="form.physical_condition" rows="2" placeholder="Contoh: Ada goresan di bodi, layar retak sedikit..."></textarea>
+                          <textarea v-model="form.physical_condition" rows="2" placeholder="Contoh: Ada goresan di bodi, layar retak sedikit..." style="border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px; width: 100%; resize: vertical;"></textarea>
                       </div>
                       <div class="form-group">
                           <label>Catatan Tambahan</label>
-                          <textarea v-model="form.notes" rows="2" placeholder="Informasi lain..."></textarea>
+                          <textarea v-model="form.notes" rows="2" placeholder="Informasi lain..." style="border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px; width: 100%; resize: vertical;"></textarea>
                       </div>
-                      <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary close-modal" @click="isModalOpen = false">Batal</button>
-                          <button type="submit" class="btn btn-primary">Simpan</button>
+                      <div class="modal-footer" style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border-color);">
+                          <button type="button" class="btn btn-secondary close-modal" @click="isModalOpen = false" style="padding: 8px 20px;">Batal</button>
+                          <button type="submit" class="btn btn-primary" style="padding: 8px 20px;">💾 Simpan</button>
                       </div>
                   </form>
               </div>

@@ -1,8 +1,13 @@
 <template>
   <div class="view-section">
-      <div class="action-bar">
-          <input type="text" v-model="searchQuery" placeholder="Cari karyawan..." class="search-input">
-          <button @click="openAddModal" class="btn btn-primary">Tambah Karyawan</button>
+      <div class="action-bar" style="display: flex; gap: 15px; align-items: center; margin-bottom: 20px;">
+          <div style="position: relative; flex: 1; max-width: 400px;">
+              <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); opacity: 0.5;">🔍</span>
+              <input type="text" v-model="searchQuery" placeholder="Cari karyawan..." class="search-input" style="width: 100%; padding-left: 35px; border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+          </div>
+          <button @click="openAddModal" class="btn btn-primary" style="display: flex; align-items: center; gap: 8px;">
+              <span>➕</span> Tambah Karyawan
+          </button>
       </div>
       <div class="table-container">
           <table class="data-table">
@@ -19,13 +24,13 @@
                       <td>{{ u.id }}</td>
                       <td><strong>{{ u.username }}</strong></td>
                       <td>
-                          <span :style="{ background: u.role === 'admin' ? '#4f46e5' : '#10b981', color: 'white', padding: '3px 8px', borderRadius: '4px', fontSize: '0.8rem' }">
-                              {{ u.role }}
+                          <span class="badge" :style="{ background: u.role === 'admin' ? 'rgba(79, 70, 229, 0.1)' : 'rgba(16, 185, 129, 0.1)', color: u.role === 'admin' ? '#4f46e5' : '#10b981', border: u.role === 'admin' ? '1px solid rgba(79, 70, 229, 0.2)' : '1px solid rgba(16, 185, 129, 0.2)' }">
+                              {{ u.role.toUpperCase() }}
                           </span>
                       </td>
                       <td>
-                          <button class="btn btn-sm btn-secondary" @click="editUser(u)">Edit</button>
-                          <button v-if="u.id !== currentUserId" class="btn btn-sm btn-danger" @click="deleteUser(u.id)">Hapus</button>
+                          <button class="btn btn-sm btn-secondary" @click="editUser(u)">✏️ Edit</button>
+                          <button v-if="u.id !== currentUserId" class="btn btn-sm btn-danger" @click="deleteUser(u.id)">🗑️ Hapus</button>
                       </td>
                   </tr>
               </tbody>
@@ -43,22 +48,22 @@
                   <form @submit.prevent="saveUser">
                       <div class="form-group">
                           <label>Username</label>
-                          <input type="text" v-model="form.username" required>
+                          <input type="text" v-model="form.username" required placeholder="Masukkan username" style="border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px; width: 100%;">
                       </div>
                       <div class="form-group">
-                          <label>Password <small v-if="formId">(Biarkan kosong jika tidak diubah)</small></label>
-                          <input type="password" v-model="form.password" :required="!formId">
+                          <label>Password <small v-if="formId" style="color: var(--text-muted);">(Biarkan kosong jika tidak diubah)</small></label>
+                          <input type="password" v-model="form.password" :required="!formId" placeholder="Masukkan password" style="border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px; width: 100%;">
                       </div>
                       <div class="form-group">
                           <label>Peran / Role</label>
-                          <select v-model="form.role" required>
+                          <select v-model="form.role" required style="border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px; width: 100%;">
                               <option value="admin">Admin</option>
                               <option value="teknisi">Teknisi / Staff</option>
                           </select>
                       </div>
-                      <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary close-modal" @click="isModalOpen = false">Batal</button>
-                          <button type="submit" class="btn btn-primary">Simpan</button>
+                      <div class="modal-footer" style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border-color);">
+                          <button type="button" class="btn btn-secondary close-modal" @click="isModalOpen = false" style="padding: 8px 20px;">Batal</button>
+                          <button type="submit" class="btn btn-primary" style="padding: 8px 20px;">💾 Simpan</button>
                       </div>
                   </form>
               </div>

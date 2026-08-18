@@ -6,13 +6,15 @@
       <nav class="sidebar-nav">
           <ul>
               <li :class="{ active: $route.name === 'Dashboard' }">
-                <router-link to="/">Dashboard</router-link>
+                <router-link to="/">
+                    <span style="margin-right: 8px;">🏠</span> Dashboard
+                </router-link>
               </li>
               <li class="nav-header">OPERASIONAL</li>
-              <li :class="{ active: $route.name === 'Customers' }"><router-link to="/customers">Pelanggan</router-link></li>
-              <li :class="{ active: $route.name === 'Devices' }"><router-link to="/devices">Perangkat</router-link></li>
-              <li :class="{ active: $route.name === 'Services' || $route.name === 'ServiceDetail' }"><router-link to="/services">Servis</router-link></li>
-              <li :class="{ active: $route.name === 'Parts' }"><router-link to="/parts">Sparepart</router-link></li>
+              <li :class="{ active: $route.name === 'Customers' }"><router-link to="/customers"><span style="margin-right: 8px;">👥</span> Pelanggan</router-link></li>
+              <li :class="{ active: $route.name === 'Devices' }"><router-link to="/devices"><span style="margin-right: 8px;">📱</span> Perangkat</router-link></li>
+              <li :class="{ active: $route.name === 'Services' || $route.name === 'ServiceDetail' }"><router-link to="/services"><span style="margin-right: 8px;">🛠️</span> Servis</router-link></li>
+              <li :class="{ active: $route.name === 'Parts' }"><router-link to="/parts"><span style="margin-right: 8px;">📦</span> Sparepart</router-link></li>
               <!-- We will uncomment these as we create the views
               -->
               <li class="nav-header">KEUANGAN</li>
@@ -20,12 +22,12 @@
               <li :class="{ active: $route.name === 'Payments' }"><router-link to="/payments">Pembayaran</router-link></li>
               <li :class="{ active: $route.name === 'Receipts' }"><router-link to="/receipts">Kwitansi</router-link></li>
               -->
-              <li :class="{ active: $route.name === 'Reports' }"><router-link to="/reports">Laporan</router-link></li>
+              <li :class="{ active: $route.name === 'Reports' }"><router-link to="/reports"><span style="margin-right: 8px;">📊</span> Laporan</router-link></li>
               <li class="nav-header">SISTEM</li>
               <li v-if="currentUser?.role === 'admin'" :class="{ active: $route.name === 'Users' }">
-                <router-link to="/users">Karyawan</router-link>
+                <router-link to="/users"><span style="margin-right: 8px;">👨‍💼</span> Karyawan</router-link>
               </li>
-              <li :class="{ active: $route.name === 'Settings' }"><router-link to="/settings">Pengaturan & Backup</router-link></li>
+              <li :class="{ active: $route.name === 'Settings' }"><router-link to="/settings"><span style="margin-right: 8px;">⚙️</span> Pengaturan & Backup</router-link></li>
           </ul>
           <div style="margin-top: auto; padding: 20px;">
               <div style="margin-bottom: 10px; font-size: 0.85rem; color: #94a3b8;">

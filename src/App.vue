@@ -1,19 +1,19 @@
 <template>
-  <div v-if="!isLoggedIn" class="login-screen show">
-    <div class="login-card">
-        <h2>nuNox Servis</h2>
-        <form @submit.prevent="handleLogin">
-            <div class="form-group">
-                <label>Username</label>
-                <input type="text" v-model="loginForm.username" required autocomplete="off" placeholder="Masukkan username">
+  <div v-if="!isLoggedIn" class="login-screen show" style="display: flex; align-items: center; justify-content: center; height: 100vh; background: linear-gradient(135deg, #1e293b, #0f172a);">
+    <div class="login-card" style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); padding: 40px; border-radius: 24px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.1); width: 100%; max-width: 400px; text-align: center;">
+        <h2 style="color: white; font-size: 1.8rem; margin-bottom: 30px; font-weight: 700;">🔧 nuNox<span style="color: #6366f1;">Servis</span></h2>
+        <form @submit.prevent="handleLogin" style="display: flex; flex-direction: column; gap: 20px;">
+            <div class="form-group" style="text-align: left;">
+                <label style="color: #cbd5e1; font-size: 0.9rem; margin-bottom: 8px; display: block;">Username</label>
+                <input type="text" v-model="loginForm.username" required autocomplete="off" placeholder="Masukkan username" style="width: 100%; padding: 12px 15px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.2); background: rgba(0, 0, 0, 0.2); color: white; outline: none; transition: border-color 0.3s;">
             </div>
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" v-model="loginForm.password" required autocomplete="off" placeholder="Masukkan password">
+            <div class="form-group" style="text-align: left;">
+                <label style="color: #cbd5e1; font-size: 0.9rem; margin-bottom: 8px; display: block;">Password</label>
+                <input type="password" v-model="loginForm.password" required autocomplete="off" placeholder="Masukkan password" style="width: 100%; padding: 12px 15px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.2); background: rgba(0, 0, 0, 0.2); color: white; outline: none; transition: border-color 0.3s;">
             </div>
-            <button type="submit" class="btn btn-primary" style="background-color: #4f46e5;">Masuk</button>
+            <button type="submit" class="btn btn-primary" style="background-color: #6366f1; width: 100%; padding: 12px; border-radius: 12px; font-weight: 600; font-size: 1rem; margin-top: 10px; transition: background-color 0.3s; border: none;">Masuk</button>
         </form>
-        <p style="margin-top: 15px; font-size: 0.8rem; color: #94a3b8;">Default admin: admin / admin123</p>
+        <p style="margin-top: 25px; font-size: 0.85rem; color: #64748b;">Default admin: admin / admin123</p>
     </div>
   </div>
 
