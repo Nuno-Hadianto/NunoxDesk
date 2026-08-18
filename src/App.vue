@@ -44,8 +44,9 @@ import Topbar from './components/Topbar.vue'
 const router = useRouter()
 const route = useRoute()
 
-const isLoggedIn = ref(false)
-const currentUser = ref(null)
+const savedUser = localStorage.getItem('nunox_user')
+const isLoggedIn = ref(!!savedUser)
+const currentUser = ref(savedUser ? JSON.parse(savedUser) : null)
 
 const loginForm = reactive({
   username: '',
@@ -57,12 +58,7 @@ const pageTitle = computed(() => {
 })
 
 onMounted(() => {
-  // Check auth status from localStorage
-  const savedUser = localStorage.getItem('nunox_user')
-  if (savedUser) {
-    currentUser.value = JSON.parse(savedUser)
-    isLoggedIn.value = true
-  }
+  // Any other onMounted logic if needed
 })
 
 const handleLogin = async () => {
