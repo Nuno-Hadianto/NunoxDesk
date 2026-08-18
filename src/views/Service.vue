@@ -1,8 +1,13 @@
 <template>
   <div class="view-section">
-      <div class="action-bar">
-          <input type="text" v-model="searchQuery" @input="debounceSearch" placeholder="Cari tiket, pelanggan, perangkat..." class="search-input">
-          <button @click="openAddModal" class="btn btn-primary">Buat Tiket Servis</button>
+      <div class="action-bar" style="display: flex; gap: 15px; align-items: center; margin-bottom: 20px;">
+          <div style="position: relative; flex: 1; max-width: 400px;">
+              <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); opacity: 0.5;">🔍</span>
+              <input type="text" v-model="searchQuery" @input="debounceSearch" placeholder="Cari tiket, pelanggan, perangkat..." class="search-input" style="width: 100%; padding-left: 35px; border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+          </div>
+          <button @click="openAddModal" class="btn btn-primary" style="display: flex; align-items: center; gap: 8px;">
+              <span>➕</span> Buat Tiket Servis
+          </button>
       </div>
       <div class="table-container">
           <table class="data-table">
@@ -25,7 +30,7 @@
                       <td>{{ s.customer_name }}</td>
                       <td>{{ s.brand || '' }} {{ s.model || '' }}</td>
                       <td>
-                          <span :style="getStatusColor(s.service_status)">
+                          <span class="badge" :style="getStatusColor(s.service_status)">
                               {{ s.service_status }}
                           </span>
                       </td>
@@ -39,10 +44,10 @@
       </div>
 
       <!-- Custom Pagination -->
-      <div class="pagination-controls" style="margin-top: 15px; display: flex; justify-content: center; gap: 10px; align-items: center;">
-          <button class="btn btn-secondary btn-sm" :disabled="currentPage === 1" @click="loadServices(currentPage - 1)">Sebelumnya</button>
-          <span>Halaman {{ currentPage }} dari {{ totalPages }}</span>
-          <button class="btn btn-secondary btn-sm" :disabled="currentPage >= totalPages" @click="loadServices(currentPage + 1)">Selanjutnya</button>
+      <div class="pagination-controls" style="margin-top: 25px; display: flex; justify-content: center; gap: 15px; align-items: center;">
+          <button class="btn btn-secondary btn-sm" :disabled="currentPage === 1" @click="loadServices(currentPage - 1)" style="border-radius: 20px; padding: 6px 16px;">&larr; Sebelumnya</button>
+          <span style="font-weight: 500; color: var(--text-muted); background: var(--card-bg); padding: 4px 12px; border-radius: 20px; border: 1px solid var(--border-color);">Halaman {{ currentPage }} dari {{ totalPages }}</span>
+          <button class="btn btn-secondary btn-sm" :disabled="currentPage >= totalPages" @click="loadServices(currentPage + 1)" style="border-radius: 20px; padding: 6px 16px;">Selanjutnya &rarr;</button>
       </div>
 
       <!-- Modal Tambah Tiket -->
@@ -56,7 +61,7 @@
                   <form @submit.prevent="saveService">
                       <div class="form-group">
                           <label>Pelanggan</label>
-                          <select v-model="form.customer_id" @change="onCustomerChange" required>
+                          <select v-model="form.customer_id" @change="onCustomerChange" required style="border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px; width: 100%;">
                               <option value="">-- Pilih Pelanggan --</option>
                               <option v-for="c in customers" :key="c.id" :value="c.id">
                                   {{ c.name }} ({{ c.phone || '-' }})
@@ -65,7 +70,7 @@
                       </div>
                       <div class="form-group">
                           <label>Perangkat</label>
-                          <select v-model="form.device_id" required :disabled="!form.customer_id">
+                          <select v-model="form.device_id" required :disabled="!form.customer_id" style="border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px; width: 100%;">
                               <option value="">-- Pilih Perangkat --</option>
                               <option v-for="d in customerDevices" :key="d.id" :value="d.id">
                                   {{ d.brand || '' }} {{ d.model || '' }} - {{ d.device_type }} (SN: {{ d.serial_number || '-' }})
@@ -74,21 +79,21 @@
                       </div>
                       <div class="form-group">
                           <label>Keluhan / Kerusakan (Diisi berdasarkan laporan pelanggan)</label>
-                          <textarea v-model="form.customer_complaint" rows="3" required placeholder="Contoh: Mati total, layar bergaris..."></textarea>
+                          <textarea v-model="form.customer_complaint" rows="3" required placeholder="Contoh: Mati total, layar bergaris..." style="border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px; resize: vertical; width: 100%;"></textarea>
                       </div>
                       <div style="display: flex; gap: 15px;">
                           <div class="form-group" style="flex: 1;">
                               <label>Teknisi (Opsional)</label>
-                              <input type="text" v-model="form.technician" placeholder="Nama teknisi">
+                              <input type="text" v-model="form.technician" placeholder="Nama teknisi" style="border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px; width: 100%;">
                           </div>
                           <div class="form-group" style="flex: 1;">
                               <label>Estimasi Biaya Awal (Opsional)</label>
-                              <input type="number" v-model="form.estimated_cost" placeholder="Misal: 150000">
+                              <input type="number" v-model="form.estimated_cost" placeholder="Misal: 150000" style="border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px; width: 100%;">
                           </div>
                       </div>
-                      <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary close-modal" @click="isModalOpen = false">Batal</button>
-                          <button type="submit" class="btn btn-primary">Buat Tiket</button>
+                      <div class="modal-footer" style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border-color);">
+                          <button type="button" class="btn btn-secondary close-modal" @click="isModalOpen = false" style="padding: 8px 20px;">Batal</button>
+                          <button type="submit" class="btn btn-primary" style="padding: 8px 20px;">💾 Buat Tiket</button>
                       </div>
                   </form>
               </div>

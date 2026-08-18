@@ -1,10 +1,17 @@
 <template>
   <div class="view-section">
-      <div class="action-bar">
-          <input type="text" v-model="searchQuery" @input="debounceSearch" placeholder="Cari sparepart (Kode / Nama)..." class="search-input">
-          <div style="display: flex; gap: 10px;">
-              <button @click="importExcel" class="btn btn-secondary">📥 Import Excel</button>
-              <button @click="openAddModal" class="btn btn-primary">Tambah Sparepart</button>
+      <div class="action-bar" style="display: flex; gap: 15px; align-items: center; margin-bottom: 20px; flex-wrap: wrap; justify-content: space-between;">
+          <div style="position: relative; flex: 1; min-width: 250px; max-width: 400px;">
+              <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); opacity: 0.5;">🔍</span>
+              <input type="text" v-model="searchQuery" @input="debounceSearch" placeholder="Cari sparepart (Kode / Nama)..." class="search-input" style="width: 100%; padding-left: 35px; border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+          </div>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+              <button @click="importExcel" class="btn btn-secondary" style="display: flex; align-items: center; gap: 6px; border-radius: 20px;">
+                  <span>📥</span> Import Excel
+              </button>
+              <button @click="openAddModal" class="btn btn-primary" style="display: flex; align-items: center; gap: 6px; border-radius: 20px;">
+                  <span>➕</span> Tambah Sparepart
+              </button>
           </div>
       </div>
       <div class="table-container">
@@ -28,7 +35,10 @@
                       <td>{{ p.name }}</td>
                       <td>{{ p.category || '-' }}</td>
                       <td>
-                          <span :style="p.stock <= 5 ? 'color: #ef4444; font-weight: bold;' : ''">
+                          <span v-if="p.stock <= 5" class="badge" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2);">
+                              ⚠️ {{ p.stock }} {{ p.unit || '' }}
+                          </span>
+                          <span v-else>
                               {{ p.stock }} {{ p.unit || '' }}
                           </span>
                       </td>
@@ -54,44 +64,44 @@
                       <div style="display: flex; gap: 15px;">
                           <div class="form-group" style="flex: 1;">
                               <label>Kode Barang (Opsional)</label>
-                              <input type="text" v-model="form.part_code" placeholder="Contoh: LCD-IP-11">
+                              <input type="text" v-model="form.part_code" placeholder="Contoh: LCD-IP-11" style="border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px; width: 100%;">
                           </div>
                           <div class="form-group" style="flex: 1;">
                               <label>Kategori</label>
-                              <input type="text" v-model="form.category" placeholder="Contoh: LCD, Baterai...">
+                              <input type="text" v-model="form.category" placeholder="Contoh: LCD, Baterai..." style="border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px; width: 100%;">
                           </div>
                       </div>
                       <div class="form-group">
                           <label>Nama Sparepart</label>
-                          <input type="text" v-model="form.name" required placeholder="Nama barang">
+                          <input type="text" v-model="form.name" required placeholder="Nama barang" style="border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px; width: 100%;">
                       </div>
                       <div style="display: flex; gap: 15px;">
                           <div class="form-group" style="flex: 1;">
                               <label>Stok Awal</label>
-                              <input type="number" v-model.number="form.stock" required min="0">
+                              <input type="number" v-model.number="form.stock" required min="0" style="border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px; width: 100%;">
                           </div>
                           <div class="form-group" style="flex: 1;">
                               <label>Satuan</label>
-                              <input type="text" v-model="form.unit" placeholder="Pcs, Unit...">
+                              <input type="text" v-model="form.unit" placeholder="Pcs, Unit..." style="border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px; width: 100%;">
                           </div>
                       </div>
                       <div style="display: flex; gap: 15px;">
                           <div class="form-group" style="flex: 1;">
                               <label>Harga Beli / Modal (Rp)</label>
-                              <input type="number" v-model.number="form.buy_price" required min="0">
+                              <input type="number" v-model.number="form.buy_price" required min="0" style="border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px; width: 100%;">
                           </div>
                           <div class="form-group" style="flex: 1;">
                               <label>Harga Jual (Rp)</label>
-                              <input type="number" v-model.number="form.sell_price" required min="0">
+                              <input type="number" v-model.number="form.sell_price" required min="0" style="border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px; width: 100%;">
                           </div>
                       </div>
                       <div class="form-group">
                           <label>Catatan Tambahan</label>
-                          <textarea v-model="form.notes" rows="2"></textarea>
+                          <textarea v-model="form.notes" rows="2" style="border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px; width: 100%; resize: vertical;"></textarea>
                       </div>
-                      <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary close-modal" @click="isModalOpen = false">Batal</button>
-                          <button type="submit" class="btn btn-primary">Simpan</button>
+                      <div class="modal-footer" style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border-color);">
+                          <button type="button" class="btn btn-secondary close-modal" @click="isModalOpen = false" style="padding: 8px 20px;">Batal</button>
+                          <button type="submit" class="btn btn-primary" style="padding: 8px 20px;">💾 Simpan</button>
                       </div>
                   </form>
               </div>
