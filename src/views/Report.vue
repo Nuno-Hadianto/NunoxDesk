@@ -172,41 +172,6 @@ const exportPdf = async () => {
   }
 }
 
-const exportExcel = async () => {
-  if (services.value.length === 0) {
-      return window.Swal.fire('Info', 'Tidak ada data untuk diekspor pada periode ini.', 'info')
-  }
-  try {
-      const data = services.value.map(s => ({
-          'ID Nota': s.invoice_number || `SRV-${s.id}`,
-          'Tanggal': new Date(s.created_at).toLocaleDateString('id-ID'),
-          'Pelanggan': s.customer_name,
-          'Telepon': s.customer_phone,
-          'Perangkat': `${s.device_brand} ${s.device_model}`,
-          'Status': s.status,
-          'Biaya Jasa': s.service_cost || 0,
-          'Biaya Part': s.part_cost || 0,
-          'Diskon': s.discount || 0,
-          'Total Tagihan': s.total_cost || 0
-      }))
-
-      const result = await window.api.exportExcel(data)
-      if (result && result.success) {
-          window.Swal.fire({
-              icon: 'success',
-              title: 'Berhasil',
-              text: 'Laporan Excel berhasil disimpan!',
-              timer: 1500,
-              showConfirmButton: false
-          })
-      } else if (result && !result.canceled) {
-          window.Swal.fire('Error', 'Gagal menyimpan laporan Excel: ' + (result.error || ''), 'error')
-      }
-  } catch (error) {
-      console.error(error)
-      window.Swal.fire('Error', 'Terjadi kesalahan saat mengekspor Excel.', 'error')
-  }
-}
 
 const printBlankNota = async () => {
   try {
