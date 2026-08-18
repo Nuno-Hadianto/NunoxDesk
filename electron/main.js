@@ -22,7 +22,7 @@ function createWindow() {
     icon: path.join(__dirname, '..', 'public', 'img', 'logo.png'),
     autoHideMenuBar: true,
     show: false,
-    backgroundColor: '#f8fafc',
+    backgroundColor: '#0f172a',
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
