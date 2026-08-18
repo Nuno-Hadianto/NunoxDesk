@@ -1,39 +1,53 @@
 <template>
   <div class="view-section">
-      <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+      <div style="display: flex; gap: 25px; flex-wrap: wrap;">
           <!-- Pengaturan Identitas -->
-          <div class="stat-card" style="flex: 1; min-width: 300px;">
-              <h2>Pengaturan Identitas Toko</h2>
-              <form @submit.prevent="saveSettings" style="margin-top: 20px;">
+          <div class="card" style="flex: 1; min-width: 300px; padding: 25px;">
+              <h2 style="font-size: 1.2rem; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; color: var(--primary-color);">🏢 Pengaturan Identitas Toko</h2>
+              <form @submit.prevent="saveSettings">
                   <div class="form-group">
-                      <label>Nama Usaha / Toko</label>
-                      <input type="text" v-model="form.business_name">
+                      <label style="font-weight: 500; font-size: 0.9rem;">Nama Usaha / Toko</label>
+                      <input type="text" v-model="form.business_name" style="border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px; width: 100%;">
                   </div>
                   <div class="form-group">
-                      <label>No. Telp / WhatsApp</label>
-                      <input type="text" v-model="form.phone">
+                      <label style="font-weight: 500; font-size: 0.9rem;">No. Telp / WhatsApp</label>
+                      <input type="text" v-model="form.phone" style="border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px; width: 100%;">
                   </div>
                   <div class="form-group">
-                      <label>Alamat</label>
-                      <textarea v-model="form.address" rows="3"></textarea>
+                      <label style="font-weight: 500; font-size: 0.9rem;">Alamat Lengkap</label>
+                      <textarea v-model="form.address" rows="3" style="border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px; width: 100%; resize: vertical;"></textarea>
                   </div>
                   <div class="form-group">
-                      <label>Catatan Bawah Kwitansi</label>
-                      <textarea v-model="form.receipt_footer" rows="2"></textarea>
+                      <label style="font-weight: 500; font-size: 0.9rem;">Catatan Bawah Kwitansi</label>
+                      <textarea v-model="form.receipt_footer" rows="2" style="border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px; width: 100%; resize: vertical;"></textarea>
                   </div>
-                  <button type="submit" class="btn btn-primary">Simpan Pengaturan</button>
+                  <div style="margin-top: 25px; text-align: right;">
+                      <button type="submit" class="btn btn-primary" style="padding: 10px 24px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px;">💾 Simpan Pengaturan</button>
+                  </div>
               </form>
           </div>
 
           <!-- Backup & Restore -->
-          <div class="stat-card" style="flex: 1; min-width: 300px;">
-              <h2>Backup & Restore Database</h2>
-              <p style="color: #64748b; margin-top: 10px; margin-bottom: 20px;">
-                  Amankan data aplikasi Anda dengan melakukan backup secara berkala.
-              </p>
-              <div style="display: flex; gap: 10px;">
-                  <button @click="backupData" class="btn btn-primary">Backup Data Sekarang</button>
-                  <button @click="restoreData" class="btn btn-secondary">Restore Data</button>
+          <div class="card" style="flex: 1; min-width: 300px; padding: 25px;">
+              <h2 style="font-size: 1.2rem; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; color: var(--primary-color);">🗄️ Backup & Restore Data</h2>
+              <div style="background: rgba(99, 102, 241, 0.05); border: 1px solid rgba(99, 102, 241, 0.2); border-radius: var(--radius-md); padding: 20px; margin-bottom: 20px;">
+                  <h3 style="font-size: 1rem; margin-bottom: 8px;">Amankan Data Anda</h3>
+                  <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; margin-bottom: 15px;">
+                      Lakukan backup secara berkala untuk menghindari kehilangan data penting (pelanggan, tiket servis, keuangan). Data akan disimpan dalam format `.db` di folder dokumen Anda.
+                  </p>
+                  <button @click="backupData" class="btn btn-primary" style="display: flex; align-items: center; gap: 6px; border-radius: 20px; padding: 10px 20px;">
+                      ☁️ Backup Data Sekarang
+                  </button>
+              </div>
+              
+              <div style="background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: var(--radius-md); padding: 20px;">
+                  <h3 style="font-size: 1rem; margin-bottom: 8px; color: #ef4444;">Pulihkan Data (Restore)</h3>
+                  <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; margin-bottom: 15px;">
+                      Perhatian: Mengembalikan (Restore) data akan menimpa <strong>seluruh</strong> data aplikasi Anda saat ini dengan data dari file backup. Pastikan Anda memilih file yang benar!
+                  </p>
+                  <button @click="restoreData" class="btn" style="background-color: white; color: #ef4444; border: 1px solid #ef4444; display: flex; align-items: center; gap: 6px; border-radius: 20px; padding: 10px 20px;">
+                      🔄 Pilih File Restore
+                  </button>
               </div>
           </div>
       </div>

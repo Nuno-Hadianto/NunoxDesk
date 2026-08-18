@@ -1,8 +1,13 @@
 <template>
   <div class="view-section">
-      <div class="action-bar">
-          <input type="text" v-model="searchQuery" @input="debounceSearch" placeholder="Cari pelanggan (Nama / HP)..." class="search-input">
-          <button @click="openAddModal" class="btn btn-primary">Tambah Pelanggan</button>
+      <div class="action-bar" style="display: flex; gap: 15px; align-items: center; margin-bottom: 20px;">
+          <div style="position: relative; flex: 1; max-width: 400px;">
+              <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); opacity: 0.5;">🔍</span>
+              <input type="text" v-model="searchQuery" @input="debounceSearch" placeholder="Cari pelanggan (Nama / HP)..." class="search-input" style="width: 100%; padding-left: 35px; border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+          </div>
+          <button @click="openAddModal" class="btn btn-primary" style="display: flex; align-items: center; gap: 8px;">
+              <span>➕</span> Tambah Pelanggan
+          </button>
       </div>
       <div class="table-container">
           <table class="data-table">
@@ -34,10 +39,10 @@
       </div>
       
       <!-- Custom Pagination -->
-      <div class="pagination-controls" style="margin-top: 15px; display: flex; justify-content: center; gap: 10px; align-items: center;">
-          <button class="btn btn-secondary btn-sm" :disabled="currentPage === 1" @click="loadCustomers(currentPage - 1)">Sebelumnya</button>
-          <span>Halaman {{ currentPage }} dari {{ totalPages }}</span>
-          <button class="btn btn-secondary btn-sm" :disabled="currentPage >= totalPages" @click="loadCustomers(currentPage + 1)">Selanjutnya</button>
+      <div class="pagination-controls" style="margin-top: 25px; display: flex; justify-content: center; gap: 15px; align-items: center;">
+          <button class="btn btn-secondary btn-sm" :disabled="currentPage === 1" @click="loadCustomers(currentPage - 1)" style="border-radius: 20px; padding: 6px 16px;">&larr; Sebelumnya</button>
+          <span style="font-weight: 500; color: var(--text-muted); background: var(--card-bg); padding: 4px 12px; border-radius: 20px; border: 1px solid var(--border-color);">Halaman {{ currentPage }} dari {{ totalPages }}</span>
+          <button class="btn btn-secondary btn-sm" :disabled="currentPage >= totalPages" @click="loadCustomers(currentPage + 1)" style="border-radius: 20px; padding: 6px 16px;">Selanjutnya &rarr;</button>
       </div>
 
       <!-- Modal Tambah/Edit -->
@@ -51,23 +56,23 @@
                   <form @submit.prevent="saveCustomer">
                       <div class="form-group">
                           <label>Nama Lengkap</label>
-                          <input type="text" v-model="form.name" required placeholder="Contoh: Budi Santoso">
+                          <input type="text" v-model="form.name" required placeholder="Contoh: Budi Santoso" style="border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px;">
                       </div>
                       <div class="form-group">
                           <label>No. HP/WhatsApp</label>
-                          <input type="text" v-model="form.phone" placeholder="Contoh: 08123456789">
+                          <input type="text" v-model="form.phone" placeholder="Contoh: 08123456789" style="border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px;">
                       </div>
                       <div class="form-group">
                           <label>Alamat</label>
-                          <textarea v-model="form.address" rows="3" placeholder="Alamat lengkap"></textarea>
+                          <textarea v-model="form.address" rows="3" placeholder="Alamat lengkap" style="border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px; resize: vertical;"></textarea>
                       </div>
                       <div class="form-group">
                           <label>Catatan Tambahan</label>
-                          <textarea v-model="form.notes" rows="2" placeholder="Catatan internal..."></textarea>
+                          <textarea v-model="form.notes" rows="2" placeholder="Catatan internal..." style="border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px; resize: vertical;"></textarea>
                       </div>
-                      <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary close-modal" @click="isModalOpen = false">Batal</button>
-                          <button type="submit" class="btn btn-primary">Simpan</button>
+                      <div class="modal-footer" style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border-color);">
+                          <button type="button" class="btn btn-secondary close-modal" @click="isModalOpen = false" style="padding: 8px 20px;">Batal</button>
+                          <button type="submit" class="btn btn-primary" style="padding: 8px 20px;">💾 Simpan</button>
                       </div>
                   </form>
               </div>

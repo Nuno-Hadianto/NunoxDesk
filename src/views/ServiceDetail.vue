@@ -1,115 +1,149 @@
 <template>
   <div class="view-section" v-if="service">
-      <div class="action-bar" style="display: flex; justify-content: space-between;">
-          <button @click="$router.push('/services')" class="btn btn-secondary">&larr; Kembali ke Daftar Servis</button>
-          <div>
-              <button @click="sendWhatsApp" class="btn" style="background-color: #25D366; color: white; margin-right: 10px;">💬 Kirim WA</button>
-              <button @click="exportPdfInvoice" class="btn" style="background-color: #ef4444; color: white; margin-right: 10px;">📄 Unduh PDF</button>
-              <button @click="printThermal" class="btn btn-secondary" style="margin-right: 10px;">🖨️ Cetak Thermal</button>
-              <button @click="printNota" class="btn btn-secondary" style="margin-right: 10px;">Cetak Tanda Terima</button>
-              <button @click="printReceipt" class="btn btn-secondary">Cetak Invoice</button>
+      <div class="action-bar" style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 25px;">
+          <button @click="$router.push('/services')" class="btn btn-secondary" style="display: flex; align-items: center; gap: 6px; border-radius: 20px; padding: 8px 16px;">
+              <span>&larr;</span> Kembali
+          </button>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+              <button @click="sendWhatsApp" class="btn" style="background-color: #25D366; color: white; display: flex; align-items: center; gap: 6px; border-radius: 20px;">
+                  💬 Kirim WA
+              </button>
+              <button @click="exportPdfInvoice" class="btn" style="background-color: #ef4444; color: white; display: flex; align-items: center; gap: 6px; border-radius: 20px;">
+                  📄 Unduh PDF
+              </button>
+              <button @click="printThermal" class="btn btn-secondary" style="display: flex; align-items: center; gap: 6px; border-radius: 20px;">
+                  🖨️ Cetak Thermal
+              </button>
+              <button @click="printNota" class="btn btn-secondary" style="display: flex; align-items: center; gap: 6px; border-radius: 20px;">
+                  Cetak Tanda Terima
+              </button>
+              <button @click="printReceipt" class="btn btn-primary" style="display: flex; align-items: center; gap: 6px; border-radius: 20px;">
+                  Cetak Invoice
+              </button>
           </div>
       </div>
 
       <div class="dashboard-grid">
-          <div class="card">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                  <h2>Detail Tiket: <strong>{{ service.ticket_number }}</strong></h2>
-                  <span :style="statusStyle(service.service_status)">
+          <div class="card" style="padding: 25px;">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 25px;">
+                  <div>
+                      <h2 style="font-size: 1.5rem; margin-bottom: 5px; color: var(--primary-color);">{{ service.ticket_number }}</h2>
+                      <p style="color: var(--text-muted); font-size: 0.9rem;">Masuk: {{ formattedDate }}</p>
+                  </div>
+                  <span :style="statusStyle(service.service_status)" style="font-size: 0.9rem; padding: 6px 14px; border-radius: 20px; font-weight: 700; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                       {{ service.service_status.toUpperCase() }}
                   </span>
               </div>
-              <p><strong>Tanggal Masuk:</strong> {{ formattedDate }}</p>
-              <p><strong>Pelanggan:</strong> {{ service.customer_name }} ({{ service.customer_phone || '-' }})</p>
-              <p><strong>Perangkat:</strong> {{ service.brand || '' }} {{ service.model || '' }} - {{ service.device_type }} (SN: {{ service.serial_number || '-' }})</p>
-              <p><strong>Keluhan:</strong> <span style="color: #ef4444;">{{ service.customer_complaint }}</span></p>
-              <hr style="margin: 15px 0; border-top: 1px solid #e2e8f0;">
+              
+              <div style="background: rgba(248, 250, 252, 0.5); padding: 15px; border-radius: var(--radius-md); border: 1px solid var(--border-color); margin-bottom: 20px;">
+                  <h3 style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;">Info Pelanggan & Perangkat</h3>
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                      <div>
+                          <p style="margin-bottom: 5px;"><strong>Nama:</strong> {{ service.customer_name }}</p>
+                          <p><strong>No. HP:</strong> {{ service.customer_phone || '-' }}</p>
+                      </div>
+                      <div>
+                          <p style="margin-bottom: 5px;"><strong>Tipe:</strong> {{ service.brand || '' }} {{ service.model || '' }} - {{ service.device_type }}</p>
+                          <p><strong>SN:</strong> {{ service.serial_number || '-' }}</p>
+                      </div>
+                  </div>
+                  <div style="margin-top: 15px; padding-top: 15px; border-top: 1px dashed var(--border-color);">
+                      <p><strong>Keluhan:</strong> <span style="color: #ef4444; font-weight: 500;">{{ service.customer_complaint }}</span></p>
+                  </div>
+              </div>
               
               <!-- Form Update Status -->
-              <div style="margin-top: 15px; background: #f8fafc; padding: 15px; border-radius: 6px;">
-                  <h3 style="margin-bottom: 10px; font-size: 1rem;">Update Status & Catatan</h3>
-                  <div class="form-group">
-                      <label>Ubah Status</label>
-                      <select v-model="updateForm.status">
-                          <option value="Diterima">Diterima</option>
-                          <option value="Pengecekan">Pengecekan</option>
-                          <option value="Menunggu Sparepart">Menunggu Sparepart</option>
-                          <option value="Proses Perbaikan">Proses Perbaikan</option>
-                          <option value="Selesai (Belum Diambil)">Selesai (Belum Diambil)</option>
-                          <option value="Selesai (Sudah Diambil)">Selesai (Sudah Diambil)</option>
-                          <option value="Batal">Batal</option>
-                      </select>
+              <div style="margin-top: 25px;">
+                  <h3 style="margin-bottom: 15px; font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">📝 Update Status & Catatan</h3>
+                  <div style="display: flex; flex-direction: column; gap: 15px;">
+                      <div class="form-group" style="margin: 0;">
+                          <label style="font-size: 0.85rem;">Ubah Status</label>
+                          <select v-model="updateForm.status" style="border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px; width: 100%;">
+                              <option value="Diterima">Diterima</option>
+                              <option value="Pengecekan">Pengecekan</option>
+                              <option value="Menunggu Sparepart">Menunggu Sparepart</option>
+                              <option value="Proses Perbaikan">Proses Perbaikan</option>
+                              <option value="Selesai (Belum Diambil)">Selesai (Belum Diambil)</option>
+                              <option value="Selesai (Sudah Diambil)">Selesai (Sudah Diambil)</option>
+                              <option value="Batal">Batal</option>
+                          </select>
+                      </div>
+                      <div class="form-group" style="margin: 0;">
+                          <label style="font-size: 0.85rem;">Hasil Diagnosis / Tindakan Dilakukan</label>
+                          <div style="display: flex; gap: 10px;">
+                              <textarea v-model="updateForm.diagnosis_result" rows="2" placeholder="Hasil Pengecekan" style="flex: 1; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px; resize: vertical;"></textarea>
+                              <textarea v-model="updateForm.actions_taken" rows="2" placeholder="Tindakan" style="flex: 1; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px; resize: vertical;"></textarea>
+                          </div>
+                      </div>
+                      <div class="form-group" style="margin: 0;">
+                          <label style="font-size: 0.85rem;">Catatan Internal (Teknisi)</label>
+                          <textarea v-model="updateForm.technician_notes" rows="2" placeholder="Catatan ini tidak muncul di struk" style="border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px; resize: vertical;"></textarea>
+                      </div>
+                      <button class="btn btn-primary" @click="saveUpdate" style="align-self: flex-end; padding: 10px 24px; border-radius: 20px;">💾 Simpan Perubahan</button>
                   </div>
-                  <div class="form-group">
-                      <label>Hasil Pengecekan / Diagnosis</label>
-                      <textarea v-model="updateForm.diagnosis_result" rows="2"></textarea>
-                  </div>
-                  <div class="form-group">
-                      <label>Tindakan yang Dilakukan</label>
-                      <textarea v-model="updateForm.actions_taken" rows="2"></textarea>
-                  </div>
-                  <div class="form-group">
-                      <label>Catatan Teknisi (Internal)</label>
-                      <textarea v-model="updateForm.technician_notes" rows="2"></textarea>
-                  </div>
-                  <button class="btn btn-primary" @click="saveUpdate">Simpan Perubahan</button>
               </div>
 
               <!-- History Log -->
-              <div style="margin-top: 20px;">
-                  <h3 style="margin-bottom: 10px; font-size: 1rem;">Riwayat Status</h3>
-                  <ul style="list-style: none; padding: 0; max-height: 200px; overflow-y: auto;">
-                      <li v-for="h in history" :key="h.id" style="margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #e2e8f0;">
-                          <div style="font-size: 0.8rem; color: #64748b;">{{ new Date(h.created_at + 'Z').toLocaleString('id-ID') }}</div>
-                          <div style="font-weight: 500;">{{ h.status }}</div>
-                          <div v-if="h.notes" style="font-size: 0.9rem; color: #334155; margin-top: 5px;">{{ h.notes }}</div>
-                      </li>
-                  </ul>
+              <div style="margin-top: 30px; border-top: 1px solid var(--border-color); padding-top: 20px;">
+                  <h3 style="margin-bottom: 15px; font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">🕰️ Riwayat Status</h3>
+                  <div style="background: var(--bg-color); padding: 15px; border-radius: var(--radius-md); max-height: 250px; overflow-y: auto;">
+                      <ul style="list-style: none; padding: 0; margin: 0; position: relative; border-left: 2px solid #cbd5e1; margin-left: 10px;">
+                          <li v-for="h in history" :key="h.id" style="margin-bottom: 15px; padding-left: 15px; position: relative;">
+                              <span style="position: absolute; left: -6px; top: 5px; width: 10px; height: 10px; border-radius: 50%; background: var(--primary-color);"></span>
+                              <div style="font-size: 0.75rem; color: #64748b; margin-bottom: 2px;">{{ new Date(h.created_at + 'Z').toLocaleString('id-ID') }}</div>
+                              <div style="font-weight: 600; color: var(--text-color);">{{ h.status }}</div>
+                              <div v-if="h.notes" style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; background: white; padding: 8px; border-radius: 4px; border: 1px solid var(--border-color);">{{ h.notes }}</div>
+                          </li>
+                      </ul>
+                  </div>
               </div>
           </div>
           
           <!-- Sebelah kanan untuk history dan sparepart -->
           <div>
               <!-- Rincian Biaya -->
-              <div class="card" style="margin-bottom: 20px;">
-                  <h2>Rincian Biaya & Sparepart</h2>
-                  <div style="display: flex; gap: 10px; margin-top: 10px; margin-bottom: 10px;">
-                      <select v-model="itemForm.type" @change="onItemTypeChange" style="padding:6px; border:1px solid #e2e8f0; border-radius:4px;">
+              <div class="card" style="margin-bottom: 20px; padding: 25px;">
+                  <h2 style="font-size: 1.2rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">💰 Rincian Biaya & Sparepart</h2>
+                  
+                  <div style="display: flex; gap: 10px; margin-bottom: 20px; background: var(--bg-color); padding: 10px; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                      <select v-model="itemForm.type" @change="onItemTypeChange" style="padding:8px; border:1px solid var(--border-color); border-radius:var(--radius-sm); background: white;">
                           <option value="Jasa">Jasa</option>
                           <option value="Sparepart">Sparepart</option>
-                          <option value="Biaya lainnya">Biaya lainnya</option>
+                          <option value="Biaya lainnya">Lainnya</option>
                           <option value="Diskon">Diskon</option>
                       </select>
                       
-                      <select v-if="itemForm.type === 'Sparepart'" v-model="itemForm.partId" @change="onPartChange" style="padding:6px; border:1px solid #e2e8f0; border-radius:4px; max-width: 150px;">
+                      <select v-if="itemForm.type === 'Sparepart'" v-model="itemForm.partId" @change="onPartChange" style="padding:8px; border:1px solid var(--border-color); border-radius:var(--radius-sm); background: white; flex: 1;">
                           <option value="">-- Pilih Sparepart --</option>
                           <option v-for="p in parts" :key="p.id" :value="p.id" :disabled="p.stock <= 0">
                               {{ p.name }} (Stok: {{ p.stock }})
                           </option>
                       </select>
                       
-                      <input v-else type="text" v-model="itemForm.desc" placeholder="Keterangan" style="flex: 1; padding:6px; border:1px solid #e2e8f0; border-radius:4px;">
+                      <input v-else type="text" v-model="itemForm.desc" placeholder="Keterangan" style="flex: 1; padding:8px; border:1px solid var(--border-color); border-radius:var(--radius-sm);">
                       
-                      <input type="number" v-model.number="itemForm.qty" placeholder="Qty" min="1" style="width: 60px; padding:6px; border:1px solid #e2e8f0; border-radius:4px;">
-                      <input type="number" v-model.number="itemForm.price" placeholder="Harga" style="width: 120px; padding:6px; border:1px solid #e2e8f0; border-radius:4px;">
-                      <button @click="addItem" class="btn btn-primary" style="padding: 6px 12px;">Tambah</button>
+                      <input type="number" v-model.number="itemForm.qty" placeholder="Qty" min="1" style="width: 60px; padding:8px; border:1px solid var(--border-color); border-radius:var(--radius-sm);">
+                      <input type="number" v-model.number="itemForm.price" placeholder="Harga" style="width: 110px; padding:8px; border:1px solid var(--border-color); border-radius:var(--radius-sm);">
+                      <button @click="addItem" class="btn btn-primary" style="padding: 8px 16px; border-radius: var(--radius-sm);">➕</button>
                   </div>
                   
-                  <ul style="list-style: none; padding: 0; margin-bottom: 15px;">
-                      <li v-for="item in items" :key="item.id" style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px dashed #e2e8f0;">
-                          <div>
-                              <strong>{{ item.item_type }}</strong> - {{ item.description }}
-                              <div style="font-size: 0.85rem; color: #64748b;">
-                                  {{ item.quantity }} x {{ formatCurrency(item.price) }}
+                  <div style="background: white; border: 1px solid var(--border-color); border-radius: var(--radius-md); overflow: hidden;">
+                      <ul style="list-style: none; padding: 0; margin: 0;">
+                          <li v-for="item in items" :key="item.id" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; border-bottom: 1px solid var(--border-color);">
+                              <div>
+                                  <div style="font-weight: 600; color: var(--text-color);">{{ item.item_type }} <span style="font-weight: normal; color: var(--text-muted);"> - {{ item.description }}</span></div>
+                                  <div style="font-size: 0.85rem; color: #64748b; margin-top: 4px;">
+                                      {{ item.quantity }} x {{ formatCurrency(item.price) }}
+                                  </div>
                               </div>
-                          </div>
-                          <div style="display: flex; align-items: center; gap: 10px;">
-                              <span style="font-weight: 600;">{{ formatCurrency(item.subtotal) }}</span>
-                              <button @click="deleteItem(item.id)" class="btn btn-danger" style="padding: 2px 5px; font-size: 0.7rem;">Hapus</button>
-                          </div>
-                      </li>
-                  </ul>
-                  <div style="display: flex; justify-content: space-between; font-size: 1.1rem; font-weight: bold; padding-top: 10px; border-top: 2px solid #e2e8f0;">
+                              <div style="display: flex; align-items: center; gap: 15px;">
+                                  <span style="font-weight: 700; color: var(--primary-color);">{{ formatCurrency(item.subtotal) }}</span>
+                                  <button @click="deleteItem(item.id)" class="btn btn-danger" style="padding: 4px 8px; font-size: 0.75rem; border-radius: 4px; opacity: 0.8;">Hapus</button>
+                              </div>
+                          </li>
+                      </ul>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; font-size: 1.2rem; font-weight: 800; padding: 15px 20px; background: rgba(99, 102, 241, 0.05); border-radius: var(--radius-md); margin-top: 15px; color: var(--primary-color);">
                       <span>Total Biaya:</span>
                       <span>{{ formatCurrency(service.total_cost) }}</span>
                   </div>
