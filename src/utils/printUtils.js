@@ -224,6 +224,81 @@ export const generateInvoiceHtml = (settings, service, items, payments, logoBase
     `;
 };
 
+export const generateBlankNotaHtml = (settings, logoBase64) => {
+    return `
+        <style>
+            @page { margin: 5mm; }
+            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #1e293b; line-height: 1.3; box-sizing: border-box; font-size: 12px; }
+        </style>
+        <div style="width: 100%; max-height: 98vh; overflow: hidden;">
+            <!-- Header -->
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #1e293b; padding-bottom: 5px; margin-bottom: 8px;">
+                <div style="flex: 1;">
+                    ${logoBase64 ? `<img src="${logoBase64}" alt="Logo" style="max-height: 50px; object-fit: contain; margin-bottom: 5px;" />` : ''}
+                    <h2 style="font-size: 1.5rem; margin: 0 0 2px 0; font-weight: 800; color: #0f172a;">${settings.business_name || 'NUNOX SERVIS'}</h2>
+                    <div style="font-size: 0.85rem; color: #475569;">${settings.address || ''}</div>
+                    <div style="font-size: 0.85rem; color: #475569; margin-top: 2px; font-weight: 600;">📞 ${settings.whatsapp || settings.phone || ''}</div>
+                </div>
+                <div style="text-align: right; flex: 1;">
+                    <h1 style="font-size: 1.6rem; color: #a855f7; margin: 0 0 5px 0; text-transform: uppercase; letter-spacing: 2px; font-weight: 900;">TANDA TERIMA</h1>
+                    <div style="font-size: 0.9rem; color: #334155; margin-bottom: 2px;"><strong>No:</strong> ..............................</div>
+                    <div style="font-size: 0.8rem; color: #64748b;">Tanggal: ..............................</div>
+                </div>
+            </div>
+            
+            <!-- Body: 3 Columns -->
+            <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+                <!-- Pelanggan -->
+                <div style="flex: 1; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 8px; background: #f8fafc;">
+                    <h4 style="font-size: 0.75rem; text-transform: uppercase; margin: 0 0 4px 0; color: #64748b; border-bottom: 1px solid #e2e8f0; padding-bottom: 2px;">Data Pelanggan</h4>
+                    <table style="width: 100%; font-size: 0.8rem;">
+                        <tr><td style="width: 50px; color: #475569; padding: 2px 0; vertical-align: top;">Nama</td><td style="vertical-align: top;">: <strong>.......................</strong></td></tr>
+                        <tr><td style="color: #475569; padding: 2px 0; vertical-align: top;">No. HP</td><td style="vertical-align: top;">: .......................</td></tr>
+                        <tr><td style="color: #475569; padding: 2px 0; vertical-align: top;">Alamat</td><td style="vertical-align: top;">: .......................</td></tr>
+                    </table>
+                </div>
+                
+                <!-- Perangkat -->
+                <div style="flex: 1; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 8px; background: #f8fafc;">
+                    <h4 style="font-size: 0.75rem; text-transform: uppercase; margin: 0 0 4px 0; color: #64748b; border-bottom: 1px solid #e2e8f0; padding-bottom: 2px;">Data Perangkat</h4>
+                    <table style="width: 100%; font-size: 0.8rem;">
+                        <tr><td style="width: 50px; color: #475569; padding: 2px 0; vertical-align: top;">Jenis</td><td style="vertical-align: top;">: <strong>.......................</strong></td></tr>
+                        <tr><td style="color: #475569; padding: 2px 0; vertical-align: top;">Merk/Tipe</td><td style="vertical-align: top;">: .......................</td></tr>
+                        <tr><td style="color: #475569; padding: 2px 0; vertical-align: top;">SN</td><td style="vertical-align: top;">: .......................</td></tr>
+                    </table>
+                </div>
+                
+                <!-- Keluhan -->
+                <div style="flex: 1.2; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 8px; background: #fef2f2;">
+                    <h4 style="font-size: 0.75rem; text-transform: uppercase; margin: 0 0 4px 0; color: #ef4444; border-bottom: 1px solid #fecaca; padding-bottom: 2px;">Keluhan / Kerusakan</h4>
+                    <div style="font-size: 0.85rem; font-weight: 600; color: #7f1d1d;">.......................<br/>.......................<br/>.......................</div>
+                </div>
+            </div>
+            
+            <!-- Items Area (Empty for Nota) -->
+            <div style="border: 1px dashed #cbd5e1; height: 100px; display: flex; align-items: center; justify-content: center; background: #f8fafc; border-radius: 6px;">
+                <span style="color: #94a3b8; font-size: 0.85rem; letter-spacing: 1px;">(Area Catatan Tambahan)</span>
+            </div>
+            
+            <!-- Signatures -->
+            <div style="display: flex; justify-content: space-between; padding: 0 40px; margin-top: 60px;">
+                <div style="text-align: center; flex: 1;">
+                    <div style="font-size: 0.9rem; color: #64748b; margin-bottom: 70px;">Pelanggan</div>
+                    <div style="border-top: 1px solid #94a3b8; width: 150px; margin: 0 auto; padding-top: 5px; font-weight: 700; color: #1e293b;">.........................</div>
+                </div>
+                <div style="text-align: center; flex: 1;">
+                    <div style="font-size: 0.9rem; color: #64748b; margin-bottom: 70px;">Teknisi / Kasir</div>
+                    <div style="border-top: 1px solid #94a3b8; width: 150px; margin: 0 auto; padding-top: 5px; font-weight: 700; color: #1e293b;">${settings.business_name || 'NUNOX'}</div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 10px; font-size: 0.75rem; color: #94a3b8; border-top: 1px solid #e2e8f0; padding-top: 5px;">
+                ${settings.receipt_footer || 'Bawa nota ini saat pengambilan barang.'}
+            </div>
+        </div>
+    `;
+};
+
 export const generateBlankReceiptHtml = (settings, logoBase64) => {
     return `
         <style>
