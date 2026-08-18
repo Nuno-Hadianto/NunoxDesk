@@ -33,9 +33,11 @@
       </div>
 
       <div class="card warning-card">
-          <h2>Peringatan Stok Sparepart</h2>
+          <h2 style="margin-bottom: 15px; font-size: 1.2rem; color: var(--primary-color); display: flex; align-items: center; gap: 8px;">
+              ⚠️ Peringatan Stok Sparepart
+          </h2>
           <div class="table-container" style="max-height: 250px;">
-              <table class="table">
+              <table class="data-table">
                   <thead>
                       <tr>
                           <th>Kode</th>
