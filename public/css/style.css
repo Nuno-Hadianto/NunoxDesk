@@ -198,9 +198,28 @@ body.dark-mode .topbar {
 
 .topbar-title h1 {
     font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--text-main);
+    font-weight: 800;
+    color: var(--primary-color);
     letter-spacing: -0.5px;
+    margin: 0;
+}
+
+.global-search-input {
+    padding: 8px 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    background: var(--card-bg);
+    color: var(--text-color);
+    width: 250px;
+    font-size: 0.85rem;
+    transition: var(--transition-smooth);
+}
+
+.global-search-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+    width: 300px;
 }
 
 .content-area {

@@ -5,6 +5,7 @@
           <div>
               <button @click="sendWhatsApp" class="btn" style="background-color: #25D366; color: white; margin-right: 10px;">💬 Kirim WA</button>
               <button @click="exportPdfInvoice" class="btn" style="background-color: #ef4444; color: white; margin-right: 10px;">📄 Unduh PDF</button>
+              <button @click="printThermal" class="btn btn-secondary" style="margin-right: 10px;">🖨️ Cetak Thermal</button>
               <button @click="printNota" class="btn btn-secondary" style="margin-right: 10px;">Cetak Tanda Terima</button>
               <button @click="printReceipt" class="btn btn-secondary">Cetak Invoice</button>
           </div>
@@ -423,7 +424,7 @@ const deletePayment = async (paymentId) => {
 }
 
 // Export / Print Logic
-import { generateNotaHtml, generateInvoiceHtml, printHtml, exportHtmlToPdf } from '../utils/printUtils.js'
+import { generateNotaHtml, generateInvoiceHtml, generateThermalNotaHtml, printHtml, exportHtmlToPdf } from '../utils/printUtils.js'
 
 const getCommonData = async () => {
   const settings = await window.api.getSettings()
@@ -480,6 +481,17 @@ const printNota = async () => {
   } catch (error) {
       console.error(error)
       window.Swal.fire('Error', 'Gagal mencetak tanda terima.', 'error')
+  }
+}
+
+const printThermal = async () => {
+  try {
+      const { settings, logoBase64 } = await getCommonData()
+      const html = generateThermalNotaHtml(settings, service.value, logoBase64)
+      await printHtml(html, false) // portrait for thermal
+  } catch (error) {
+      console.error(error)
+      window.Swal.fire('Error', 'Gagal mencetak struk thermal.', 'error')
   }
 }
 

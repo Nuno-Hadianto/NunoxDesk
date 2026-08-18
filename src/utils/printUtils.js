@@ -470,3 +470,90 @@ export const exportHtmlToPdf = async (html, filename) => {
     }
     return { success: false, error: 'API exportPdf not found' };
 };
+
+export const generateThermalNotaHtml = (settings, service, logoBase64) => {
+    settings = settings || {};
+    return `
+        <style>
+            @page { size: 58mm auto; margin: 0; }
+            body { 
+                -webkit-print-color-adjust: exact; 
+                print-color-adjust: exact; 
+                margin: 0; 
+                padding: 3mm; 
+                font-family: 'Courier New', Courier, monospace; 
+                color: #000; 
+                font-size: 11px; 
+                line-height: 1.2;
+                width: 52mm; /* 58mm minus padding */
+            }
+            .center { text-align: center; }
+            .bold { font-weight: bold; }
+            .dashed-line { border-top: 1px dashed #000; margin: 5px 0; }
+            .row { display: flex; justify-content: space-between; margin-bottom: 2px; }
+            .label { flex: 0 0 35%; }
+            .value { flex: 1; text-align: right; word-break: break-word; }
+        </style>
+        <div>
+            <!-- Header -->
+            <div class="center">
+                ${logoBase64 ? `<img src="${logoBase64}" alt="Logo" style="max-height: 40px; margin-bottom: 5px;" />` : ''}
+                <div class="bold" style="font-size: 14px;">${settings.business_name || 'NUNOX SERVIS'}</div>
+                <div style="font-size: 10px;">${settings.address || ''}</div>
+                <div style="font-size: 10px;">WA: ${settings.whatsapp || settings.phone || ''}</div>
+            </div>
+            
+            <div class="dashed-line"></div>
+            
+            <div class="center bold" style="font-size: 13px; margin: 5px 0;">TANDA TERIMA</div>
+            
+            <div class="row">
+                <span class="label">No:</span>
+                <span class="value bold">${service ? service.ticket_number : '-'}</span>
+            </div>
+            <div class="row">
+                <span class="label">Tgl:</span>
+                <span class="value">${service ? new Date(service.created_at + 'Z').toLocaleDateString('id-ID') : '-'}</span>
+            </div>
+            
+            <div class="dashed-line"></div>
+            
+            <div class="bold" style="margin-bottom: 2px;">PELANGGAN:</div>
+            <div>${service ? service.customer_name : '-'}</div>
+            <div>${service ? service.customer_phone || '' : ''}</div>
+            
+            <div class="dashed-line"></div>
+            
+            <div class="bold" style="margin-bottom: 2px;">PERANGKAT:</div>
+            <div>${service ? service.device_type : '-'}</div>
+            <div>${service ? (service.brand || '') + ' ' + (service.model || '') : '-'}</div>
+            <div class="row" style="margin-top: 2px;">
+                <span class="label">SN:</span>
+                <span class="value">${service ? service.serial_number || '-' : '-'}</span>
+            </div>
+            
+            <div class="dashed-line"></div>
+            
+            <div class="bold" style="margin-bottom: 2px;">KELUHAN:</div>
+            <div style="white-space: pre-wrap; font-size: 10px;">${service ? service.customer_complaint : '-'}</div>
+            
+            <div class="dashed-line"></div>
+            
+            <div class="bold" style="margin-bottom: 2px;">KELENGKAPAN:</div>
+            <div style="font-size: 10px;">${service ? service.accessories || '-' : '-'}</div>
+            
+            <div class="dashed-line"></div>
+            
+            <div class="center" style="margin-top: 15px; font-size: 10px;">
+                <div>Hormat Kami,</div>
+                <br><br><br>
+                <div>( .................... )</div>
+            </div>
+            
+            <div class="center" style="margin-top: 10px; font-size: 9px;">
+                * Harap bawa struk ini saat mengambil barang.
+            </div>
+            <div style="height: 10mm;"></div> <!-- Extra space for tearing -->
+        </div>
+    `;
+};

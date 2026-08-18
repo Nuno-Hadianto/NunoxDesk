@@ -25,7 +25,7 @@
                       <td>{{ s.customer_name }}</td>
                       <td>{{ s.brand || '' }} {{ s.model || '' }}</td>
                       <td>
-                          <span style="padding: 4px 8px; border-radius: 4px; background: #e2e8f0; font-size: 0.85rem; font-weight: 500;">
+                          <span :style="getStatusColor(s.service_status)">
                               {{ s.service_status }}
                           </span>
                       </td>
@@ -99,9 +99,10 @@
 
 <script setup>
 import { ref, reactive, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 const router = useRouter()
+const route = useRoute()
 const services = ref([])
 const searchQuery = ref('')
 const currentPage = ref(1)
@@ -126,6 +127,25 @@ const formatCurrency = (amount) => {
       currency: 'IDR',
       minimumFractionDigits: 0
   }).format(amount || 0)
+}
+
+const getStatusColor = (status) => {
+  let bg = '#e2e8f0'
+  let color = '#334155'
+  if (status === 'Selesai (Sudah Diambil)') { bg = '#10b981'; color = 'white' }
+  else if (status === 'Selesai (Belum Diambil)') { bg = '#34d399'; color = 'white' }
+  else if (status === 'Proses Perbaikan') { bg = '#3b82f6'; color = 'white' }
+  else if (status === 'Menunggu Sparepart') { bg = '#f59e0b'; color = 'white' }
+  else if (status === 'Batal') { bg = '#ef4444'; color = 'white' }
+  
+  return {
+      padding: '4px 8px',
+      borderRadius: '4px',
+      background: bg,
+      color: color,
+      fontSize: '0.85rem',
+      fontWeight: '500'
+  }
 }
 
 const loadServices = async (page = 1) => {
@@ -201,6 +221,10 @@ const saveService = async () => {
 }
 
 onMounted(() => {
+  if (route.query.search) {
+      searchQuery.value = route.query.search
+  }
   loadServices()
+  loadCustomersDropdown()
 })
 </script>
