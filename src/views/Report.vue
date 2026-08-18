@@ -64,6 +64,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { generateBlankNotaHtml, generateBlankReceiptHtml, generateReportHtml, printHtml, exportHtmlToPdf } from '../utils/printUtils.js'
 
 const startDate = ref('')
 const endDate = ref('')
@@ -133,17 +134,58 @@ const exportExcel = async () => {
   }
 }
 
-const exportPdf = () => {
-  // We can trigger an IPC event to print PDF if implemented,
-  // or use window.print() if a specific print view is created.
-  window.Swal.fire('Info', 'Fitur cetak laporan PDF akan tersedia. (Perlu memanggil print via electron)', 'info')
+const getCommonData = async () => {
+  const settings = await window.api.getSettings()
+  const logoBase64 = window.api.getLogoBase64 ? await window.api.getLogoBase64() : ''
+  return { settings, logoBase64 }
 }
 
-const printBlankNota = () => {
-  window.Swal.fire('Info', 'Fitur nota kosong akan tersedia.', 'info')
+const exportPdf = async () => {
+  if (services.value.length === 0) {
+      return window.Swal.fire('Info', 'Tidak ada data untuk diekspor pada periode ini.', 'info')
+  }
+  try {
+      const { settings, logoBase64 } = await getCommonData()
+      const html = generateReportHtml(settings, services.value, startDate.value, endDate.value, totalOmset.value, totalModal.value, netProfit.value, logoBase64)
+      const filename = `Laporan_Transaksi_${startDate.value}_sd_${endDate.value}.pdf`
+      
+      const result = await exportHtmlToPdf(html, filename)
+      if (result && result.success) {
+          window.Swal.fire({
+              icon: 'success',
+              title: 'Berhasil',
+              text: 'Laporan PDF berhasil disimpan!',
+              timer: 1500,
+              showConfirmButton: false
+          })
+      } else if (result && !result.canceled) {
+          window.Swal.fire('Error', 'Gagal menyimpan laporan PDF: ' + (result.error || ''), 'error')
+      }
+  } catch (error) {
+      console.error(error)
+      window.Swal.fire('Error', 'Terjadi kesalahan saat memproses PDF.', 'error')
+  }
 }
 
-const printBlankReceipt = () => {
-  window.Swal.fire('Info', 'Fitur kwitansi kosong akan tersedia.', 'info')
+const printBlankNota = async () => {
+  try {
+      const { settings, logoBase64 } = await getCommonData()
+      const html = generateBlankNotaHtml(settings, logoBase64)
+      await printHtml(html, true) // landscape
+  } catch (error) {
+      console.error(error)
+      window.Swal.fire('Error', 'Gagal mencetak nota kosong.', 'error')
+  }
+}
+
+const printBlankReceipt = async () => {
+  try {
+      const { settings, logoBase64 } = await getCommonData()
+      const html = generateBlankReceiptHtml(settings, logoBase64)
+      await printHtml(html, true) // landscape
+  } catch (error) {
+      console.error(error)
+      window.Swal.fire('Error', 'Gagal mencetak kwitansi kosong.', 'error')
+  }
 }
 </script>

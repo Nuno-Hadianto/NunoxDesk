@@ -31,6 +31,8 @@
         </div>
     </main>
   </div>
+
+  <div id="print-area"></div>
 </template>
 
 <script setup>

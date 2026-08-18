@@ -1,7 +1,13 @@
 <template>
   <div class="view-section" v-if="service">
-      <div style="margin-bottom: 20px;">
+      <div class="action-bar" style="display: flex; justify-content: space-between;">
           <button @click="$router.push('/services')" class="btn btn-secondary">&larr; Kembali ke Daftar Servis</button>
+          <div>
+              <button @click="sendWhatsApp" class="btn" style="background-color: #25D366; color: white; margin-right: 10px;">💬 Kirim WA</button>
+              <button @click="exportPdfInvoice" class="btn" style="background-color: #ef4444; color: white; margin-right: 10px;">📄 Unduh PDF</button>
+              <button @click="printNota" class="btn btn-secondary" style="margin-right: 10px;">Cetak Tanda Terima</button>
+              <button @click="printReceipt" class="btn btn-secondary">Cetak Invoice</button>
+          </div>
       </div>
 
       <div class="dashboard-grid">
@@ -413,6 +419,78 @@ const deletePayment = async (paymentId) => {
       await window.api.deletePayment(paymentId, service.value.id)
       await loadPayments()
       await loadServiceDetail()
+  }
+}
+
+// Export / Print Logic
+import { generateNotaHtml, generateInvoiceHtml, printHtml, exportHtmlToPdf } from '../utils/printUtils.js'
+
+const getCommonData = async () => {
+  const settings = await window.api.getSettings()
+  const logoBase64 = window.api.getLogoBase64 ? await window.api.getLogoBase64() : ''
+  return { settings, logoBase64 }
+}
+
+const sendWhatsApp = () => {
+  if (!service.value) return
+  const phone = service.value.customer_phone
+  if (!phone) {
+      return window.Swal.fire('Info', 'Pelanggan tidak memiliki nomor telepon', 'info')
+  }
+  let targetPhone = phone.replace(/^0/, '62')
+  
+  const text = `Halo Kak ${service.value.customer_name},
+Perangkat ${service.value.brand || ''} ${service.value.model || ''} dengan No Tiket *${service.value.ticket_number}* saat ini berstatus: *${service.value.service_status}*.
+Sisa Tagihan: *${formatCurrency(remainingBill.value)}*.
+Terima kasih telah mempercayakan perbaikan kepada kami.`
+
+  const url = `https://wa.me/${targetPhone}?text=${encodeURIComponent(text)}`
+  window.open(url, '_blank')
+}
+
+const exportPdfInvoice = async () => {
+  try {
+      const { settings, logoBase64 } = await getCommonData()
+      const html = generateInvoiceHtml(settings, service.value, items.value, payments.value, logoBase64)
+      const filename = `Invoice_${service.value.ticket_number}_${service.value.customer_name.replace(/\s+/g, '_')}.pdf`
+      
+      const result = await exportHtmlToPdf(html, filename)
+      if (result && result.success) {
+          window.Swal.fire({
+              icon: 'success',
+              title: 'Berhasil',
+              text: 'PDF berhasil disimpan!',
+              timer: 1500,
+              showConfirmButton: false
+          })
+      } else if (result && !result.canceled) {
+          window.Swal.fire('Error', 'Gagal menyimpan PDF: ' + (result.error || ''), 'error')
+      }
+  } catch (error) {
+      console.error(error)
+      window.Swal.fire('Error', 'Terjadi kesalahan saat memproses PDF.', 'error')
+  }
+}
+
+const printNota = async () => {
+  try {
+      const { settings, logoBase64 } = await getCommonData()
+      const html = generateNotaHtml(settings, service.value, logoBase64)
+      await printHtml(html, true) // landscape for nota
+  } catch (error) {
+      console.error(error)
+      window.Swal.fire('Error', 'Gagal mencetak tanda terima.', 'error')
+  }
+}
+
+const printReceipt = async () => {
+  try {
+      const { settings, logoBase64 } = await getCommonData()
+      const html = generateInvoiceHtml(settings, service.value, items.value, payments.value, logoBase64)
+      await printHtml(html, false) // portrait for invoice
+  } catch (error) {
+      console.error(error)
+      window.Swal.fire('Error', 'Gagal mencetak invoice.', 'error')
   }
 }
 
