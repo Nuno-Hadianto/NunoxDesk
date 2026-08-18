@@ -101,6 +101,7 @@ body::before {
 .app-container {
     display: flex;
     height: 100vh;
+    animation: fadeIn 0.4s ease-out forwards;
 }
 
 /* Sidebar */

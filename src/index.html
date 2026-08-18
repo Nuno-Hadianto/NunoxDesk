@@ -15,10 +15,19 @@
     <!-- We can move these to public folder of Vite or keep them if we copy public -> src/public -->
     <script src="/js/lib/sweetalert2.all.min.js"></script>
     <script src="/js/lib/chart.min.js"></script>
-    <style>body { background-color: #0f172a; margin: 0; }</style>
 </head>
 <body>
-    <div id="app"></div>
+    <div id="app">
+        <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at center, #1e1b4b 0%, #0f172a 100%); display: flex; flex-direction: column; justify-content: center; align-items: center; color: #94a3b8; font-family: 'Inter', sans-serif; z-index: 9999;">
+            <div style="width: 40px; height: 40px; border: 3px solid rgba(255,255,255,0.1); border-top-color: #6366f1; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px;"></div>
+            <div style="font-weight: 500; letter-spacing: 0.5px;">Memuat nuNox Servis...</div>
+        </div>
+        <style>
+            @keyframes spin { 
+                to { transform: rotate(360deg); } 
+            }
+        </style>
+    </div>
     <script type="module" src="/main.js"></script>
 </body>
 </html>
