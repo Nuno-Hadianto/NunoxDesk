@@ -450,6 +450,19 @@ export const printHtml = async (html, landscape = false, isThermal = false) => {
     const printArea = document.getElementById('print-area');
     if (printArea) {
         printArea.innerHTML = html;
+        
+        let styleTag = document.getElementById('dynamic-print-style');
+        if (!styleTag) {
+            styleTag = document.createElement('style');
+            styleTag.id = 'dynamic-print-style';
+            document.head.appendChild(styleTag);
+        }
+        if (isThermal) {
+            styleTag.innerHTML = '@media print { @page { size: 58mm auto; margin: 0; } }';
+        } else {
+            styleTag.innerHTML = landscape ? '@media print { @page { size: A5 landscape; } }' : '@media print { @page { size: A4 portrait; } }';
+        }
+
         if (window.api && window.api.printPreview) {
             try {
                 let pdfOptions = { landscape: landscape && !isThermal };
@@ -465,6 +478,7 @@ export const printHtml = async (html, landscape = false, isThermal = false) => {
             window.print();
         }
         printArea.innerHTML = '';
+        if (styleTag) styleTag.innerHTML = '';
     }
 };
 
