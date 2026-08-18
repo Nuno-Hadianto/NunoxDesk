@@ -238,6 +238,17 @@ body.dark-mode .stat-card:hover {
     border-color: rgba(99, 102, 241, 0.5);
 }
 
+.card {
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 25px;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-soft);
+    border: 1px solid var(--border-color);
+    margin-bottom: 25px;
+}
+
 .stat-card h3 {
     font-size: 0.85rem;
     color: var(--text-muted);

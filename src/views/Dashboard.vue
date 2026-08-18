@@ -27,7 +27,9 @@
   <div class="dashboard-grid">
       <div class="card chart-container">
           <h2>Tren Pendapatan (6 Bulan)</h2>
-          <canvas id="income-chart"></canvas>
+          <div style="position: relative; height: 300px; width: 100%;">
+              <canvas id="income-chart"></canvas>
+          </div>
       </div>
 
       <div class="card warning-card">
