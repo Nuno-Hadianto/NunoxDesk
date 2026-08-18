@@ -98,6 +98,10 @@ body::before {
     to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
+.fade-in {
+    animation: slideUp 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
 .app-container {
     display: flex;
     height: 100vh;
@@ -269,11 +273,17 @@ body.dark-mode .stat-card:hover {
     background: var(--card-bg);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    padding: 25px;
     border-radius: var(--radius-lg);
+    padding: 25px;
     box-shadow: var(--shadow-soft);
     border: 1px solid var(--border-color);
     margin-bottom: 25px;
+    transition: var(--transition-smooth);
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-hover);
 }
 
 .stat-card h3 {
@@ -296,21 +306,22 @@ body.dark-mode .stat-card:hover {
 
 /* UI Components */
 .btn {
-    padding: 10px 22px;
+    padding: 10px 20px;
     border: none;
     border-radius: var(--radius-sm);
     cursor: pointer;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     font-weight: 600;
     transition: var(--transition-smooth);
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
 .btn:active {
-    transform: scale(0.96) translateY(2px);
+    transform: translateY(1px);
 }
 
 .btn-primary {
@@ -428,11 +439,16 @@ body.dark-mode .data-table th {
     transition: var(--transition-smooth);
 }
 
-.data-table tr:hover {
-    background-color: rgba(241, 245, 249, 0.6);
+.data-table tbody tr {
+    transition: var(--transition-smooth);
 }
-body.dark-mode .data-table tr:hover {
-    background-color: rgba(51, 65, 85, 0.4);
+
+.data-table tbody tr:hover {
+    background: rgba(99, 102, 241, 0.03);
+}
+
+body.dark-mode .data-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.05);
 }
 
 /* Modals with Glassmorphism */
