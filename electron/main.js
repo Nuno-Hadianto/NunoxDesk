@@ -21,11 +21,17 @@ function createWindow() {
     title: 'nuNox_servis - NUNOX_SERVIS',
     icon: path.join(__dirname, '..', 'public', 'img', 'logo.png'),
     autoHideMenuBar: true,
+    show: false,
+    backgroundColor: '#f8fafc',
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
       preload: path.join(__dirname, 'preload.js')
     }
+  });
+
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.show();
   });
 
   mainWindow.maximize();
