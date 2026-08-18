@@ -484,7 +484,11 @@ Sisa Tagihan: *${formatCurrency(remainingBill.value)}*.
 Terima kasih telah mempercayakan perbaikan kepada kami.`
 
   const url = `https://wa.me/${targetPhone}?text=${encodeURIComponent(text)}`
-  window.open(url, '_blank')
+  if (window.api && window.api.openExternalUrl) {
+      window.api.openExternalUrl(url)
+  } else {
+      window.open(url, '_blank')
+  }
 }
 
 const exportPdfInvoice = async () => {
