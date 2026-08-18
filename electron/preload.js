@@ -1,6 +1,7 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('api', {
+  appReady: () => ipcRenderer.send('app-ready'),
   getDashboardStats: () => ipcRenderer.invoke('get-dashboard-stats'),
   
   // Customers

@@ -30,11 +30,10 @@ function createWindow() {
     }
   });
 
-  mainWindow.once('ready-to-show', () => {
+  ipcMain.once('app-ready', () => {
+    mainWindow.maximize();
     mainWindow.show();
   });
-
-  mainWindow.maximize();
   
   const isDev = !app.isPackaged && process.env.NODE_ENV !== 'production';
   if (isDev) {
