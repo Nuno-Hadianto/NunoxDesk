@@ -118,12 +118,15 @@ function registerMiscIpc(mainWindow) {
   ipcMain.handle('print-preview', async (event, options = {}) => {
     try {
       const pdfPath = path.join(os.tmpdir(), `nunox_print_${Date.now()}.pdf`);
-      const pdfData = await mainWindow.webContents.printToPDF({
+      const pdfOptions = {
         printBackground: true,
-        pageSize: options.pageSize || 'A4',
         landscape: options.landscape || false,
         marginsType: 1
-      });
+      };
+      if (options.pageSize) {
+        pdfOptions.pageSize = options.pageSize;
+      }
+      const pdfData = await mainWindow.webContents.printToPDF(pdfOptions);
       fs.writeFileSync(pdfPath, pdfData);
       await shell.openPath(pdfPath);
       return true;
