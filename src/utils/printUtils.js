@@ -1,4 +1,5 @@
 export const generateNotaHtml = (settings, service, logoBase64) => {
+    settings = settings || {};
     return `
         <style>
             @page { margin: 5mm; }
@@ -74,6 +75,7 @@ export const generateNotaHtml = (settings, service, logoBase64) => {
 };
 
 export const generateInvoiceHtml = (settings, service, items, payments, logoBase64) => {
+    settings = settings || {};
     const formatRp = (val) => new Intl.NumberFormat('id-ID', {
         style: 'currency', currency: 'IDR', minimumFractionDigits: 0
     }).format(val || 0);
@@ -225,6 +227,7 @@ export const generateInvoiceHtml = (settings, service, items, payments, logoBase
 };
 
 export const generateBlankNotaHtml = (settings, logoBase64) => {
+    settings = settings || {};
     return `
         <style>
             @page { margin: 5mm; }
@@ -300,6 +303,7 @@ export const generateBlankNotaHtml = (settings, logoBase64) => {
 };
 
 export const generateBlankReceiptHtml = (settings, logoBase64) => {
+    settings = settings || {};
     return `
         <style>
             @page { margin: 5mm; }
@@ -366,6 +370,7 @@ export const generateBlankReceiptHtml = (settings, logoBase64) => {
 };
 
 export const generateReportHtml = (settings, services, startDate, endDate, totalOmset, totalModal, netProfit, logoBase64) => {
+    settings = settings || {};
     const formatRp = (val) => new Intl.NumberFormat('id-ID', {
         style: 'currency', currency: 'IDR', minimumFractionDigits: 0
     }).format(val || 0);
