@@ -1,62 +1,31 @@
-const db = require('../database/db');
+const deviceRepository = require('../repositories/deviceRepository');
 
 function getDevices(searchQuery = '') {
-    let query = `
-        SELECT devices.*, customers.name as customer_name, customers.phone as customer_phone 
-        FROM devices 
-        JOIN customers ON devices.customer_id = customers.id
-    `;
-    if (searchQuery) {
-        query += ` WHERE devices.brand LIKE ? OR devices.model LIKE ? OR devices.serial_number LIKE ? OR customers.name LIKE ?`;
-        const stmt = db.prepare(query + ` ORDER BY devices.id DESC`);
-        return stmt.all(`%${searchQuery}%`, `%${searchQuery}%`, `%${searchQuery}%`, `%${searchQuery}%`);
-    }
-    const stmt = db.prepare(query + ` ORDER BY devices.id DESC`);
-    return stmt.all();
+    return deviceRepository.getDevices(searchQuery);
 }
 
 function getDeviceById(id) {
-    const stmt = db.prepare(`SELECT * FROM devices WHERE id = ?`);
-    return stmt.get(id);
+    return deviceRepository.getDeviceById(id);
 }
 
 function getDevicesByCustomerId(customerId) {
-    const stmt = db.prepare(`SELECT * FROM devices WHERE customer_id = ? ORDER BY id DESC`);
-    return stmt.all(customerId);
+    return deviceRepository.getDevicesByCustomerId(customerId);
 }
 
 function addDevice(data) {
-    const { customer_id, device_type, brand, model, serial_number, color, accessories, physical_condition, notes } = data;
-    const stmt = db.prepare(`
-        INSERT INTO devices (customer_id, device_type, brand, model, serial_number, color, accessories, physical_condition, notes) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `);
-    const info = stmt.run(customer_id, device_type, brand, model, serial_number, color, accessories, physical_condition, notes);
-    return info.lastInsertRowid;
+    return deviceRepository.addDevice(data);
 }
 
 function updateDevice(id, data) {
-    const { customer_id, device_type, brand, model, serial_number, color, accessories, physical_condition, notes } = data;
-    const stmt = db.prepare(`
-        UPDATE devices SET 
-            customer_id = ?, device_type = ?, brand = ?, model = ?, serial_number = ?, 
-            color = ?, accessories = ?, physical_condition = ?, notes = ?, updated_at = CURRENT_TIMESTAMP 
-        WHERE id = ?
-    `);
-    stmt.run(customer_id, device_type, brand, model, serial_number, color, accessories, physical_condition, notes, id);
-    return true;
+    return deviceRepository.updateDevice(id, data);
 }
 
 function deleteDevice(id) {
-    const checkStmt = db.prepare(`SELECT COUNT(*) as count FROM service_orders WHERE device_id = ?`);
-    const result = checkStmt.get(id);
-    if (result.count > 0) {
+    const hasServiceOrders = deviceRepository.checkDeviceHasServiceOrders(id);
+    if (hasServiceOrders) {
         throw new Error("Perangkat tidak bisa dihapus karena masih memiliki riwayat tiket servis.");
     }
-    
-    const stmt = db.prepare(`DELETE FROM devices WHERE id = ?`);
-    stmt.run(id);
-    return true;
+    return deviceRepository.deleteDevice(id);
 }
 
 module.exports = {
