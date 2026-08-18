@@ -323,12 +323,16 @@ const loadParts = async () => {
 const saveUpdate = async () => {
   try {
       const data = {
-          service_status: updateForm.status,
           diagnosis_result: updateForm.diagnosis_result,
           actions_taken: updateForm.actions_taken,
           technician_notes: updateForm.technician_notes
       }
-      await window.api.updateService(service.value.id, data)
+      await window.api.updateServiceDetails(service.value.id, data)
+      
+      if (updateForm.status !== service.value.service_status) {
+          await window.api.updateServiceStatus(service.value.id, updateForm.status, updateForm.actions_taken || 'Status diupdate')
+      }
+
       window.Swal.fire({
           icon: 'success',
           title: 'Tersimpan',
