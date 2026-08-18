@@ -47,8 +47,4 @@ defineProps({
 
 defineEmits(['logout'])
 
-const backupData = () => {
-  // Logic for backup will go here
-  alert('Backup function not yet implemented in Vue migration.')
-}
 </script>
