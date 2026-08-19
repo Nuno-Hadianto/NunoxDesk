@@ -1,20 +1,20 @@
 ---
-name: Permintaan Fitur Baru
-about: Ajukan ide atau saran fitur baru untuk proyek ini
+name: Request Fitur Baru
+about: Punya ide bagus buat aplikasi ini? Tulis di sini!
 title: '[FITUR] '
 labels: enhancement
 assignees: ''
 
 ---
 
-**Apakah permintaan fitur ini berkaitan dengan suatu masalah? Mohon jelaskan.**
-Deskripsi singkat mengenai masalah yang Anda alami. Contoh: "Saya selalu kesulitan saat harus [melakukan sesuatu]..."
+**Masalahnya Apa?**
+Biasanya request fitur muncul karena ada masalah atau kesulitan pas pakai aplikasinya. Jelasin dikit kesulitannya apa. Contoh: "Sering ribet pas mau ngetik..."
 
-**Solusi yang Anda Harapkan**
-Penjelasan singkat dan jelas tentang fitur apa yang Anda inginkan.
+**Ide Fiturnya Gimana?**
+Jelasin fitur yang kamu pengenin itu kayak gimana kerjanya.
 
-**Alternatif yang Pernah Anda Pikirkan**
-Penjelasan singkat mengenai solusi alternatif atau fitur lain yang pernah Anda pertimbangkan.
+**Alternatif Lain**
+Pernah kepikiran cara lain buat nyelesaiin masalah ini nggak?
 
-**Konteks Tambahan**
-Tambahkan informasi, konteks, atau *mockup* (sketsa antarmuka) terkait permintaan fitur di sini.
+**Lain-lain**
+Kalau ada desain kasar (mockup) atau contoh dari aplikasi kasir lain, boleh ditambahin di sini biar lebih jelas.

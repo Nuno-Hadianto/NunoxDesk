@@ -1,29 +1,19 @@
 ## Deskripsi
+Jelasin dikit dong PR ini ngerubah atau nambahin apa aja. Kalau ini ngeberesin Issue tertentu, tolong cantumin nomor issue-nya (contoh: Fixes #12).
 
-Mohon sertakan ringkasan perubahan dan *issue* mana yang diselesaikan. Sertakan juga motivasi dan konteks yang relevan. Sebutkan dependensi (ketergantungan) apa pun yang diperlukan untuk perubahan ini.
+## Perubahan
+Silakan centang yang sesuai:
+- [ ] Benerin bug (nggak nambah fitur, cuma benerin error)
+- [ ] Nambah fitur baru
+- [ ] Ngerapiin kode / Refactor
+- [ ] Update dokumentasi
 
-Memperbaiki # (nomor issue)
+## Udah dites belum?
+Jelasin dikit gimana cara kamu ngetes perubahan ini, biar saya gampang kalau mau nyoba ngetes ulang di laptop saya.
+- [ ] Dites manual di Windows
+- [ ] (opsional) Dites pakai Playwright
 
-## Jenis Perubahan
-
-Silakan hapus opsi yang tidak relevan.
-
-- [ ] Perbaikan bug (perubahan tanpa masalah yang memperbaiki sebuah issue)
-- [ ] Fitur baru (perubahan tanpa masalah yang menambahkan fungsionalitas)
-- [ ] Perubahan yang merusak kompatibilitas (*Breaking change* - perbaikan atau fitur yang menyebabkan fungsi yang ada tidak berjalan sebagaimana mestinya)
-- [ ] Pembaruan dokumentasi ini atau yang ini
-
-## Bagaimana Perubahan Ini Diuji?
-
-Mohon jelaskan pengujian yang Anda jalankan untuk memverifikasi perubahan Anda. Sediakan instruksi agar kami dapat menirunya (*reproduce*). Harap perhatikan detail relevan tentang konfigurasi pengujian Anda.
-
-- [ ] Uji Coba Manual A
-- [ ] Uji Coba Manual B
-
-## Daftar Periksa:
-
-- [ ] Kode saya mematuhi pedoman gaya (style guidelines) proyek ini
-- [ ] Saya telah meninjau sendiri (self-review) kode saya
-- [ ] Saya telah menambahkan komentar pada kode saya, terutama pada area yang sulit dipahami
-- [ ] Saya telah memperbarui dokumentasi yang sesuai
-- [ ] Kode saya tidak menimbulkan peringatan (warnings) baru
+## Daftar Periksa (Checklist)
+- [ ] Kode udah rapi
+- [ ] Udah dicek ulang kodenya (self-review)
+- [ ] Udah ditambahin komentar kalau ada bagian kode yang ribet

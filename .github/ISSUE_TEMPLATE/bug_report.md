@@ -1,31 +1,28 @@
 ---
-name: Laporan Bug / Error
-about: Buat laporan untuk membantu kami memperbaiki masalah (error)
+name: Lapor Bug / Error
+about: Kasih tau kalau ada yang error biar bisa diperbaiki secepatnya
 title: '[BUG] '
 labels: bug
 assignees: ''
 
 ---
 
-**Deskripsi Masalah**
-Penjelasan singkat dan jelas tentang apa bug yang terjadi.
+**Deskripsi Error**
+Jelasin dikit dong errornya kayak gimana atau bagian mana yang nggak sesuai ekspektasi.
 
-**Langkah-langkah untuk Meniru (Reproduce)**
-Langkah-langkah untuk memunculkan error:
-1. Masuk ke halaman '...'
+**Gimana Cara Munculin Errornya?**
+Langkah-langkah biar errornya kelihatan:
+1. Masuk ke menu '...'
 2. Klik tombol '....'
 3. Isi kolom '....'
-4. Lihat error yang muncul
+4. Terus muncul error '....'
 
-**Ekspektasi**
-Apa yang seharusnya terjadi secara normal?
+**Harusnya Gimana?**
+Menurut kamu, aplikasi ini harusnya ngapain pas langkah di atas dilakuin?
 
-**Tangkapan Layar (Screenshots)**
-Jika memungkinkan, tambahkan tangkapan layar (screenshot) untuk memperjelas masalah.
+**Screenshot**
+Kalau ada screenshot, tolong dilampirin ya biar saya lebih gampang ngecek dan ngebayangin masalahnya.
 
-**Informasi Perangkat (Desktop):**
- - Sistem Operasi: [contoh: Windows 10, Windows 11]
- - Versi Aplikasi: [contoh: v1.0.0]
-
-**Konteks Tambahan**
-Tambahkan informasi atau konteks lain terkait masalah di sini.
+**Info Tambahan:**
+ - OS: [contoh: Windows 10, Windows 11]
+ - Versi: [contoh: v1.0.0 atau pake kode dari branch main]
