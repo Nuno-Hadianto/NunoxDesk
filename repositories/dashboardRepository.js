@@ -58,6 +58,33 @@ function getDashboardStats() {
     // Peringatan Stok Menipis (Stok <= 5)
     const lowStockParts = db.prepare(`SELECT * FROM spare_parts WHERE stock <= 5 ORDER BY stock ASC LIMIT 10`).all();
 
+    // Barang Terlantar / Follow Up
+    // 1. Menunggu Sparepart > 7 hari
+    const waitingQuery = db.prepare(`
+        SELECT so.id, so.ticket_number, c.name as customer_name, so.service_status, 
+               CAST(julianday('now', 'localtime') - julianday(so.created_at, 'localtime') AS INTEGER) as days_pending
+        FROM service_orders so
+        JOIN customers c ON so.customer_id = c.id
+        WHERE so.service_status = 'Menunggu Sparepart' 
+          AND (julianday('now', 'localtime') - julianday(so.created_at, 'localtime')) > 7
+    `);
+    
+    // 2. Selesai (Belum Diambil) > 14 hari
+    const completedNotPickedQuery = db.prepare(`
+        SELECT so.id, so.ticket_number, c.name as customer_name, so.service_status, 
+               CAST(julianday('now', 'localtime') - julianday(so.completed_date, 'localtime') AS INTEGER) as days_pending
+        FROM service_orders so
+        JOIN customers c ON so.customer_id = c.id
+        WHERE so.service_status = 'Selesai (Belum Diambil)' 
+          AND so.completed_date IS NOT NULL
+          AND (julianday('now', 'localtime') - julianday(so.completed_date, 'localtime')) > 14
+    `);
+
+    const abandonedServices = [
+        ...waitingQuery.all(),
+        ...completedNotPickedQuery.all()
+    ];
+
     return {
         todayServices,
         inProgress,
@@ -65,7 +92,8 @@ function getDashboardStats() {
         incomeMonth,
         labaBersih,
         chartData: { labels: chartLabels, values: chartValues },
-        lowStockParts
+        lowStockParts,
+        abandonedServices
     };
 }
 

@@ -11,6 +11,14 @@ export interface LowStockPart {
   stock: number;
 }
 
+export interface AbandonedService {
+  id: number;
+  ticket_number: string;
+  customer_name: string;
+  service_status: string;
+  days_pending: number;
+}
+
 export interface DashboardStats {
   todayServices: number;
   inProgress: number;
@@ -22,6 +30,7 @@ export interface DashboardStats {
     values: number[];
   };
   lowStockParts: LowStockPart[];
+  abandonedServices?: AbandonedService[];
 }
 
 export interface Customer {
