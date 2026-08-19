@@ -1,16 +1,17 @@
 <div align="center">
   <img src="https://img.icons8.com/color/96/000000/laptop-settings--v1.png" alt="nuNox_servis Logo" />
   <h1>nuNox_servis</h1>
-  <p><strong>Aplikasi Manajemen Kasir & CRM Usaha Servis Komputer/Laptop 100% Offline</strong></p>
+  <p><strong>Aplikasi Point of Sale (POS) & Manajemen Servis Komputer/Laptop 100% Offline</strong></p>
   
   <p>
     <a href="https://github.com/Nuno-Hadianto/nuNox_servis/blob/main/LICENSE">
       <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT">
     </a>
     <img src="https://img.shields.io/badge/Electron-47848F?style=flat&logo=electron&logoColor=white" alt="Electron">
-    <img src="https://img.shields.io/badge/Node.js-%3E%3D16.0.0-43853D?style=flat&logo=node.js&logoColor=white" alt="Node.js">
+    <img src="https://img.shields.io/badge/Vue.js-35495E?style=flat&logo=vue.js&logoColor=4FC08D" alt="Vue.js">
+    <img src="https://img.shields.io/badge/Vite-B73BFE?style=flat&logo=vite&logoColor=FFD62E" alt="Vite">
     <img src="https://img.shields.io/badge/SQLite-07405E?style=flat&logo=sqlite&logoColor=white" alt="SQLite">
-    <img src="https://img.shields.io/badge/Playwright-Tested-2EAD33?style=flat&logo=playwright&logoColor=white" alt="Playwright">
+    <img src="https://img.shields.io/badge/TypeScript-007ACC?style=flat&logo=typescript&logoColor=white" alt="TypeScript">
   </p>
 </div>
 
@@ -39,11 +40,11 @@
 ---
 
 ## ✨ Fitur Utama
-- 📊 **Dashboard Analitik**: Pantau jumlah tiket aktif, grafik omset bulanan, dan margin keuntungan secara langsung.
-- 👥 **Manajemen Pelanggan**: Pencatatan data pelanggan yang komprehensif, ditautkan dengan riwayat perangkat mereka.
-- 🔧 **Tracking Servis**: Kelola tiket servis dari status *Masuk*, *Dikerjakan*, *Selesai*, hingga pembuatan *invoice* pembayaran (DP & Pelunasan).
-- 📦 **Inventaris Sparepart**: Potongan stok barang otomatis apabila ditambahkan sebagai *item* servis di dalam tiket.
-- 🖨️ **Kwitansi / Cetak Struk**: Tersedia fungsi cetak nota atau ekspor PDF dengan desain *Print-Ready* ukuran A4.
+- 📊 **Dashboard & Peringatan Otomatis**: Pantau jumlah tiket aktif, grafik omset bulanan, margin keuntungan, dan *sistem peringatan pintar* (menyorot barang servis yang belum diambil > 14 hari atau menunggu *sparepart* > 7 hari).
+- 👥 **Manajemen Pelanggan terintegrasi WhatsApp**: Pencatatan data pelanggan komprehensif, dilengkapi tombol kirim notifikasi tagihan langsung ke WhatsApp Web.
+- 🔧 **Tracking Servis Terperinci**: Kelola tiket servis dari status *Masuk*, *Dikerjakan*, *Selesai*, hingga pembuatan *invoice* pembayaran (DP & Pelunasan).
+- 📦 **Inventaris & Sparepart Terlaris**: Potongan stok barang otomatis apabila ditambahkan ke tiket servis. Tersedia laporan analitik cerdas untuk 5 *sparepart* terlaris bulanan.
+- 🖨️ **Laporan Keuangan Eksekutif**: Ekspor laporan keuangan bulanan super elegan dalam format PDF.
 - 🔐 **Keamanan Internal**: Autentikasi Admin yang diamankan dengan *bcryptjs* hashing.
 - 📂 **Backup & Restore**: Mengamankan (*backup*) dan memulihkan (*restore*) keseluruhan database SQLite dalam sekali klik.
 
@@ -68,18 +69,18 @@
    ```
 
 2. **Install Dependensi**
-   Pastikan Anda sudah menginstal Node.js v16 atau versi yang lebih baru.
+   Pastikan Anda sudah menginstal Node.js v18 atau versi yang lebih baru.
    ```bash
    npm install
    ```
 
 3. **Jalankan Aplikasi Mode Pengembangan**
+   Karena kita menggunakan *Vite* dan *Electron* secara berdampingan, gunakan perintah:
    ```bash
-   npm run dev
+   npm run dev:all
    ```
 
 4. **Jalankan Uji Otomatis (E2E Tests)**
-   Kami menggunakan *Playwright* untuk E2E testing alur bisnis kasir.
    ```bash
    npm run test:e2e
    ```
@@ -87,37 +88,40 @@
 ---
 
 ## 📦 Build Installer (.exe)
-Jika Anda ingin mendistribusikan program ini menjadi aplikasi *Standalone* untuk sistem operasi Windows:
+Untuk mendistribusikan program ini menjadi aplikasi *Standalone* untuk Windows:
 ```bash
 npm run build
 ```
-File installer `nuNox_servis Setup.exe` akan di-generate oleh `electron-builder` dan tersimpan di dalam folder `dist/`.
+File installer akan di-generate oleh `electron-builder` dan tersimpan di dalam folder `dist/`.
 
 ---
 
 ## 📁 Struktur Direktori
-Gambaran umum struktur direktori aplikasi:
+Gambaran umum arsitektur kode modern kami:
 ```text
 nuNox_servis/
-├── __tests__/           # Skenario End-to-End Testing (Playwright)
 ├── controllers/         # Logika bisnis database SQLite (Backend)
 ├── database/            # Skema dan inisialisasi Database
 ├── electron/
 │   ├── ipc/             # Handlers Inter-Process Communication (modular)
 │   ├── main.js          # Entry point Electron (Main Process)
-│   └── preload.js       # Context Bridge keamanan IPC
-├── public/              # Aset statis (CSS, Fonts, JS Modular Frontend)
-├── views/               # Tampilan UI HTML5
+│   └── preload.js       # Context Bridge untuk jembatan keamanan IPC
+├── repositories/        # Lapisan abstraksi kueri SQL
+├── src/                 # 🌟 Wajah Aplikasi (Vue 3, Vite, TypeScript)
+│   ├── components/      # Komponen antarmuka yang dapat digunakan kembali
+│   ├── views/           # Halaman utama aplikasi (Dashboard, Laporan, dll)
+│   ├── router/          # Rute pergerakan halaman (Vue Router)
+│   └── App.vue          # Entry point aplikasi Vue
 └── README.md
 ```
 
 ---
 
 ## 🛠️ Arsitektur Teknologi
-- **Frontend**: Vanilla HTML5, CSS3 murni, dan ES6 JavaScript. Sangat ringan, tanpa *framework* berat (No React/Vue).
-- **Backend (Main Process)**: Node.js dengan Electron API.
-- **Database**: `better-sqlite3` yang dikonfigurasi untuk kecepatan maksimal (sinkron).
-- **Security**: Autentikasi lokal terenkripsi (bcryptjs) & Proteksi Context-Isolation dari IPC Electron.
+- **Frontend (UI)**: **Vue 3** dengan *Composition API* (`<script setup lang="ts">`) dipadukan dengan **Vite** untuk kecepatan render kilat.
+- **Backend (Otak)**: Node.js dengan **Electron API**.
+- **Database**: `better-sqlite3` yang dikonfigurasi untuk performa sinkron tinggi 100% lokal.
+- **Keamanan**: Autentikasi lokal terenkripsi (`bcryptjs`) & Proteksi *Context-Isolation* dari IPC Electron (sangat mustahil disusupi dari halaman frontend).
 
 ---
 
