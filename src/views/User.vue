@@ -72,14 +72,15 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, reactive, computed, onMounted } from 'vue'
+import type { User } from '../types'
 
-const users = ref([])
-const searchQuery = ref('')
-const currentUserId = ref(null)
+const users = ref<User[]>([])
+const searchQuery = ref<string>('')
+const currentUserId = ref<number | null>(null)
 
-const filteredUsers = computed(() => {
+const filteredUsers = computed<User[]>(() => {
   if (!searchQuery.value) return users.value
   const q = searchQuery.value.toLowerCase()
   return users.value.filter(u => u.username.toLowerCase().includes(q) || u.role.toLowerCase().includes(q))
@@ -90,10 +91,10 @@ const loadUsers = async () => {
       try {
           const userStr = localStorage.getItem('nunox_user')
           if (userStr) {
-              const u = JSON.parse(userStr)
-              currentUserId.value = u.id
+              const u = JSON.parse(userStr) as User
+              currentUserId.value = u.id || null
           }
-          users.value = await window.api.getUsers()
+          users.value = (await window.api.getUsers()) as User[]
       } catch (error) {
           console.error(error)
       }
@@ -101,9 +102,9 @@ const loadUsers = async () => {
 }
 
 // Modal Form Logic
-const isModalOpen = ref(false)
-const modalTitle = ref('Tambah Karyawan')
-const formId = ref(null)
+const isModalOpen = ref<boolean>(false)
+const modalTitle = ref<string>('Tambah Karyawan')
+const formId = ref<number | null>(null)
 const form = reactive({
   username: '',
   password: '',
@@ -119,9 +120,9 @@ const openAddModal = () => {
   isModalOpen.value = true
 }
 
-const editUser = async (u) => {
+const editUser = async (u: User) => {
   try {
-      const detail = await window.api.getUser(u.id)
+      const detail = (await window.api.getUser(u.id)) as User
       if (detail) {
           modalTitle.value = 'Edit Karyawan'
           formId.value = detail.id
@@ -159,7 +160,7 @@ const saveUser = async () => {
   }
 }
 
-const deleteUser = async (id) => {
+const deleteUser = async (id: number) => {
   const result = await window.Swal.fire({
       title: 'Hapus Karyawan?',
       text: "Yakin ingin menghapus karyawan ini?",

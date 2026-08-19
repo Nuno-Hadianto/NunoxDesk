@@ -24,24 +24,21 @@
   </header>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 
-defineProps({
-  title: {
-    type: String,
-    default: ''
-  }
-})
+defineProps<{
+  title?: string
+}>()
 
 defineEmits(['toggle-theme'])
 
-const currentDateTime = ref('')
-const searchQuery = ref('')
-const searchInput = ref(null)
+const currentDateTime = ref<string>('')
+const searchQuery = ref<string>('')
+const searchInput = ref<HTMLInputElement | null>(null)
 const router = useRouter()
-let timer = null
+let timer: ReturnType<typeof setInterval> | null = null
 
 const updateDateTime = () => {
   const now = new Date()

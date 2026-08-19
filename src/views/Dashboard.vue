@@ -72,10 +72,11 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import type { DashboardStats } from '../types'
 
-const stats = ref({
+const stats = ref<DashboardStats>({
   todayServices: 0,
   inProgress: 0,
   completed: 0,
@@ -85,10 +86,10 @@ const stats = ref({
   lowStockParts: []
 })
 
-let chartInstance = null
+let chartInstance: any = null
 
-const formatCurrency = (amount) => {
-  return 'Rp ' + parseInt(amount || 0).toLocaleString('id-ID')
+const formatCurrency = (amount: number | string | undefined | null) => {
+  return 'Rp ' + parseInt(String(amount || 0)).toLocaleString('id-ID')
 }
 
 const loadDashboard = async () => {
@@ -103,12 +104,12 @@ const loadDashboard = async () => {
   }
 }
 
-const renderChart = (chartData) => {
+const renderChart = (chartData: { labels: string[], values: number[] }) => {
   if (chartInstance) {
       chartInstance.destroy()
   }
   
-  const ctx = document.getElementById('income-chart')
+  const ctx = document.getElementById('income-chart') as HTMLCanvasElement
   if (!ctx) return
   
   chartInstance = new window.Chart(ctx, {

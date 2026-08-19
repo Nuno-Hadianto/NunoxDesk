@@ -40,12 +40,7 @@ import { ref, reactive, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import Sidebar from './components/Sidebar.vue'
 import Topbar from './components/Topbar.vue'
-
-interface User {
-  id?: number;
-  username: string;
-  role: string;
-}
+import type { User } from './types'
 
 const router = useRouter()
 const route = useRoute()

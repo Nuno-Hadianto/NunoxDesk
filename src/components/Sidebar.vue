@@ -39,14 +39,12 @@
   </aside>
 </template>
 
-<script setup>
-defineProps({
-  currentUser: {
-    type: Object,
-    default: null
-  }
-})
+<script setup lang="ts">
+import type { User } from '../types'
+
+defineProps<{
+  currentUser?: User | null
+}>()
 
 defineEmits(['logout'])
-
 </script>
