@@ -8,7 +8,12 @@ function getCompletedServices(startDate, endDate) {
     return reportRepository.getCompletedServices(startDate, endDate);
 }
 
+function getTopSpareparts(startDate, endDate) {
+    return reportRepository.getTopSpareparts(startDate, endDate);
+}
+
 module.exports = {
     getIncomeReport,
-    getCompletedServices
+    getCompletedServices,
+    getTopSpareparts
 };

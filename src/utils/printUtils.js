@@ -330,7 +330,7 @@ export const generateBlankReceiptHtml = (settings, logoBase64) => {
     `;
 };
 
-export const generateReportHtml = (settings, services, startDate, endDate, totalOmset, totalModal, netProfit, logoBase64) => {
+export const generateReportHtml = (settings, services, startDate, endDate, totalOmset, totalModal, netProfit, logoBase64, topParts = []) => {
     settings = settings || {};
     const formatRp = (val) => new Intl.NumberFormat('id-ID', {
         style: 'currency', currency: 'IDR', minimumFractionDigits: 0
@@ -354,49 +354,84 @@ export const generateReportHtml = (settings, services, startDate, endDate, total
         rowsHtml = `<tr><td colspan="6" class="rep-td-center" style="padding: 15px;">Tidak ada transaksi</td></tr>`;
     }
 
+    let topPartsHtml = '';
+    if (topParts && topParts.length > 0) {
+        topPartsHtml = `
+            <div style="margin-top: 30px; margin-bottom: 20px;">
+                <h3 style="font-size: 14pt; color: #334155; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; margin-bottom: 15px;">Peringkat 5 Sparepart Terlaris</h3>
+                <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                    ${topParts.map((p, i) => `
+                        <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px 15px; flex: 1; min-width: 120px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                            <div style="font-size: 9pt; color: #64748b; font-weight: 600; margin-bottom: 4px;">Peringkat #${i+1}</div>
+                            <div style="font-size: 11pt; font-weight: bold; color: #0f172a; margin-bottom: 8px;">${p.part_name}</div>
+                            <div style="font-size: 10pt; color: #10b981; font-weight: bold;">Terjual: ${p.total_sold} unit</div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    } else {
+        topPartsHtml = `
+            <div style="margin-top: 30px; margin-bottom: 20px;">
+                <h3 style="font-size: 14pt; color: #334155; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; margin-bottom: 15px;">Peringkat 5 Sparepart Terlaris</h3>
+                <div style="background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 8px; padding: 15px; color: #64748b; text-align: center;">Belum ada data penjualan sparepart di periode ini.</div>
+            </div>
+        `;
+    }
+
     return `
-        <div class="print-report" style="max-width: 100%; box-sizing: border-box;">
-            <div class="rep-header">
-                ${logoBase64 ? `<img src="${logoBase64}" class="rep-logo" />` : ''}
-                <h2 class="rep-title">LAPORAN TRANSAKSI SERVIS</h2>
-                <h3 class="rep-subtitle">${settings.business_name || 'NUNOX SERVIS'}</h3>
-                <p class="rep-period">Periode: ${startDate} s/d ${endDate}</p>
+        <div class="print-report" style="max-width: 100%; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; color: #333;">
+            <div style="text-align: center; margin-bottom: 30px; border-bottom: 3px solid #4f46e5; padding-bottom: 20px;">
+                ${logoBase64 ? `<img src="${logoBase64}" style="max-height: 70px; margin-bottom: 10px;" />` : ''}
+                <h1 style="margin: 0; font-size: 24pt; color: #1e293b; letter-spacing: 1px;">LAPORAN KEUANGAN BULANAN</h1>
+                <h2 style="margin: 5px 0 10px 0; font-size: 16pt; color: #475569;">${settings.business_name || 'NUNOX SERVIS'}</h2>
+                <div style="display: inline-block; background: #e0e7ff; color: #4f46e5; padding: 6px 16px; border-radius: 20px; font-weight: bold; font-size: 11pt;">Periode: ${startDate} s/d ${endDate}</div>
             </div>
             
-            <div class="rep-stats">
-                <div class="rep-stat-box">
-                    <div class="rep-stat-label">Total Omset</div>
-                    <div class="rep-stat-val">${formatRp(totalOmset)}</div>
+            <div style="display: flex; gap: 20px; margin-bottom: 30px;">
+                <div style="flex: 1; background: #ffffff; border-left: 5px solid #4f46e5; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); padding: 20px; border-radius: 8px;">
+                    <div style="font-size: 11pt; color: #64748b; text-transform: uppercase; font-weight: 600; margin-bottom: 8px;">Total Omset (Kotor)</div>
+                    <div style="font-size: 20pt; font-weight: 800; color: #1e293b;">${formatRp(totalOmset)}</div>
                 </div>
-                <div class="rep-stat-box">
-                    <div class="rep-stat-label">Total HPP (Modal)</div>
-                    <div class="rep-stat-val-red">${formatRp(totalModal)}</div>
+                <div style="flex: 1; background: #ffffff; border-left: 5px solid #ef4444; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); padding: 20px; border-radius: 8px;">
+                    <div style="font-size: 11pt; color: #64748b; text-transform: uppercase; font-weight: 600; margin-bottom: 8px;">Total HPP (Modal)</div>
+                    <div style="font-size: 20pt; font-weight: 800; color: #ef4444;">${formatRp(totalModal)}</div>
                 </div>
-                <div class="rep-stat-box">
-                    <div class="rep-stat-label">Laba Bersih</div>
-                    <div class="rep-stat-val-green">${formatRp(netProfit)}</div>
+                <div style="flex: 1; background: #ffffff; border-left: 5px solid #10b981; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); padding: 20px; border-radius: 8px;">
+                    <div style="font-size: 11pt; color: #64748b; text-transform: uppercase; font-weight: 600; margin-bottom: 8px;">Laba Bersih (Profit)</div>
+                    <div style="font-size: 20pt; font-weight: 800; color: #10b981;">${formatRp(netProfit)}</div>
                 </div>
-                <div class="rep-stat-box">
-                    <div class="rep-stat-label">Jumlah Transaksi</div>
-                    <div class="rep-stat-val">${services.length}</div>
+                <div style="flex: 1; background: #ffffff; border-left: 5px solid #f59e0b; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); padding: 20px; border-radius: 8px;">
+                    <div style="font-size: 11pt; color: #64748b; text-transform: uppercase; font-weight: 600; margin-bottom: 8px;">Total Transaksi</div>
+                    <div style="font-size: 20pt; font-weight: 800; color: #f59e0b;">${services.length} Unit</div>
                 </div>
             </div>
             
-            <table class="rep-table">
-                <thead>
-                    <tr>
-                        <th class="rep-th" style="width: 5%;">No</th>
-                        <th class="rep-th" style="width: 15%;">No. Tiket</th>
-                        <th class="rep-th" style="width: 15%;">Tgl Selesai</th>
-                        <th class="rep-th" style="width: 25%;">Pelanggan</th>
-                        <th class="rep-th" style="width: 25%;">Perangkat</th>
-                        <th class="rep-th" style="width: 15%;">Total Biaya</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${rowsHtml}
-                </tbody>
-            </table>
+            ${topPartsHtml}
+            
+            <div style="margin-top: 30px;">
+                <h3 style="font-size: 14pt; color: #334155; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; margin-bottom: 15px;">Rincian Transaksi Selesai</h3>
+                <table style="width: 100%; border-collapse: collapse; font-size: 10pt;">
+                    <thead>
+                        <tr style="background-color: #f1f5f9;">
+                            <th style="padding: 12px 8px; border-bottom: 2px solid #cbd5e1; text-align: center; color: #334155;">No</th>
+                            <th style="padding: 12px 8px; border-bottom: 2px solid #cbd5e1; text-align: left; color: #334155;">No. Tiket</th>
+                            <th style="padding: 12px 8px; border-bottom: 2px solid #cbd5e1; text-align: left; color: #334155;">Tgl Selesai</th>
+                            <th style="padding: 12px 8px; border-bottom: 2px solid #cbd5e1; text-align: left; color: #334155;">Pelanggan</th>
+                            <th style="padding: 12px 8px; border-bottom: 2px solid #cbd5e1; text-align: left; color: #334155;">Perangkat</th>
+                            <th style="padding: 12px 8px; border-bottom: 2px solid #cbd5e1; text-align: right; color: #334155;">Total Biaya</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${rowsHtml}
+                    </tbody>
+                </table>
+            </div>
+            
+            <div style="margin-top: 50px; text-align: right; color: #64748b; font-size: 10pt;">
+                <div>Dicetak pada: ${new Date().toLocaleString('id-ID')}</div>
+                <div style="margin-top: 10px; font-weight: bold;">( ${settings.business_name || 'Pemilik'} )</div>
+            </div>
         </div>
     `;
 }

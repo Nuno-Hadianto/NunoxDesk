@@ -26,7 +26,25 @@ function getCompletedServices(startDate, endDate) {
     return stmt.all(startDate, endDate);
 }
 
+function getTopSpareparts(startDate, endDate) {
+    const stmt = db.prepare(`
+        SELECT 
+            p.name as part_name,
+            SUM(si.quantity) as total_sold
+        FROM service_items si
+        JOIN service_orders so ON si.service_order_id = so.id
+        JOIN spare_parts p ON si.spare_part_id = p.id
+        WHERE (so.service_status = 'Selesai (Sudah Diambil)' OR so.service_status = 'Selesai (Belum Diambil)' OR so.service_status LIKE '%Selesai%')
+          AND date(so.completed_date, 'localtime') >= date(?) AND date(so.completed_date, 'localtime') <= date(?)
+        GROUP BY p.id
+        ORDER BY total_sold DESC
+        LIMIT 5
+    `);
+    return stmt.all(startDate, endDate);
+}
+
 module.exports = {
     getIncomeReport,
-    getCompletedServices
+    getCompletedServices,
+    getTopSpareparts
 };

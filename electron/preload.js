@@ -54,6 +54,7 @@ contextBridge.exposeInMainWorld('api', {
   // Reports
   getIncomeReport: (start, end) => ipcRenderer.invoke('get-income-report', start, end),
   getCompletedServices: (start, end) => ipcRenderer.invoke('get-completed-services', start, end),
+  getTopSpareparts: (start, end) => ipcRenderer.invoke('get-top-spareparts', start, end),
 
   // Backup & Restore
   backupDatabase: () => ipcRenderer.invoke('backup-database'),

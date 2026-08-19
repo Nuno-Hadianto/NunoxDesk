@@ -152,8 +152,13 @@ const exportPdf = async () => {
   }
   try {
       const { settings, logoBase64 } = await getCommonData()
-      const html = generateReportHtml(settings, services.value, startDate.value, endDate.value, totalOmset.value, totalModal.value, netProfit.value, logoBase64)
-      const filename = `Laporan_Transaksi_${startDate.value}_sd_${endDate.value}.pdf`
+      let topParts = []
+      if (window.api && window.api.getTopSpareparts) {
+          topParts = await window.api.getTopSpareparts(startDate.value, endDate.value)
+      }
+      
+      const html = generateReportHtml(settings, services.value, startDate.value, endDate.value, totalOmset.value, totalModal.value, netProfit.value, logoBase64, topParts)
+      const filename = `Laporan_Keuangan_${startDate.value}_sd_${endDate.value}.pdf`
       
       const result = await exportHtmlToPdf(html, filename)
       if (result && result.success) {

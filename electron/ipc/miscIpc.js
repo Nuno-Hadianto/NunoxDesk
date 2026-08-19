@@ -26,6 +26,7 @@ function registerMiscIpc(mainWindow) {
   // Reports
   ipcMain.handle('get-income-report', (event, start, end) => reportController.getIncomeReport(start, end));
   ipcMain.handle('get-completed-services', (event, start, end) => reportController.getCompletedServices(start, end));
+  ipcMain.handle('get-top-spareparts', (event, start, end) => reportController.getTopSpareparts(start, end));
 
   // Backup & Restore
   ipcMain.handle('backup-database', async () => {
