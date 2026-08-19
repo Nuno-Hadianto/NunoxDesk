@@ -1,32 +1,31 @@
 ---
-name: Bug report
-about: Laporkan bug untuk membantu kami memperbaiki aplikasi
+name: Laporan Bug / Error
+about: Buat laporan untuk membantu kami memperbaiki masalah (error)
 title: '[BUG] '
 labels: bug
 assignees: ''
 
 ---
 
-**Deskripsi Bug**
-Deskripsi singkat dan jelas mengenai bug apa yang Anda alami.
+**Deskripsi Masalah**
+Penjelasan singkat dan jelas tentang apa bug yang terjadi.
 
-**Langkah-langkah Mereproduksi**
-Langkah-langkah untuk memunculkan kembali bug:
-1. Pergi ke '...'
-2. Klik '....'
-3. Scroll ke '....'
-4. Lihat error yang terjadi
+**Langkah-langkah untuk Meniru (Reproduce)**
+Langkah-langkah untuk memunculkan error:
+1. Masuk ke halaman '...'
+2. Klik tombol '....'
+3. Isi kolom '....'
+4. Lihat error yang muncul
 
-**Perilaku yang Diharapkan (Expected Behavior)**
-Jelaskan secara singkat apa yang seharusnya terjadi jika tidak ada bug.
+**Ekspektasi**
+Apa yang seharusnya terjadi secara normal?
 
 **Tangkapan Layar (Screenshots)**
-Jika memungkinkan, tambahkan screenshot untuk membantu menjelaskan masalah Anda.
+Jika memungkinkan, tambahkan tangkapan layar (screenshot) untuk memperjelas masalah.
 
-**Lingkungan Sistem (Environment):**
- - OS: [mis. Windows 10, Windows 11]
- - Versi Node.js: [mis. 18.17.0]
- - Versi Aplikasi: [mis. 1.0.0]
+**Informasi Perangkat (Desktop):**
+ - Sistem Operasi: [contoh: Windows 10, Windows 11]
+ - Versi Aplikasi: [contoh: v1.0.0]
 
 **Konteks Tambahan**
-Tambahkan informasi atau konteks lain terkait masalah ini di sini.
+Tambahkan informasi atau konteks lain terkait masalah di sini.

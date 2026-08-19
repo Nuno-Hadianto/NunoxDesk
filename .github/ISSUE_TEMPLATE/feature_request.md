@@ -1,20 +1,20 @@
 ---
-name: Feature request
-about: Sarankan ide fitur baru untuk proyek ini
+name: Permintaan Fitur Baru
+about: Ajukan ide atau saran fitur baru untuk proyek ini
 title: '[FITUR] '
 labels: enhancement
 assignees: ''
 
 ---
 
-**Apakah permintaan fitur Anda terkait dengan sebuah masalah? Jelaskan.**
-Deskripsi singkat dan jelas mengenai masalah tersebut. Misalnya: Saya selalu merasa frustrasi saat...
+**Apakah permintaan fitur ini berkaitan dengan suatu masalah? Mohon jelaskan.**
+Deskripsi singkat mengenai masalah yang Anda alami. Contoh: "Saya selalu kesulitan saat harus [melakukan sesuatu]..."
 
-**Jelaskan solusi yang Anda inginkan**
-Deskripsi singkat mengenai apa yang Anda ingin aplikasi ini lakukan.
+**Solusi yang Anda Harapkan**
+Penjelasan singkat dan jelas tentang fitur apa yang Anda inginkan.
 
-**Jelaskan alternatif yang pernah Anda pertimbangkan**
-Deskripsi singkat mengenai solusi atau fitur alternatif yang pernah terpikir oleh Anda.
+**Alternatif yang Pernah Anda Pikirkan**
+Penjelasan singkat mengenai solusi alternatif atau fitur lain yang pernah Anda pertimbangkan.
 
 **Konteks Tambahan**
-Tambahkan informasi, screenshot, atau mockup terkait permintaan fitur ini di sini.
+Tambahkan informasi, konteks, atau *mockup* (sketsa antarmuka) terkait permintaan fitur di sini.
