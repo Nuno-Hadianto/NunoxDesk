@@ -110,32 +110,33 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
+import type { Part } from '../types'
 
-const parts = ref([])
-const searchQuery = ref('')
+const parts = ref<Part[]>([])
+const searchQuery = ref<string>('')
 
-let searchTimeout = null
+let searchTimeout: ReturnType<typeof setTimeout> | null = null
 const debounceSearch = () => {
-  clearTimeout(searchTimeout)
+  if (searchTimeout) clearTimeout(searchTimeout)
   searchTimeout = setTimeout(() => {
     loadParts()
   }, 300)
 }
 
-const formatCurrency = (amount) => {
+const formatCurrency = (amount: number | string | undefined | null) => {
   return new Intl.NumberFormat('id-ID', {
       style: 'currency',
       currency: 'IDR',
       minimumFractionDigits: 0
-  }).format(amount || 0)
+  }).format(Number(amount || 0))
 }
 
 const loadParts = async () => {
   if (window.api && window.api.getParts) {
       try {
-          parts.value = await window.api.getParts(searchQuery.value)
+          parts.value = (await window.api.getParts(searchQuery.value)) as Part[]
       } catch (error) {
           console.error("Failed to load parts:", error)
       }
@@ -160,9 +161,9 @@ const importExcel = async () => {
 }
 
 // Modal Form Logic
-const isModalOpen = ref(false)
-const modalTitle = ref('Tambah Sparepart')
-const formId = ref(null)
+const isModalOpen = ref<boolean>(false)
+const modalTitle = ref<string>('Tambah Sparepart')
+const formId = ref<number | null>(null)
 const form = reactive({
   part_code: '',
   name: '',
@@ -188,20 +189,20 @@ const openAddModal = () => {
   isModalOpen.value = true
 }
 
-const editPart = async (p) => {
+const editPart = async (p: Part) => {
   try {
-      const detail = await window.api.getPart(p.id)
+      const detail = (await window.api.getPart(p.id)) as Part
       if (detail) {
           modalTitle.value = 'Edit Sparepart'
-          formId.value = detail.id
-          form.part_code = detail.part_code
-          form.name = detail.name
-          form.category = detail.category
-          form.stock = detail.stock
-          form.buy_price = detail.buy_price
-          form.sell_price = detail.sell_price
-          form.unit = detail.unit
-          form.notes = detail.notes
+          formId.value = detail.id || null
+          form.part_code = detail.part_code || ''
+          form.name = detail.name || ''
+          form.category = detail.category || ''
+          form.stock = detail.stock || 0
+          form.buy_price = detail.buy_price || 0
+          form.sell_price = detail.sell_price || 0
+          form.unit = detail.unit || ''
+          form.notes = detail.notes || ''
           isModalOpen.value = true
       }
   } catch (error) {
@@ -232,7 +233,7 @@ const savePart = async () => {
   }
 }
 
-const deletePart = async (id) => {
+const deletePart = async (id: number) => {
   const result = await window.Swal.fire({
       title: 'Hapus Sparepart?',
       text: "Data yang dihapus tidak bisa dikembalikan.",
@@ -248,7 +249,7 @@ const deletePart = async (id) => {
           await window.api.deletePart(id)
           window.Swal.fire('Terhapus!', 'Sparepart berhasil dihapus.', 'success')
           loadParts()
-      } catch (error) {
+      } catch (error: any) {
           window.Swal.fire('Error', error.message || 'Gagal menghapus.', 'error')
       }
   }

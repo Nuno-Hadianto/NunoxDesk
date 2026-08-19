@@ -81,29 +81,30 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, reactive, computed, onMounted } from 'vue'
+import type { Customer } from '../types'
 
-const customers = ref([])
-const searchQuery = ref('')
-const currentPage = ref(1)
+const customers = ref<Customer[]>([])
+const searchQuery = ref<string>('')
+const currentPage = ref<number>(1)
 const itemsPerPage = 50
-const totalItems = ref(0)
-const totalPages = computed(() => Math.ceil(totalItems.value / itemsPerPage) || 1)
+const totalItems = ref<number>(0)
+const totalPages = computed<number>(() => Math.ceil(totalItems.value / itemsPerPage) || 1)
 
-let searchTimeout = null
+let searchTimeout: ReturnType<typeof setTimeout> | null = null
 const debounceSearch = () => {
-  clearTimeout(searchTimeout)
+  if (searchTimeout) clearTimeout(searchTimeout)
   searchTimeout = setTimeout(() => {
     loadCustomers(1)
   }, 300)
 }
 
-const loadCustomers = async (page = 1) => {
+const loadCustomers = async (page: number = 1) => {
   if (window.api && window.api.getCustomers) {
       try {
           const result = await window.api.getCustomers(searchQuery.value, page, itemsPerPage)
-          customers.value = result.data || []
+          customers.value = (result.data as Customer[]) || []
           totalItems.value = result.total || 0
           currentPage.value = result.page || 1
       } catch (error) {
@@ -113,9 +114,9 @@ const loadCustomers = async (page = 1) => {
 }
 
 // Modal Form Logic
-const isModalOpen = ref(false)
-const modalTitle = ref('Tambah Pelanggan')
-const formId = ref(null)
+const isModalOpen = ref<boolean>(false)
+const modalTitle = ref<string>('Tambah Pelanggan')
+const formId = ref<number | null>(null)
 const form = reactive({
   name: '',
   phone: '',
@@ -133,16 +134,16 @@ const openAddModal = () => {
   isModalOpen.value = true
 }
 
-const editCustomer = async (c) => {
+const editCustomer = async (c: Customer) => {
   try {
-      const detail = await window.api.getCustomer(c.id)
+      const detail = (await window.api.getCustomer(c.id)) as Customer
       if (detail) {
           modalTitle.value = 'Edit Pelanggan'
-          formId.value = detail.id
-          form.name = detail.name
-          form.phone = detail.phone
-          form.address = detail.address
-          form.notes = detail.notes
+          formId.value = detail.id || null
+          form.name = detail.name || ''
+          form.phone = detail.phone || ''
+          form.address = detail.address || ''
+          form.notes = detail.notes || ''
           isModalOpen.value = true
       }
   } catch (error) {
@@ -173,7 +174,7 @@ const saveCustomer = async () => {
   }
 }
 
-const deleteCustomer = async (id) => {
+const deleteCustomer = async (id: number) => {
   const result = await window.Swal.fire({
       title: 'Hapus Pelanggan?',
       text: "Data tidak dapat dikembalikan! Semua perangkat terkait mungkin tidak bisa dihapus jika memiliki riwayat servis.",
@@ -189,7 +190,7 @@ const deleteCustomer = async (id) => {
           await window.api.deleteCustomer(id)
           window.Swal.fire('Terhapus!', 'Pelanggan berhasil dihapus.', 'success')
           loadCustomers(currentPage.value)
-      } catch (error) {
+      } catch (error: any) {
           window.Swal.fire('Error', error.message || 'Gagal menghapus.', 'error')
       }
   }

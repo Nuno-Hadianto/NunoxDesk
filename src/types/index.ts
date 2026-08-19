@@ -23,3 +23,23 @@ export interface DashboardStats {
   };
   lowStockParts: LowStockPart[];
 }
+
+export interface Customer {
+  id: number;
+  name: string;
+  phone: string;
+  address: string;
+  notes: string;
+}
+
+export interface Part {
+  id: number;
+  part_code: string;
+  name: string;
+  category: string;
+  stock: number;
+  buy_price: number;
+  sell_price: number;
+  unit: string;
+  notes: string;
+}
