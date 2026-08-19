@@ -45,12 +45,16 @@
   "homepage": "https://github.com/Nuno-Hadianto/nuNox_servis#readme",
   "devDependencies": {
     "@playwright/test": "^1.62.1",
+    "@tsconfig/node20": "^20.1.10",
     "@vitejs/plugin-vue": "^6.0.8",
+    "@vue/tsconfig": "^0.9.1",
     "electron": "^43.3.0",
     "electron-builder": "^26.15.3",
     "electron-reload": "^2.0.0-alpha.1",
     "jest": "^30.4.2",
-    "vite": "^8.2.0"
+    "typescript": "^7.0.2",
+    "vite": "^8.2.0",
+    "vue-tsc": "^3.3.10"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",

@@ -35,28 +35,34 @@
   <div id="print-area"></div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, reactive, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import Sidebar from './components/Sidebar.vue'
 import Topbar from './components/Topbar.vue'
 
+interface User {
+  id?: number;
+  username: string;
+  role: string;
+}
+
 const router = useRouter()
 const route = useRoute()
 
-let initialUser = null
+let initialUser: User | null = null
 try {
   const savedUser = localStorage.getItem('nunox_user')
   if (savedUser && savedUser !== 'undefined' && savedUser !== 'null') {
-    initialUser = JSON.parse(savedUser)
+    initialUser = JSON.parse(savedUser) as User
   }
 } catch (e) {
   console.error('Failed to parse user from localStorage', e)
   localStorage.removeItem('nunox_user')
 }
 
-const isLoggedIn = ref(!!initialUser)
-const currentUser = ref(initialUser)
+const isLoggedIn = ref<boolean>(!!initialUser)
+const currentUser = ref<User | null>(initialUser)
 
 const loginForm = reactive({
   username: '',
