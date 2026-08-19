@@ -104,25 +104,38 @@
   </div>
 </template>
 
-<script setup>
-import { ref, reactive, onMounted } from 'vue'
+<script setup lang="ts">
+import { ref, reactive, onMounted, computed } from 'vue'
+import type { Device, Customer } from '../types'
 
-const devices = ref([])
-const customers = ref([])
-const searchQuery = ref('')
+const devices = ref<Device[]>([])
+const customers = ref<Customer[]>([])
+const searchQuery = ref<string>('')
+const currentPage = ref<number>(1)
+const itemsPerPage = 50
+const totalItems = ref<number>(0)
+const totalPages = computed<number>(() => Math.ceil(totalItems.value / itemsPerPage) || 1)
 
-let searchTimeout = null
+let searchTimeout: ReturnType<typeof setTimeout> | null = null
 const debounceSearch = () => {
-  clearTimeout(searchTimeout)
+  if (searchTimeout) clearTimeout(searchTimeout)
   searchTimeout = setTimeout(() => {
-    loadDevices()
+    loadDevices(1)
   }, 300)
 }
 
-const loadDevices = async () => {
+const loadDevices = async (page: number = 1) => {
   if (window.api && window.api.getDevices) {
       try {
-          devices.value = await window.api.getDevices(searchQuery.value)
+          const result = await window.api.getDevices(searchQuery.value, page, itemsPerPage)
+          // Adjust based on how getDevices actually returns. Assuming it returns { data, total, page } like Customer
+          if (Array.isArray(result)) {
+              devices.value = result as Device[]
+          } else {
+              devices.value = (result.data as Device[]) || []
+              totalItems.value = result.total || 0
+              currentPage.value = result.page || 1
+          }
       } catch (error) {
           console.error("Failed to load devices:", error)
       }
@@ -132,14 +145,14 @@ const loadDevices = async () => {
 const loadCustomersDropdown = async () => {
   if (window.api && window.api.getCustomers) {
       const result = await window.api.getCustomers('', 1, 1000)
-      customers.value = result.data || []
+      customers.value = (result.data as Customer[]) || []
   }
 }
 
 // Modal Form Logic
-const isModalOpen = ref(false)
-const modalTitle = ref('Tambah Perangkat')
-const formId = ref(null)
+const isModalOpen = ref<boolean>(false)
+const modalTitle = ref<string>('Tambah Perangkat')
+const formId = ref<number | null>(null)
 const form = reactive({
   customer_id: '',
   device_type: 'Laptop',
@@ -169,24 +182,24 @@ const openAddModal = async () => {
   isModalOpen.value = true
 }
 
-const editDevice = async (d) => {
+const editDevice = async (d: Device) => {
   try {
-      const detail = await window.api.getDevice(d.id)
+      const detail = (await window.api.getDevice(d.id)) as Device
       if (detail) {
           modalTitle.value = 'Edit Perangkat'
-          formId.value = detail.id
+          formId.value = detail.id || null
           
           await loadCustomersDropdown()
 
-          form.customer_id = detail.customer_id
-          form.device_type = detail.device_type
-          form.brand = detail.brand
-          form.model = detail.model
-          form.serial_number = detail.serial_number
-          form.color = detail.color
-          form.accessories = detail.accessories
-          form.physical_condition = detail.physical_condition
-          form.notes = detail.notes
+          form.customer_id = detail.customer_id.toString()
+          form.device_type = detail.device_type || ''
+          form.brand = detail.brand || ''
+          form.model = detail.model || ''
+          form.serial_number = detail.serial_number || ''
+          form.color = detail.color || ''
+          form.accessories = detail.accessories || ''
+          form.physical_condition = detail.physical_condition || ''
+          form.notes = detail.notes || ''
           
           isModalOpen.value = true
       }
@@ -204,7 +217,7 @@ const saveDevice = async () => {
           await window.api.addDevice({ ...form })
       }
       isModalOpen.value = false
-      loadDevices()
+      loadDevices(currentPage.value)
       window.Swal.fire({
           icon: 'success',
           title: 'Tersimpan!',
@@ -218,7 +231,7 @@ const saveDevice = async () => {
   }
 }
 
-const deleteDevice = async (id) => {
+const deleteDevice = async (id: number) => {
   const result = await window.Swal.fire({
       title: 'Hapus Perangkat?',
       text: "Apakah Anda yakin ingin menghapus perangkat ini?",
@@ -233,8 +246,8 @@ const deleteDevice = async (id) => {
       try {
           await window.api.deleteDevice(id)
           window.Swal.fire('Terhapus!', 'Perangkat berhasil dihapus.', 'success')
-          loadDevices()
-      } catch (error) {
+          loadDevices(currentPage.value)
+      } catch (error: any) {
           window.Swal.fire('Error', error.message || 'Gagal menghapus.', 'error')
       }
   }

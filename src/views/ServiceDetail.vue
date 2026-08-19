@@ -195,18 +195,20 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, reactive, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import type { ServiceOrder, ServiceHistory, ServiceItem, Payment, Part, Settings } from '../types'
+import { generateNotaHtml, generateInvoiceHtml, generateThermalNotaHtml, printHtml, exportHtmlToPdf } from '../utils/printUtils.js'
 
 const route = useRoute()
 const router = useRouter()
-const service = ref(null)
+const service = ref<ServiceOrder | null>(null)
 
-const history = ref([])
-const items = ref([])
-const payments = ref([])
-const parts = ref([])
+const history = ref<ServiceHistory[]>([])
+const items = ref<ServiceItem[]>([])
+const payments = ref<Payment[]>([])
+const parts = ref<Part[]>([])
 
 const updateForm = reactive({
   status: '',
@@ -217,7 +219,7 @@ const updateForm = reactive({
 
 const itemForm = reactive({
   type: 'Jasa',
-  partId: '',
+  partId: '' as string | number,
   desc: '',
   qty: 1,
   price: 0
@@ -243,15 +245,15 @@ const remainingBill = computed(() => {
   return rem > 0 ? rem : 0
 })
 
-const formatCurrency = (amount) => {
+const formatCurrency = (amount: number | string | undefined | null) => {
   return new Intl.NumberFormat('id-ID', {
       style: 'currency',
       currency: 'IDR',
       minimumFractionDigits: 0
-  }).format(amount || 0)
+  }).format(Number(amount || 0))
 }
 
-const statusStyle = (status) => {
+const statusStyle = (status: string) => {
   let bg = '#e2e8f0'
   let color = '#334155'
   if (status === 'Selesai (Sudah Diambil)') { bg = '#10b981'; color = 'white' }
@@ -268,17 +270,17 @@ const statusStyle = (status) => {
   }
 }
 
-const paymentStatusStyle = (status) => {
+const paymentStatusStyle = (status: string) => {
   if (status === 'Lunas') return { color: '#10b981' }
   if (status === 'DP / Sebagian') return { color: '#f59e0b' }
   return { color: '#ef4444' }
 }
 
 const loadServiceDetail = async () => {
-  const id = route.params.id
+  const id = route.params.id as string
   if (window.api && window.api.getService) {
       try {
-          const detail = await window.api.getService(id)
+          const detail = (await window.api.getService(id)) as ServiceOrder
           if (detail) {
               service.value = detail
               updateForm.status = detail.service_status
@@ -294,29 +296,29 @@ const loadServiceDetail = async () => {
 }
 
 const loadHistory = async () => {
-  const id = route.params.id
+  const id = route.params.id as string
   if (window.api && window.api.getServiceHistory) {
-      history.value = await window.api.getServiceHistory(id)
+      history.value = (await window.api.getServiceHistory(id)) as ServiceHistory[]
   }
 }
 
 const loadItems = async () => {
-  const id = route.params.id
+  const id = route.params.id as string
   if (window.api && window.api.getServiceItems) {
-      items.value = await window.api.getServiceItems(id)
+      items.value = (await window.api.getServiceItems(id)) as ServiceItem[]
   }
 }
 
 const loadPayments = async () => {
-  const id = route.params.id
+  const id = route.params.id as string
   if (window.api && window.api.getPayments) {
-      payments.value = await window.api.getPayments(id)
+      payments.value = (await window.api.getPayments(id)) as Payment[]
   }
 }
 
 const loadParts = async () => {
   if (window.api && window.api.getParts) {
-      parts.value = await window.api.getParts()
+      parts.value = (await window.api.getParts()) as Part[]
   }
 }
 
@@ -401,7 +403,7 @@ const addItem = async () => {
   }
 }
 
-const deleteItem = async (itemId) => {
+const deleteItem = async (itemId: number) => {
   const result = await window.Swal.fire({
       title: 'Hapus item ini?',
       icon: 'warning',
@@ -447,7 +449,7 @@ const addPayment = async () => {
   }
 }
 
-const deletePayment = async (paymentId) => {
+const deletePayment = async (paymentId: number) => {
   const result = await window.Swal.fire({
       title: 'Hapus pembayaran?',
       icon: 'warning',
@@ -462,10 +464,9 @@ const deletePayment = async (paymentId) => {
 }
 
 // Export / Print Logic
-import { generateNotaHtml, generateInvoiceHtml, generateThermalNotaHtml, printHtml, exportHtmlToPdf } from '../utils/printUtils.js'
 
 const getCommonData = async () => {
-  const settings = await window.api.getSettings()
+  const settings = (await window.api.getSettings()) as Settings
   const logoBase64 = window.api.getLogoBase64 ? await window.api.getLogoBase64() : ''
   return { settings, logoBase64 }
 }

@@ -67,21 +67,22 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { generateBlankNotaHtml, generateBlankReceiptHtml, generateReportHtml, printHtml, exportHtmlToPdf } from '../utils/printUtils.js'
+import type { ServiceOrder, Settings } from '../types'
 
-const startDate = ref('')
-const endDate = ref('')
-const services = ref([])
+const startDate = ref<string>('')
+const endDate = ref<string>('')
+const services = ref<ServiceOrder[]>([])
 
-const totalOmset = ref(0)
-const totalModal = ref(0)
-const netProfit = ref(0)
+const totalOmset = ref<number>(0)
+const totalModal = ref<number>(0)
+const netProfit = ref<number>(0)
 
-const formatCurrency = (val) => new Intl.NumberFormat('id-ID', {
+const formatCurrency = (val: number | string | undefined | null) => new Intl.NumberFormat('id-ID', {
   style: 'currency', currency: 'IDR', minimumFractionDigits: 0
-}).format(val || 0)
+}).format(Number(val || 0))
 
 onMounted(() => {
   const d = new Date()
@@ -94,7 +95,7 @@ const generateReport = async () => {
   if (!startDate.value || !endDate.value) return
   if (window.api && window.api.getCompletedServices) {
       try {
-          const data = await window.api.getCompletedServices(startDate.value, endDate.value)
+          const data = (await window.api.getCompletedServices(startDate.value, endDate.value)) as (ServiceOrder & {total_modal?: number})[]
           services.value = data
           
           let omset = 0
@@ -116,7 +117,7 @@ const generateReport = async () => {
 const exportExcel = async () => {
   if (!startDate.value || !endDate.value) return
   try {
-      const data = await window.api.getCompletedServices(startDate.value, endDate.value)
+      const data = (await window.api.getCompletedServices(startDate.value, endDate.value)) as ServiceOrder[]
       if (data.length === 0) return window.Swal.fire('Info', 'Tidak ada data untuk diekspor pada tanggal tersebut.', 'info')
       
       const excelData = data.map(s => ({
@@ -140,7 +141,7 @@ const exportExcel = async () => {
 }
 
 const getCommonData = async () => {
-  const settings = await window.api.getSettings()
+  const settings = (await window.api.getSettings()) as Settings
   const logoBase64 = window.api.getLogoBase64 ? await window.api.getLogoBase64() : ''
   return { settings, logoBase64 }
 }

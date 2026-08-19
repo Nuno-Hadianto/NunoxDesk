@@ -102,39 +102,40 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, reactive, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import type { ServiceOrder, Customer, Device } from '../types'
 
 const router = useRouter()
 const route = useRoute()
-const services = ref([])
-const searchQuery = ref('')
-const currentPage = ref(1)
+const services = ref<ServiceOrder[]>([])
+const searchQuery = ref<string>('')
+const currentPage = ref<number>(1)
 const itemsPerPage = 50
-const totalItems = ref(0)
-const totalPages = computed(() => Math.ceil(totalItems.value / itemsPerPage) || 1)
+const totalItems = ref<number>(0)
+const totalPages = computed<number>(() => Math.ceil(totalItems.value / itemsPerPage) || 1)
 
-const customers = ref([])
-const customerDevices = ref([])
+const customers = ref<Customer[]>([])
+const customerDevices = ref<Device[]>([])
 
-let searchTimeout = null
+let searchTimeout: ReturnType<typeof setTimeout> | null = null
 const debounceSearch = () => {
-  clearTimeout(searchTimeout)
+  if (searchTimeout) clearTimeout(searchTimeout)
   searchTimeout = setTimeout(() => {
     loadServices(1)
   }, 300)
 }
 
-const formatCurrency = (amount) => {
+const formatCurrency = (amount: number | string | undefined | null) => {
   return new Intl.NumberFormat('id-ID', {
       style: 'currency',
       currency: 'IDR',
       minimumFractionDigits: 0
-  }).format(amount || 0)
+  }).format(Number(amount || 0))
 }
 
-const getStatusColor = (status) => {
+const getStatusColor = (status: string) => {
   let bg = '#e2e8f0'
   let color = '#334155'
   if (status === 'Selesai (Sudah Diambil)') { bg = '#10b981'; color = 'white' }
@@ -153,11 +154,11 @@ const getStatusColor = (status) => {
   }
 }
 
-const loadServices = async (page = 1) => {
+const loadServices = async (page: number = 1) => {
   if (window.api && window.api.getServices) {
       try {
           const result = await window.api.getServices(searchQuery.value, page, itemsPerPage)
-          services.value = result.data || []
+          services.value = (result.data as ServiceOrder[]) || []
           totalItems.value = result.total || 0
           currentPage.value = result.page || 1
       } catch (error) {
@@ -169,7 +170,7 @@ const loadServices = async (page = 1) => {
 const loadCustomersDropdown = async () => {
   if (window.api && window.api.getCustomers) {
       const result = await window.api.getCustomers('', 1, 1000)
-      customers.value = result.data || []
+      customers.value = (result.data as Customer[]) || []
   }
 }
 
@@ -177,16 +178,16 @@ const onCustomerChange = async () => {
   customerDevices.value = []
   form.device_id = ''
   if (form.customer_id && window.api && window.api.getDevicesByCustomer) {
-      customerDevices.value = await window.api.getDevicesByCustomer(form.customer_id)
+      customerDevices.value = (await window.api.getDevicesByCustomer(form.customer_id)) as Device[]
   }
 }
 
-const goToDetail = (id) => {
+const goToDetail = (id: number) => {
   router.push(`/services/${id}`)
 }
 
 // Modal Form Logic
-const isModalOpen = ref(false)
+const isModalOpen = ref<boolean>(false)
 const form = reactive({
   customer_id: '',
   device_id: '',

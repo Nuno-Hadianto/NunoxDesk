@@ -54,10 +54,11 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
+import type { Settings } from '../types'
 
-const form = reactive({
+const form = reactive<Settings>({
   business_name: '',
   phone: '',
   address: '',
@@ -67,7 +68,7 @@ const form = reactive({
 const loadSettings = async () => {
   if (window.api && window.api.getSettings) {
       try {
-          const settings = await window.api.getSettings()
+          const settings = (await window.api.getSettings()) as Settings
           form.business_name = settings.business_name || ''
           form.phone = settings.phone || settings.whatsapp || ''
           form.address = settings.address || ''
