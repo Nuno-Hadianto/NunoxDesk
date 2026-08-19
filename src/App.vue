@@ -19,7 +19,7 @@
 
   <div v-else class="app-container show">
     <!-- Sidebar -->
-    <Sidebar :currentUser="currentUser" @logout="handleLogout" />
+    <Sidebar :currentUser="currentUser || undefined" @logout="handleLogout" />
 
     <!-- Main Content -->
     <main class="main-content">
@@ -69,8 +69,8 @@ const loginForm = reactive({
   password: ''
 })
 
-const pageTitle = computed(() => {
-  return route.meta.title || 'nuNox_servis'
+const pageTitle = computed<string>(() => {
+  return (route.meta.title as string) || 'nuNox_servis'
 })
 
 onMounted(() => {
@@ -97,7 +97,7 @@ const handleLogin = async () => {
       })
       router.push('/')
     }
-  } catch (error) {
+  } catch (error: any) {
     window.Swal.fire('Error', error.message || 'Login gagal', 'error')
   }
 }
