@@ -2,36 +2,36 @@
   <div class="fade-in" style="padding-bottom: 20px;">
       <div class="stats-grid">
           <div class="stat-card">
-              <div class="icon-wrapper" style="background: rgba(99,102,241,0.15); color: var(--primary); padding: 12px; border-radius: 50%; display: inline-flex; margin-bottom: 12px;">
-                  <Wrench size="28" stroke-width="2" />
+              <div class="icon-wrapper" style="background: rgba(99,102,241,0.15); color: var(--primary); width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; align-self: flex-start;">
+                  <Wrench :size="28" :stroke-width="2" />
               </div>
               <h3>Servis Hari Ini</h3>
               <p class="stat-value">{{ stats.todayServices }}</p>
           </div>
           <div class="stat-card">
-              <div class="icon-wrapper" style="background: rgba(245,158,11,0.15); color: var(--warning); padding: 12px; border-radius: 50%; display: inline-flex; margin-bottom: 12px;">
-                  <Hourglass size="28" stroke-width="2" />
+              <div class="icon-wrapper" style="background: rgba(245,158,11,0.15); color: var(--warning); width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; align-self: flex-start;">
+                  <Hourglass :size="28" :stroke-width="2" />
               </div>
               <h3>Sedang Dikerjakan</h3>
               <p class="stat-value">{{ stats.inProgress }}</p>
           </div>
           <div class="stat-card">
-              <div class="icon-wrapper" style="background: rgba(16,185,129,0.15); color: var(--success); padding: 12px; border-radius: 50%; display: inline-flex; margin-bottom: 12px;">
-                  <CheckCircle size="28" stroke-width="2" />
+              <div class="icon-wrapper" style="background: rgba(16,185,129,0.15); color: var(--success); width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; align-self: flex-start;">
+                  <CheckCircle :size="28" :stroke-width="2" />
               </div>
               <h3>Selesai</h3>
               <p class="stat-value">{{ stats.completed }}</p>
           </div>
           <div class="stat-card">
-              <div class="icon-wrapper" style="background: rgba(59,130,246,0.15); color: var(--info); padding: 12px; border-radius: 50%; display: inline-flex; margin-bottom: 12px;">
-                  <Wallet size="28" stroke-width="2" />
+              <div class="icon-wrapper" style="background: rgba(59,130,246,0.15); color: var(--info); width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; align-self: flex-start;">
+                  <Wallet :size="28" :stroke-width="2" />
               </div>
               <h3>Pendapatan Bulan Ini</h3>
               <p class="stat-value">{{ formatCurrency(stats.incomeMonth) }}</p>
           </div>
           <div class="stat-card">
-              <div class="icon-wrapper" style="background: rgba(16,185,129,0.15); color: var(--success); padding: 12px; border-radius: 50%; display: inline-flex; margin-bottom: 12px;">
-                  <TrendingUp size="28" stroke-width="2" />
+              <div class="icon-wrapper" style="background: rgba(16,185,129,0.15); color: var(--success); width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; align-self: flex-start;">
+                  <TrendingUp :size="28" :stroke-width="2" />
               </div>
               <h3>Laba Bersih Bulan Ini</h3>
               <p class="stat-value" :class="stats.labaBersih >= 0 ? 'text-success' : 'text-danger'">
@@ -52,7 +52,7 @@
           <!-- Peringatan Barang Terlantar -->
           <div class="card warning-card">
               <h2 style="margin-bottom: 15px; font-size: 1.2rem; display: flex; align-items: center; gap: 8px; color: var(--danger);">
-                  <AlertOctagon size="24" /> Peringatan Follow-up Pelanggan
+                  <AlertOctagon :size="24" /> Peringatan Follow-up Pelanggan
               </h2>
               <div class="table-container" style="max-height: 250px;">
                   <table class="data-table">
@@ -84,7 +84,7 @@
           <!-- Peringatan Stok -->
           <div class="card warning-card">
               <h2 style="margin-bottom: 15px; font-size: 1.2rem; display: flex; align-items: center; gap: 8px; color: var(--warning);">
-                  <AlertTriangle size="24" /> Peringatan Stok Sparepart Menipis
+                  <AlertTriangle :size="24" /> Peringatan Stok Sparepart Menipis
               </h2>
               <div class="table-container" style="max-height: 250px;">
                   <table class="data-table">
@@ -182,7 +182,7 @@ const renderChart = (chartData: { labels: string[], values: number[] }) => {
               y: { 
                   beginAtZero: true,
                   ticks: {
-                      callback: function(value) {
+                      callback: function(value: number | string) {
                           return 'Rp ' + value.toLocaleString('id-ID')
                       }
                   }

@@ -30,7 +30,7 @@
                 Login sebagai: <strong style="color: var(--text-primary);">{{ currentUser ? currentUser.username : '-' }}</strong>
               </div>
               <button @click="$emit('logout')" class="btn btn-danger" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
-                  <LogOut size="18" /> Logout
+                  <LogOut :size="18" /> Logout
               </button>
           </div>
       </nav>
