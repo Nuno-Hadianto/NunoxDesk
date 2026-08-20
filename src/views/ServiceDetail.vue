@@ -534,7 +534,7 @@ const exportPdfInvoice = async () => {
   try {
       const { settings, logoBase64 } = await getCommonData()
       const html = generateInvoiceHtml(settings, service.value, items.value, payments.value, logoBase64)
-      const filename = `Invoice_${service.value.ticket_number}_${service.value.customer_name.replace(/\s+/g, '_')}.pdf`
+      const filename = `Invoice_${service.value.ticket_number}_${(service.value.customer_name || '').replace(/\s+/g, '_')}.pdf`
       
       const result = await exportHtmlToPdf(html, filename)
       if (result && result.success) {
