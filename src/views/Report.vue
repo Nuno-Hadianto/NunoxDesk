@@ -70,6 +70,7 @@
 import { Calendar, FileSpreadsheet, Printer, Wallet, TrendingDown, TrendingUp, CheckCircle } from 'lucide-vue-next'
 import { ref, onMounted } from 'vue'
 import { generateBlankNotaHtml, generateBlankReceiptHtml, generateReportHtml, printHtml, exportHtmlToPdf } from '../utils/printUtils'
+import { Toast } from '../utils/toast'
 import StatCard from '../components/StatCard.vue'
 import type { ServiceOrder, Settings } from '../types'
 
@@ -131,7 +132,10 @@ const exportExcel = async () => {
 
       const result = await window.api.exportExcel(excelData)
       if (result.success) {
-          window.Swal.fire('Berhasil', `Laporan berhasil disimpan di:\n${result.filePath}`, 'success')
+          Toast.fire({
+              icon: 'success',
+              title: 'Laporan berhasil disimpan'
+          })
       } else if (!result.canceled) {
           window.Swal.fire('Error', "Gagal menyimpan file Excel: " + result.error, 'error')
       }
@@ -163,12 +167,9 @@ const exportPdf = async () => {
       
       const result = await exportHtmlToPdf(html, filename)
       if (result && result.success) {
-          window.Swal.fire({
+          Toast.fire({
               icon: 'success',
-              title: 'Berhasil',
-              text: 'Laporan PDF berhasil disimpan!',
-              timer: 1500,
-              showConfirmButton: false
+              title: 'Laporan PDF berhasil disimpan!'
           })
       } else if (result && !result.canceled) {
           window.Swal.fire('Error', 'Gagal menyimpan laporan PDF: ' + (result.error || ''), 'error')

@@ -47,6 +47,7 @@ import { ref, reactive, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useAuthStore } from './stores/auth'
+import { Toast } from './utils/toast'
 import Sidebar from './components/Sidebar.vue'
 import Topbar from './components/Topbar.vue'
 import type { User } from './types'
@@ -79,12 +80,9 @@ const handleLogin = async () => {
       authStore.login(user)
       
       // Auto-login SweetAlert
-      window.Swal.fire({
+      Toast.fire({
           icon: 'success',
-          title: 'Login Berhasil',
-          text: `Selamat datang, ${user.username}!`,
-          timer: 1500,
-          showConfirmButton: false
+          title: `Selamat datang, ${user.username}!`
       })
       router.push('/')
     }
