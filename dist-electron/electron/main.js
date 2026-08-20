@@ -43,7 +43,7 @@ function createWindow() {
     if (isDev) {
         // Memuat Vite Dev Server
         mainWindow.loadURL('http://localhost:5173');
-        mainWindow.webContents.openDevTools(); // Force open devtools
+        // mainWindow.webContents.openDevTools(); // Optional: buka devtools otomatis
     }
     else {
         // Memuat file hasil build Vite
