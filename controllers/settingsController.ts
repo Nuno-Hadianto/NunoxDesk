@@ -1,3 +1,4 @@
+import { Settings } from '../src/types';
 const settingsRepository = require('../repositories/settingsRepository');
 
 function getSettings() {

@@ -1,6 +1,7 @@
 export interface User {
   id?: number;
   username: string;
+  password?: string;
   role: string;
 }
 
@@ -85,6 +86,7 @@ export interface ServiceOrder {
   total_cost: number;
   payment_status: string;
   received_date: string;
+  estimated_completion_date?: string;
   completed_date?: string;
   diagnosis_result?: string;
   actions_taken?: string;

@@ -1,3 +1,4 @@
+import { Device } from '../src/types';
 const db = require('../database/db');
 
 function getDevices(searchQuery = '') {
@@ -15,7 +16,7 @@ function getDevices(searchQuery = '') {
     return stmt.all();
 }
 
-function getDeviceById(id) {
+function getDeviceById(id: number | string) {
     const stmt = db.prepare(`SELECT * FROM devices WHERE id = ?`);
     return stmt.get(id);
 }
@@ -25,7 +26,7 @@ function getDevicesByCustomerId(customerId) {
     return stmt.all(customerId);
 }
 
-function addDevice(data) {
+function addDevice(data: Device) {
     const { customer_id, device_type, brand, model, serial_number, color, accessories, physical_condition, notes } = data;
     const stmt = db.prepare(`
         INSERT INTO devices (customer_id, device_type, brand, model, serial_number, color, accessories, physical_condition, notes) 
@@ -35,7 +36,7 @@ function addDevice(data) {
     return info.lastInsertRowid;
 }
 
-function updateDevice(id, data) {
+function updateDevice(id: number | string, data: Device) {
     const { customer_id, device_type, brand, model, serial_number, color, accessories, physical_condition, notes } = data;
     const stmt = db.prepare(`
         UPDATE devices SET 
@@ -53,7 +54,7 @@ function checkDeviceHasServiceOrders(id) {
     return result.count > 0;
 }
 
-function deleteDevice(id) {
+function deleteDevice(id: number | string) {
     const stmt = db.prepare(`DELETE FROM devices WHERE id = ?`);
     stmt.run(id);
     return true;

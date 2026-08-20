@@ -1,6 +1,7 @@
+import { Customer } from '../src/types';
 const db = require('../database/db');
 
-function getCustomers(searchQuery = '', page = 1, limit = 50) {
+function getCustomers(searchQuery: string = '', page: number = 1, limit: number = 50) {
     const offset = (page - 1) * limit;
     let data, total;
     if (searchQuery) {
@@ -14,19 +15,19 @@ function getCustomers(searchQuery = '', page = 1, limit = 50) {
     return { data, total, page, limit };
 }
 
-function getCustomerById(id) {
+function getCustomerById(id: number | string) {
     const stmt = db.prepare(`SELECT * FROM customers WHERE id = ?`);
     return stmt.get(id);
 }
 
-function addCustomer(data) {
+function addCustomer(data: Customer) {
     const { name, phone, address, notes } = data;
     const stmt = db.prepare(`INSERT INTO customers (name, phone, address, notes) VALUES (?, ?, ?, ?)`);
     const info = stmt.run(name, phone, address, notes);
     return info.lastInsertRowid;
 }
 
-function updateCustomer(id, data) {
+function updateCustomer(id: number | string, data: Customer) {
     const { name, phone, address, notes } = data;
     const stmt = db.prepare(`UPDATE customers SET name = ?, phone = ?, address = ?, notes = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?`);
     stmt.run(name, phone, address, notes, id);
@@ -39,7 +40,7 @@ function checkCustomerHasServiceOrders(id) {
     return result.count > 0;
 }
 
-function deleteCustomer(id) {
+function deleteCustomer(id: number | string) {
     const stmt = db.prepare(`DELETE FROM customers WHERE id = ?`);
     stmt.run(id);
     return true;

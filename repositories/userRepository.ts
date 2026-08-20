@@ -1,3 +1,4 @@
+import { User } from '../src/types';
 const db = require('../database/db');
 
 function getUserCount() {
@@ -20,7 +21,7 @@ function getUsers() {
     return stmt.all();
 }
 
-function getUserById(id) {
+function getUserById(id: number | string) {
     const stmt = db.prepare(`SELECT id, username, role FROM users WHERE id = ?`);
     return stmt.get(id);
 }
@@ -59,7 +60,7 @@ function getAdminCount() {
     return db.prepare(`SELECT COUNT(*) as count FROM users WHERE role = 'admin'`).get().count;
 }
 
-function deleteUser(id) {
+function deleteUser(id: number | string) {
     const stmt = db.prepare(`DELETE FROM users WHERE id = ?`);
     stmt.run(id);
     return true;

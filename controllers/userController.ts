@@ -1,3 +1,4 @@
+import { User } from '../src/types';
 const userRepository = require('../repositories/userRepository');
 const bcrypt = require('bcryptjs');
 
@@ -30,11 +31,11 @@ function getUsers() {
     return userRepository.getUsers();
 }
 
-function getUserById(id) {
+function getUserById(id: number | string) {
     return userRepository.getUserById(id);
 }
 
-function addUser(data) {
+function addUser(data: User) {
     const { username, password, role } = data;
     
     // Check if username exists
@@ -47,7 +48,7 @@ function addUser(data) {
     return userRepository.addUser(username, hash, role);
 }
 
-function updateUser(id, data) {
+function updateUser(id: number | string, data: User) {
     const { username, password, role } = data;
     
     // Check if username exists for OTHER users
@@ -65,7 +66,7 @@ function updateUser(id, data) {
     return true;
 }
 
-function deleteUser(id) {
+function deleteUser(id: number | string) {
     // Prevent deleting the last admin
     const user = userRepository.getUserRole(id);
     if (user && user.role === 'admin') {

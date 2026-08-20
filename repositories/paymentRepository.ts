@@ -1,3 +1,4 @@
+import { Payment } from '../src/types';
 const db = require('../database/db');
 
 function generatePaymentNumber() {
@@ -44,7 +45,7 @@ function updateServicePaymentStatus(serviceOrderId) {
     db.prepare(`UPDATE service_orders SET payment_status = ? WHERE id = ?`).run(status, serviceOrderId);
 }
 
-function addPayment(data) {
+function addPayment(data: Payment) {
     const { service_order_id, amount, payment_method, notes } = data;
     const payment_number = generatePaymentNumber();
     
@@ -64,11 +65,11 @@ function addPayment(data) {
     return tx();
 }
 
-function getPaymentById(id) {
+function getPaymentById(id: number | string) {
     return db.prepare(`SELECT service_order_id FROM payments WHERE id = ?`).get(id);
 }
 
-function deletePayment(id) {
+function deletePayment(id: number | string) {
     const payment = getPaymentById(id);
     if (!payment) return false;
     

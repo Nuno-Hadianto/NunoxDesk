@@ -1,3 +1,4 @@
+import { ServiceOrder } from '../src/types';
 const db = require('../database/db');
 
 function generateTicketNumber() {
@@ -16,7 +17,7 @@ function generateTicketNumber() {
     return `${prefix}${nextNum.toString().padStart(4, '0')}`;
 }
 
-function getServices(searchQuery = '', page = 1, limit = 50) {
+function getServices(searchQuery: string = '', page: number = 1, limit: number = 50) {
     const offset = (page - 1) * limit;
     let query = `
         SELECT so.*, c.name as customer_name, d.brand, d.model, d.device_type
@@ -49,7 +50,7 @@ function getServices(searchQuery = '', page = 1, limit = 50) {
     return { data, total, page, limit };
 }
 
-function getServiceById(id) {
+function getServiceById(id: number | string) {
     const stmt = db.prepare(`
         SELECT so.*, 
                c.name as customer_name, c.phone as customer_phone, c.address as customer_address, 
@@ -67,7 +68,7 @@ function getServiceStatusHistory(serviceOrderId) {
     return stmt.all(serviceOrderId);
 }
 
-function addService(data) {
+function addService(data: ServiceOrder) {
     const { customer_id, device_id, estimated_completion_date, technician, customer_complaint, estimated_cost } = data;
     const ticket_number = generateTicketNumber();
     
@@ -113,7 +114,7 @@ function updateServiceStatus(id, status, notes) {
     return tx();
 }
 
-function updateServiceDetails(id, data) {
+function updateServiceDetails(id: number | string, data: ServiceOrder) {
     const { diagnosis_result, actions_taken, technician_notes } = data;
     const stmt = db.prepare(`
         UPDATE service_orders SET 
@@ -124,7 +125,7 @@ function updateServiceDetails(id, data) {
     return true;
 }
 
-function deleteService(id) {
+function deleteService(id: number | string) {
     const tx = db.transaction(() => {
         // Ambil semua item sparepart untuk dikembalikan stoknya sebelum order dihapus
         const items = db.prepare(`SELECT * FROM service_items WHERE service_order_id = ? AND item_type = 'Sparepart' AND spare_part_id IS NOT NULL`).all(id);

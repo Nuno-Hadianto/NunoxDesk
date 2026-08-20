@@ -1,3 +1,4 @@
+import { Settings } from '../src/types';
 const db = require('../database/db');
 
 function getSettings() {

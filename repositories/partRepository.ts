@@ -1,3 +1,4 @@
+import { Part } from '../src/types';
 const db = require('../database/db');
 
 function getParts(searchQuery = '') {
@@ -9,12 +10,12 @@ function getParts(searchQuery = '') {
     return stmt.all();
 }
 
-function getPartById(id) {
+function getPartById(id: number | string) {
     const stmt = db.prepare(`SELECT * FROM spare_parts WHERE id = ?`);
     return stmt.get(id);
 }
 
-function addPart(data) {
+function addPart(data: Part) {
     const { part_code, name, category, stock, buy_price, sell_price, unit, notes } = data;
     const stmt = db.prepare(`
         INSERT INTO spare_parts (part_code, name, category, stock, buy_price, sell_price, unit, notes) 
@@ -24,7 +25,7 @@ function addPart(data) {
     return info.lastInsertRowid;
 }
 
-function updatePart(id, data) {
+function updatePart(id: number | string, data: Part) {
     const { part_code, name, category, stock, buy_price, sell_price, unit, notes } = data;
     const stmt = db.prepare(`
         UPDATE spare_parts SET 
@@ -49,7 +50,7 @@ function checkPartHasServiceItems(id) {
     return result.count > 0;
 }
 
-function deletePart(id) {
+function deletePart(id: number | string) {
     const stmt = db.prepare(`DELETE FROM spare_parts WHERE id = ?`);
     stmt.run(id);
     return true;

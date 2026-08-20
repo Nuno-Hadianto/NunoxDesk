@@ -1,3 +1,4 @@
+import { ServiceItem } from '../src/types';
 const db = require('../database/db');
 const paymentRepository = require('./paymentRepository');
 
@@ -12,7 +13,7 @@ function getServiceItems(serviceOrderId) {
     return stmt.all(serviceOrderId);
 }
 
-function addServiceItem(data) {
+function addServiceItem(data: ServiceItem) {
     const { service_order_id, item_type, spare_part_id, description, quantity, price } = data;
 
     // Diskon uses negative total
@@ -54,7 +55,7 @@ function addServiceItem(data) {
     return tx();
 }
 
-function deleteServiceItem(id) {
+function deleteServiceItem(id: number | string) {
     const item = db.prepare(`SELECT * FROM service_items WHERE id = ?`).get(id);
     if (!item) return false;
 
