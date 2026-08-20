@@ -32,8 +32,8 @@
                       <td>{{ d.device_type }}</td>
                       <td>{{ d.serial_number || '-' }}</td>
                       <td>
-                          <button class="btn btn-secondary btn-sm" @click="editDevice(d)">✏️ Edit</button>
-                          <button class="btn btn-danger btn-sm" @click="deleteDevice(d.id)">🗑️ Hapus</button>
+                          <button class="btn btn-secondary btn-sm" @click="editDevice(d)" style="display: inline-flex; align-items: center; gap: 6px;"><Edit :size="14" /> Edit</button>
+                          <button class="btn btn-danger btn-sm" @click="deleteDevice(d.id)" style="display: inline-flex; align-items: center; gap: 6px;"><Trash2 :size="14" /> Hapus</button>
                       </td>
                   </tr>
               </tbody>
@@ -105,7 +105,7 @@
 </template>
 
 <script setup lang="ts">
-import { Search, Plus } from 'lucide-vue-next'
+import { Search, Plus, Edit, Trash2 } from 'lucide-vue-next'
 import { ref, reactive, onMounted, computed } from 'vue'
 import type { Device, Customer } from '../types'
 

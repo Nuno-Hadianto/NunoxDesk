@@ -138,7 +138,7 @@
                               </div>
                               <div style="display: flex; align-items: center; gap: 15px;">
                                   <span style="font-weight: 700; color: var(--primary-color);">{{ formatCurrency(item.subtotal) }}</span>
-                                  <button @click="deleteItem(item.id)" class="btn btn-danger" style="padding: 4px 8px; font-size: 0.75rem; border-radius: 4px; opacity: 0.8;">Hapus</button>
+                                  <button @click="deleteItem(item.id)" class="btn btn-danger" style="padding: 4px 8px; font-size: 0.75rem; border-radius: 4px; opacity: 0.8;" style="display: inline-flex; align-items: center; gap: 6px;"><Trash2 :size="14" /> Hapus</button>
                               </div>
                           </li>
                       </ul>
@@ -164,7 +164,7 @@
                           </div>
                           <div style="display:flex; justify-content:space-between; font-size:0.8rem; color:#64748b;">
                               <span>{{ new Date(p.payment_date + 'Z').toLocaleString('id-ID') }} - {{ p.payment_method }}</span>
-                              <button @click="deletePayment(p.id)" class="btn btn-danger" style="padding:2px 5px; font-size:0.7rem;">Hapus</button>
+                              <button @click="deletePayment(p.id)" class="btn btn-danger" style="padding:2px 5px; font-size:0.7rem;" style="display: inline-flex; align-items: center; gap: 6px;"><Trash2 :size="14" /> Hapus</button>
                           </div>
                       </li>
                   </ul>
@@ -216,6 +216,7 @@
 </template>
 
 <script setup lang="ts">
+import { Edit, Trash2 } from 'lucide-vue-next'
 import { ref, reactive, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import type { ServiceOrder, ServiceHistory, ServiceItem, Payment, Part, Settings } from '../types'

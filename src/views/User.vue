@@ -29,8 +29,8 @@
                           </span>
                       </td>
                       <td>
-                          <button class="btn btn-sm btn-secondary" @click="editUser(u)">✏️ Edit</button>
-                          <button v-if="u.id !== currentUserId" class="btn btn-sm btn-danger" @click="deleteUser(u.id)">🗑️ Hapus</button>
+                          <button class="btn btn-sm btn-secondary" @click="editUser(u)" style="display: inline-flex; align-items: center; gap: 6px;"><Edit :size="14" /> Edit</button>
+                          <button v-if="u.id !== currentUserId" class="btn btn-sm btn-danger" @click="deleteUser(u.id)" style="display: inline-flex; align-items: center; gap: 6px;"><Trash2 :size="14" /> Hapus</button>
                       </td>
                   </tr>
               </tbody>
@@ -73,7 +73,7 @@
 </template>
 
 <script setup lang="ts">
-import { Search, Plus } from 'lucide-vue-next'
+import { Search, Plus, Edit, Trash2 } from 'lucide-vue-next'
 import { ref, reactive, computed, onMounted } from 'vue'
 import type { User } from '../types'
 
