@@ -24,22 +24,18 @@
       </div>
       
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 25px;">
-          <div class="card" style="padding: 20px; text-align: center; border-top: 4px solid var(--primary-color);">
-              <h3 style="font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 8px;"><Wallet :size="16" /> Total Pendapatan (Omset)</h3>
-              <div class="stat-value" style="font-size: 1.5rem; color: var(--primary-color);">{{ formatCurrency(totalOmset) }}</div>
-          </div>
-          <div class="card" style="padding: 20px; text-align: center; border-top: 4px solid #ef4444;">
-              <h3 style="font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 8px;"><TrendingDown :size="16" /> Total Modal (HPP)</h3>
-              <div class="stat-value" style="font-size: 1.5rem; color: #ef4444;">{{ formatCurrency(totalModal) }}</div>
-          </div>
-          <div class="card" style="padding: 20px; text-align: center; border-top: 4px solid #10b981;">
-              <h3 style="font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 8px;"><TrendingUp :size="16" /> Laba Bersih (Profit)</h3>
-              <div class="stat-value" style="font-size: 1.5rem; color: #10b981;">{{ formatCurrency(netProfit) }}</div>
-          </div>
-          <div class="card" style="padding: 20px; text-align: center; border-top: 4px solid #f59e0b;">
-              <h3 style="font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 8px;"><CheckCircle :size="16" /> Transaksi Selesai</h3>
-              <div class="stat-value" style="font-size: 1.5rem; color: #f59e0b;">{{ services.length }}</div>
-          </div>
+          <StatCard title="Total Pendapatan (Omset)" :value="formatCurrency(totalOmset)" variant="primary" :center="true" :borderTop="true">
+              <template #icon-small><Wallet :size="16" /></template>
+          </StatCard>
+          <StatCard title="Total Modal (HPP)" :value="formatCurrency(totalModal)" variant="danger" :center="true" :borderTop="true">
+              <template #icon-small><TrendingDown :size="16" /></template>
+          </StatCard>
+          <StatCard title="Laba Bersih (Profit)" :value="formatCurrency(netProfit)" variant="success" :center="true" :borderTop="true">
+              <template #icon-small><TrendingUp :size="16" /></template>
+          </StatCard>
+          <StatCard title="Transaksi Selesai" :value="services.length" variant="warning" :center="true" :borderTop="true">
+              <template #icon-small><CheckCircle :size="16" /></template>
+          </StatCard>
       </div>
 
       <div class="table-container">
@@ -73,7 +69,8 @@
 <script setup lang="ts">
 import { Calendar, FileSpreadsheet, Printer, Wallet, TrendingDown, TrendingUp, CheckCircle } from 'lucide-vue-next'
 import { ref, onMounted } from 'vue'
-import { generateBlankNotaHtml, generateBlankReceiptHtml, generateReportHtml, printHtml, exportHtmlToPdf } from '../utils/printUtils.js'
+import { generateBlankNotaHtml, generateBlankReceiptHtml, generateReportHtml, printHtml, exportHtmlToPdf } from '../utils/printUtils'
+import StatCard from '../components/StatCard.vue'
 import type { ServiceOrder, Settings } from '../types'
 
 const startDate = ref<string>('')
