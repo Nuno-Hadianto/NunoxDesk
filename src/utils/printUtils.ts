@@ -72,13 +72,13 @@ export const generateNotaHtml = (settings: any, service: any, logoBase64: any) =
 
 export const generateInvoiceHtml = (settings: any, service: any, items: any, payments: any, logoBase64: any) => {
     settings = settings || {};
-    const formatRp = (val) => new Intl.NumberFormat('id-ID', {
+    const formatRp = (val: any) => new Intl.NumberFormat('id-ID', {
         style: 'currency', currency: 'IDR', minimumFractionDigits: 0
     }).format(val || 0);
     
     let itemsHtml = '';
     if (items && items.length > 0) {
-        items.forEach(i => {
+        items.forEach((i: any) => {
             let desc = i.description;
             if (i.item_type === 'Sparepart') desc = i.part_name || desc;
             itemsHtml += `
@@ -97,7 +97,7 @@ export const generateInvoiceHtml = (settings: any, service: any, items: any, pay
     
     let totalPaid = 0;
     if (payments && payments.length > 0) {
-        totalPaid = payments.reduce((acc, p) => acc + p.amount, 0);
+        totalPaid = payments.reduce((acc: any, p: any) => acc + p.amount, 0);
     }
     let remaining = (service.total_cost || 0) - totalPaid;
     
@@ -332,13 +332,13 @@ export const generateBlankReceiptHtml = (settings: any, logoBase64: any) => {
 
 export const generateReportHtml = (settings: any, services: any, startDate: any, endDate: any, totalOmset: any, totalModal: any, netProfit: any, logoBase64: any, topParts: any = []) => {
     settings = settings || {};
-    const formatRp = (val) => new Intl.NumberFormat('id-ID', {
+    const formatRp = (val: any) => new Intl.NumberFormat('id-ID', {
         style: 'currency', currency: 'IDR', minimumFractionDigits: 0
     }).format(val || 0);
 
     let rowsHtml = '';
     if (services && services.length > 0) {
-        services.forEach((s, idx) => {
+        services.forEach((s: any, idx: any) => {
             rowsHtml += `
                 <tr>
                     <td class="rep-td-center">${idx + 1}</td>
@@ -360,7 +360,7 @@ export const generateReportHtml = (settings: any, services: any, startDate: any,
             <div style="margin-top: 30px; margin-bottom: 20px;">
                 <h3 style="font-size: 14pt; color: #334155; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; margin-bottom: 15px;">Peringkat 5 Sparepart Terlaris</h3>
                 <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-                    ${topParts.map((p, i) => `
+                    ${topParts.map((p: any, i: any) => `
                         <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px 15px; flex: 1; min-width: 120px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
                             <div style="font-size: 9pt; color: #64748b; font-weight: 600; margin-bottom: 4px;">Peringkat #${i+1}</div>
                             <div style="font-size: 11pt; font-weight: bold; color: #0f172a; margin-bottom: 8px;">${p.part_name}</div>
@@ -455,7 +455,7 @@ export const printHtml = async (html: string, landscape: boolean = false, isTher
 
         if (window.api && window.api.printPreview) {
             try {
-                let pdfOptions = { landscape: landscape && !isThermal };
+                let pdfOptions: any = { landscape: landscape && !isThermal };
                 if (!isThermal) {
                     pdfOptions.pageSize = landscape ? 'A5' : 'A4';
                 }
