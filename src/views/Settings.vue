@@ -96,9 +96,9 @@ const saveSettings = async () => {
           timer: 1500,
           showConfirmButton: false
       })
-  } catch (error) {
+  } catch (error: any) {
       console.error(error)
-      window.Swal.fire('Error', 'Gagal menyimpan pengaturan.', 'error')
+      window.Swal.fire('Error', error.message || 'Gagal menyimpan pengaturan.', 'error')
   }
 }
 
@@ -108,9 +108,9 @@ const backupData = async () => {
       if (success) {
           window.Swal.fire('Berhasil', 'Backup database berhasil!', 'success')
       }
-  } catch (error) {
+  } catch (error: any) {
       console.error(error)
-      window.Swal.fire('Error', 'Gagal backup database.', 'error')
+      window.Swal.fire('Error', error.message || 'Gagal backup database.', 'error')
   }
 }
 
@@ -135,9 +135,9 @@ const restoreData = async () => {
                   timer: 2500
               })
           }
-      } catch (error) {
+      } catch (error: any) {
           console.error(error)
-          window.Swal.fire('Error', 'Gagal restore database.', 'error')
+          window.Swal.fire('Error', error.message || 'Gagal restore database.', 'error')
       }
   }
 }

@@ -367,8 +367,8 @@ const saveUpdate = async () => {
       })
       await loadServiceDetail()
       await loadHistory()
-  } catch (error) {
-      window.Swal.fire('Error', 'Gagal menyimpan.', 'error')
+  } catch (error: any) {
+      window.Swal.fire('Error', error.message || 'Gagal menyimpan.', 'error')
   }
 }
 
@@ -421,8 +421,8 @@ const addItem = async () => {
       await loadItems()
       await loadServiceDetail()
       if (itemForm.type === 'Sparepart') await loadParts()
-  } catch (error) {
-      window.Swal.fire('Error', 'Gagal menambah item (Stok tidak cukup atau error lain).', 'error')
+  } catch (error: any) {
+      window.Swal.fire('Error', error.message || 'Gagal menambah item.', 'error')
   }
 }
 
@@ -467,8 +467,8 @@ const addPayment = async () => {
       paymentForm.amount = 0
       await loadPayments()
       await loadServiceDetail()
-  } catch (error) {
-      window.Swal.fire('Error', 'Gagal memproses pembayaran.', 'error')
+  } catch (error: any) {
+      window.Swal.fire('Error', error.message || 'Gagal memproses pembayaran.', 'error')
   }
 }
 
@@ -542,9 +542,9 @@ const exportPdfInvoice = async () => {
       } else if (result && !result.canceled) {
           window.Swal.fire('Error', 'Gagal menyimpan PDF: ' + (result.error || ''), 'error')
       }
-  } catch (error) {
+  } catch (error: any) {
       console.error(error)
-      window.Swal.fire('Error', 'Terjadi kesalahan saat memproses PDF.', 'error')
+      window.Swal.fire('Error', error.message || 'Terjadi kesalahan saat memproses PDF.', 'error')
   }
 }
 
@@ -553,9 +553,9 @@ const printNota = async () => {
       const { settings, logoBase64 } = await getCommonData()
       const html = generateNotaHtml(settings, service.value, logoBase64)
       await printHtml(html, true) // landscape for nota
-  } catch (error) {
+  } catch (error: any) {
       console.error(error)
-      window.Swal.fire('Error', 'Gagal mencetak tanda terima.', 'error')
+      window.Swal.fire('Error', error.message || 'Gagal mencetak tanda terima.', 'error')
   }
 }
 
@@ -564,9 +564,9 @@ const printThermal = async () => {
       const { settings, logoBase64 } = await getCommonData()
       const html = generateThermalNotaHtml(settings, service.value, logoBase64)
       await printHtml(html, false, true) // portrait for thermal, isThermal = true
-  } catch (error) {
+  } catch (error: any) {
       console.error(error)
-      window.Swal.fire('Error', 'Gagal mencetak struk thermal.', 'error')
+      window.Swal.fire('Error', error.message || 'Gagal mencetak struk thermal.', 'error')
   }
 }
 
@@ -575,9 +575,9 @@ const printReceipt = async () => {
       const { settings, logoBase64 } = await getCommonData()
       const html = generateInvoiceHtml(settings, service.value, items.value, payments.value, logoBase64)
       await printHtml(html, false) // portrait for invoice
-  } catch (error) {
+  } catch (error: any) {
       console.error(error)
-      window.Swal.fire('Error', 'Gagal mencetak invoice.', 'error')
+      window.Swal.fire('Error', error.message || 'Gagal mencetak invoice.', 'error')
   }
 }
 
