@@ -63,7 +63,7 @@ function getServiceById(id: number | string) {
     return stmt.get(id);
 }
 
-function getServiceStatusHistory(serviceOrderId) {
+function getServiceStatusHistory(serviceOrderId: any) {
     const stmt = db.prepare(`SELECT * FROM service_status_history WHERE service_order_id = ? ORDER BY id ASC`);
     return stmt.all(serviceOrderId);
 }
@@ -90,7 +90,7 @@ function addService(data: ServiceOrder) {
     return tx();
 }
 
-function updateServiceStatus(id, status, notes, warrantyDays = 0) {
+function updateServiceStatus(id: any, status: any, notes: any, warrantyDays: any = 0) {
     const tx = db.transaction(() => {
         const stmt = db.prepare(`UPDATE service_orders SET service_status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?`);
         stmt.run(status, id);
@@ -151,30 +151,30 @@ function deleteService(id: number | string) {
 }
 
 // Photos logic
-function addPhoto(serviceOrderId, photoType, filepath) {
+function addPhoto(serviceOrderId: any, photoType: any, filepath: any) {
     const stmt = db.prepare(`INSERT INTO service_photos (service_order_id, photo_type, filepath) VALUES (?, ?, ?)`);
     const info = stmt.run(serviceOrderId, photoType, filepath);
     return info.lastInsertRowid;
 }
 
-function getPhotos(serviceOrderId) {
+function getPhotos(serviceOrderId: any) {
     const stmt = db.prepare(`SELECT * FROM service_photos WHERE service_order_id = ? ORDER BY id ASC`);
     return stmt.all(serviceOrderId);
 }
 
-function getPhotoById(id) {
+function getPhotoById(id: any) {
     const stmt = db.prepare(`SELECT * FROM service_photos WHERE id = ?`);
     return stmt.get(id);
 }
 
-function deletePhoto(id) {
+function deletePhoto(id: any) {
     const stmt = db.prepare(`DELETE FROM service_photos WHERE id = ?`);
     stmt.run(id);
     return true;
 }
 
 // Warranty Logic
-function checkWarranty(deviceId) {
+function checkWarranty(deviceId: any) {
     const stmt = db.prepare(`
         SELECT ticket_number, warranty_end_date 
         FROM service_orders 

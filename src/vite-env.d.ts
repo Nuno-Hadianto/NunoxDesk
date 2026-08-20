@@ -16,4 +16,5 @@ interface Window {
     [key: string]: any;
   }
   Swal: any;
+  Chart: any;
 }

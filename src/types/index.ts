@@ -1,10 +1,3 @@
-declare global {
-  interface Window {
-    Swal: any;
-    Chart: any;
-    api: any;
-  }
-}
 
 export interface User {
   id?: number;

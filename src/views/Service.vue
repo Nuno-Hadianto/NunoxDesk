@@ -265,7 +265,7 @@ const handleKeydown = (e: KeyboardEvent) => {
 
 onMounted(() => {
   if (route.query.search) {
-      searchQuery.value = route.query.search
+      searchQuery.value = route.query.search as string
   }
   loadServices()
   loadCustomersDropdown()
