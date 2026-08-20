@@ -45,7 +45,7 @@ export const ServiceOrderSchema = z.object({
 export const ServiceItemSchema = z.object({
   service_order_id: z.number().int('ID Servis tidak valid.'),
   item_type: z.enum(['Jasa', 'Sparepart', 'Biaya lainnya', 'Diskon'] as const, {
-      errorMap: () => ({ message: 'Jenis item tidak valid.' })
+      message: 'Jenis item tidak valid.'
   }),
   spare_part_id: z.number().int().optional().nullable(),
   description: z.string().min(1, 'Deskripsi wajib diisi.'),
