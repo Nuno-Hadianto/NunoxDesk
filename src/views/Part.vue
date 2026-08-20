@@ -112,7 +112,7 @@
 
 <script setup lang="ts">
 import { Search, Plus, Edit, Trash2 } from 'lucide-vue-next'
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, onUnmounted } from 'vue'
 import type { Part } from '../types'
 
 const parts = ref<Part[]>([])
@@ -256,8 +256,22 @@ const deletePart = async (id: number) => {
   }
 }
 
+const handleKeydown = (e: KeyboardEvent) => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
+      e.preventDefault()
+      if (!isModalOpen.value) {
+          openAddModal()
+      }
+  }
+}
+
 onMounted(() => {
   loadParts()
+  window.addEventListener('keydown', handleKeydown)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleKeydown)
 })
 
 </script>

@@ -43,7 +43,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useAuthStore } from './stores/auth'
@@ -67,10 +67,22 @@ const pageTitle = computed<string>(() => {
   return (route.meta.title as string) || 'nuNox_servis'
 })
 
+const handleGlobalKeydown = (e: KeyboardEvent) => {
+  if (e.key === 'Escape') {
+    const closeBtn = document.querySelector('.modal.show .close-modal') as HTMLElement
+    if (closeBtn) closeBtn.click()
+  }
+}
+
 onMounted(() => {
   if (window.api && window.api.appReady) {
     window.api.appReady()
   }
+  window.addEventListener('keydown', handleGlobalKeydown)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleGlobalKeydown)
 })
 
 const handleLogin = async () => {

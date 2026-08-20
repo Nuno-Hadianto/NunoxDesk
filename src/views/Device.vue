@@ -106,7 +106,7 @@
 
 <script setup lang="ts">
 import { Search, Plus, Edit, Trash2 } from 'lucide-vue-next'
-import { ref, reactive, onMounted, computed } from 'vue'
+import { ref, reactive, computed, onMounted, onUnmounted } from 'vue'
 import type { Device, Customer } from '../types'
 
 const devices = ref<Device[]>([])
@@ -254,7 +254,21 @@ const deleteDevice = async (id: number) => {
   }
 }
 
+const handleKeydown = (e: KeyboardEvent) => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
+      e.preventDefault()
+      if (!isModalOpen.value) {
+          openAddModal()
+      }
+  }
+}
+
 onMounted(() => {
   loadDevices()
+  window.addEventListener('keydown', handleKeydown)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleKeydown)
 })
 </script>

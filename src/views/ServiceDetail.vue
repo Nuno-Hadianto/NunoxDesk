@@ -217,7 +217,7 @@
 
 <script setup lang="ts">
 import { Edit, Trash2 } from 'lucide-vue-next'
-import { ref, reactive, computed, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import type { ServiceOrder, ServiceHistory, ServiceItem, Payment, Part, Settings } from '../types'
 import { generateNotaHtml, generateInvoiceHtml, generateThermalNotaHtml, printHtml, exportHtmlToPdf } from '../utils/printUtils.js'
@@ -601,5 +601,18 @@ onMounted(async () => {
   if (remainingBill.value > 0) {
       paymentForm.amount = remainingBill.value
   }
+  
+  window.addEventListener('keydown', handleKeydown)
+})
+
+const handleKeydown = (e: KeyboardEvent) => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+      e.preventDefault()
+      printReceipt()
+  }
+}
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleKeydown)
 })
 </script>

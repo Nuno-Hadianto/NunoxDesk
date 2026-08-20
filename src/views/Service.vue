@@ -104,7 +104,7 @@
 
 <script setup lang="ts">
 import { Search, Plus } from 'lucide-vue-next'
-import { ref, reactive, computed, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import type { ServiceOrder, Customer, Device } from '../types'
 
@@ -227,11 +227,25 @@ const saveService = async () => {
   }
 }
 
+const handleKeydown = (e: KeyboardEvent) => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
+      e.preventDefault()
+      if (!isModalOpen.value) {
+          openAddModal()
+      }
+  }
+}
+
 onMounted(() => {
   if (route.query.search) {
       searchQuery.value = route.query.search
   }
   loadServices()
   loadCustomersDropdown()
+  window.addEventListener('keydown', handleKeydown)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleKeydown)
 })
 </script>
