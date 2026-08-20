@@ -44,7 +44,7 @@ export const ServiceOrderSchema = z.object({
 
 export const ServiceItemSchema = z.object({
   service_order_id: z.number().int('ID Servis tidak valid.'),
-  item_type: z.enum(['Jasa', 'Sparepart', 'Biaya lainnya', 'Diskon'], {
+  item_type: z.enum(['Jasa', 'Sparepart', 'Biaya lainnya', 'Diskon'] as const, {
       errorMap: () => ({ message: 'Jenis item tidak valid.' })
   }),
   spare_part_id: z.number().int().optional().nullable(),
@@ -66,7 +66,7 @@ export const validateData = (schema: z.ZodSchema<any>, data: any) => {
   } catch (error) {
       if (error instanceof z.ZodError) {
           // Flatten error messages to a single readable string
-          const errMessages = error.errors.map(err => err.message).join(' | ');
+          const errMessages = (error as any).errors.map((err: any) => err.message).join(' | ');
           throw new Error(`Validasi Gagal: ${errMessages}`);
       }
       throw error;

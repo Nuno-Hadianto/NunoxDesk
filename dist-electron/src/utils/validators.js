@@ -63,7 +63,7 @@ const validateData = (schema, data) => {
     catch (error) {
         if (error instanceof zod_1.z.ZodError) {
             // Flatten error messages to a single readable string
-            const errMessages = error.errors.map(err => err.message).join(' | ');
+            const errMessages = error.errors.map((err) => err.message).join(' | ');
             throw new Error(`Validasi Gagal: ${errMessages}`);
         }
         throw error;
