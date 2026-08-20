@@ -18,7 +18,7 @@ const { registerPartIpc } = require('./ipc/partIpc');
 const { registerUserIpc } = require('./ipc/userIpc');
 const { registerMiscIpc } = require('./ipc/miscIpc');
 
-let mainWindow;
+let mainWindow: any;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -93,13 +93,13 @@ autoUpdater.on('update-downloaded', () => {
     title: 'Update Ready',
     message: 'Sebuah pembaruan telah diunduh. Aplikasi akan direstart untuk memasang pembaruan.',
     buttons: ['Restart Sekarang', 'Nanti']
-  }).then((result) => {
+  }).then((result: any) => {
     if (result.response === 0) {
       autoUpdater.quitAndInstall();
     }
   });
 });
-autoUpdater.on('error', (err) => {
+autoUpdater.on('error', (err: any) => {
   log.error('Error in auto-updater. ' + err);
 });
 
