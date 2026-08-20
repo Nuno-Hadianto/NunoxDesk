@@ -347,6 +347,7 @@ const loadParts = async () => {
 }
 
 const saveUpdate = async () => {
+  if (!service.value) return
   try {
       const data = {
           diagnosis_result: updateForm.diagnosis_result,
@@ -388,6 +389,7 @@ const onPartChange = () => {
 }
 
 const addItem = async () => {
+  if (!service.value) return
   let desc = itemForm.desc
   let partId = null
   
@@ -444,6 +446,7 @@ const deleteItem = async (itemId: number) => {
 
 // Payment logic
 const addPayment = async () => {
+  if (!service.value) return
   if (paymentForm.amount <= 0) return window.Swal.fire('Info', 'Nominal harus lebih dari 0', 'info')
   if (paymentForm.amount > remainingBill.value) {
       const confirm = await window.Swal.fire({
@@ -474,6 +477,7 @@ const addPayment = async () => {
 }
 
 const deletePayment = async (paymentId: number) => {
+  if (!service.value) return
   const result = await window.Swal.fire({
       title: 'Hapus pembayaran?',
       icon: 'warning',
@@ -526,6 +530,7 @@ const confirmSendWa = () => {
 }
 
 const exportPdfInvoice = async () => {
+  if (!service.value) return
   try {
       const { settings, logoBase64 } = await getCommonData()
       const html = generateInvoiceHtml(settings, service.value, items.value, payments.value, logoBase64)
@@ -550,6 +555,7 @@ const exportPdfInvoice = async () => {
 }
 
 const printNota = async () => {
+  if (!service.value) return
   try {
       const { settings, logoBase64 } = await getCommonData()
       const html = generateNotaHtml(settings, service.value, logoBase64)
@@ -561,6 +567,7 @@ const printNota = async () => {
 }
 
 const printThermal = async () => {
+  if (!service.value) return
   try {
       const { settings, logoBase64 } = await getCommonData()
       const html = generateThermalNotaHtml(settings, service.value, logoBase64)
@@ -572,6 +579,7 @@ const printThermal = async () => {
 }
 
 const printReceipt = async () => {
+  if (!service.value) return
   try {
       const { settings, logoBase64 } = await getCommonData()
       const html = generateInvoiceHtml(settings, service.value, items.value, payments.value, logoBase64)
