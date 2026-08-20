@@ -2,39 +2,42 @@
   <div class="view-section">
       <div class="action-bar" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 25px;">
           <div style="display: flex; gap: 10px; align-items: center;">
-              <span style="font-weight: 500; color: var(--text-muted);">📅 Filter:</span>
-              <input type="date" v-model="startDate" class="form-control" style="width: 100%; padding-left: 38px; border-radius: 20px;">
+              <Calendar class="search-icon" :size="18" style="opacity: 0.5; color: var(--text-primary);" />
+              <span style="font-weight: 500; color: var(--text-muted);">Filter:</span>
+              <input type="date" v-model="startDate" class="form-control" style="width: 150px; border-radius: 20px; padding: 8px 15px;">
               <span style="font-weight: 500; color: var(--text-muted);">s/d</span>
-              <input type="date" v-model="endDate" class="search-input" style="border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 8px;">
-              <button @click="generateReport" class="btn btn-primary" style="padding: 8px 16px; border-radius: 20px;">Terapkan</button>
+              <input type="date" v-model="endDate" class="form-control" style="width: 150px; border-radius: 20px; padding: 8px 15px;">
+              <button @click="generateReport" class="btn btn-primary" style="padding: 8px 16px; border-radius: 20px; display: flex; align-items: center; gap: 8px;">
+                  Terapkan
+              </button>
           </div>
           <div style="display: flex; gap: 10px; flex-wrap: wrap;">
               <button @click="printBlankNota" class="btn btn-secondary" style="border-radius: 20px;">Nota Kosong</button>
               <button @click="printBlankReceipt" class="btn btn-secondary" style="border-radius: 20px;">Kwitansi Kosong</button>
               <button @click="exportExcel" class="btn" style="background-color: #10b981; color: white; border-radius: 20px; display: flex; align-items: center; gap: 6px;">
-                  <span>📊</span> Unduh Excel
+                  <FileSpreadsheet :size="18" /> Unduh Excel
               </button>
               <button @click="exportPdf" class="btn" style="background-color: #ef4444; color: white; border-radius: 20px; display: flex; align-items: center; gap: 6px;">
-                  <span>📄</span> Cetak Laporan
+                  <Printer :size="18" /> Cetak Laporan
               </button>
           </div>
       </div>
       
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 25px;">
           <div class="card" style="padding: 20px; text-align: center; border-top: 4px solid var(--primary-color);">
-              <h3 style="font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 10px;">💰 Total Pendapatan (Omset)</h3>
+              <h3 style="font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 8px;"><Wallet :size="16" /> Total Pendapatan (Omset)</h3>
               <div class="stat-value" style="font-size: 1.5rem; color: var(--primary-color);">{{ formatCurrency(totalOmset) }}</div>
           </div>
           <div class="card" style="padding: 20px; text-align: center; border-top: 4px solid #ef4444;">
-              <h3 style="font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 10px;">📉 Total Modal (HPP)</h3>
+              <h3 style="font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 8px;"><TrendingDown :size="16" /> Total Modal (HPP)</h3>
               <div class="stat-value" style="font-size: 1.5rem; color: #ef4444;">{{ formatCurrency(totalModal) }}</div>
           </div>
           <div class="card" style="padding: 20px; text-align: center; border-top: 4px solid #10b981;">
-              <h3 style="font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 10px;">📈 Laba Bersih (Profit)</h3>
+              <h3 style="font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 8px;"><TrendingUp :size="16" /> Laba Bersih (Profit)</h3>
               <div class="stat-value" style="font-size: 1.5rem; color: #10b981;">{{ formatCurrency(netProfit) }}</div>
           </div>
           <div class="card" style="padding: 20px; text-align: center; border-top: 4px solid #f59e0b;">
-              <h3 style="font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 10px;">✅ Transaksi Selesai</h3>
+              <h3 style="font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 8px;"><CheckCircle :size="16" /> Transaksi Selesai</h3>
               <div class="stat-value" style="font-size: 1.5rem; color: #f59e0b;">{{ services.length }}</div>
           </div>
       </div>
@@ -68,7 +71,7 @@
 </template>
 
 <script setup lang="ts">
-import { Search } from 'lucide-vue-next'
+import { Calendar, FileSpreadsheet, Printer, Wallet, TrendingDown, TrendingUp, CheckCircle } from 'lucide-vue-next'
 import { ref, onMounted } from 'vue'
 import { generateBlankNotaHtml, generateBlankReceiptHtml, generateReportHtml, printHtml, exportHtmlToPdf } from '../utils/printUtils.js'
 import type { ServiceOrder, Settings } from '../types'
