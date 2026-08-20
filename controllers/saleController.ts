@@ -1,3 +1,4 @@
+export {};
 const saleRepository = require('../repositories/saleRepository');
 const partRepository = require('../repositories/partRepository');
 

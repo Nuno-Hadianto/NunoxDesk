@@ -20,7 +20,7 @@
                   <div v-for="part in parts" :key="part.id" style="display: flex; justify-content: space-between; align-items: center; padding: 15px; border: 1px solid var(--border-color); border-radius: var(--radius-md); margin-bottom: 15px; background: var(--bg-color);">
                       <div>
                           <div style="font-weight: 600;">{{ part.name }}</div>
-                          <div style="font-size: 0.85rem; color: var(--text-muted);">{{ part.part_code }} | Stok: <span :style="{ color: part.stock <= (part.low_stock_threshold || 3) ? '#ef4444' : 'inherit', fontWeight: 'bold' }">{{ part.stock }} {{ part.unit }}</span></div>
+                          <div style="font-size: 0.85rem; color: var(--text-muted);">{{ part.part_code }} | Stok: <span :style="{ color: part.stock <= 3 ? '#ef4444' : 'inherit', fontWeight: 'bold' }">{{ part.stock }} {{ part.unit }}</span></div>
                           <div style="color: var(--primary-color); font-weight: 700; margin-top: 5px;">{{ formatCurrency(part.sell_price) }}</div>
                       </div>
                       <button @click="addToCart(part)" class="btn btn-primary" :disabled="part.stock <= 0" style="border-radius: 20px; padding: 8px 16px;">
@@ -80,7 +80,7 @@
                       <label style="font-size: 0.85rem;">Nominal Dibayar</label>
                       <input type="number" v-model="cashGiven" class="form-control" style="border-radius: var(--radius-sm); font-size: 1.1rem; font-weight: bold;">
                   </div>
-                  <div v-if="paymentMethod === 'Tunai' && cashGiven > 0" style="display: flex; justify-content: space-between; font-size: 1rem; margin-top: 10px; color: var(--text-muted);">
+                  <div v-if="paymentMethod === 'Tunai' && Number(cashGiven) > 0" style="display: flex; justify-content: space-between; font-size: 1rem; margin-top: 10px; color: var(--text-muted);">
                       <span>Kembalian:</span>
                       <strong :style="{ color: changeAmount >= 0 ? '#10b981' : '#ef4444' }">{{ formatCurrency(changeAmount) }}</strong>
                   </div>

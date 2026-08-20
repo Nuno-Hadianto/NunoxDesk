@@ -1,3 +1,4 @@
+export {};
 const db = require('../database/db');
 
 function createSale(saleData: any, items: any[]) {

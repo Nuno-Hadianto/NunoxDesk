@@ -1,3 +1,4 @@
+export {};
 const { app, BrowserWindow, ipcMain, dialog, shell } = require('electron');
 const path = require('path');
 const db = require('../database/db');

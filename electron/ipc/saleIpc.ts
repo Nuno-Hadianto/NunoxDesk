@@ -1,3 +1,4 @@
+export {};
 const { ipcMain } = require('electron');
 const saleController = require('../../controllers/saleController');
 
