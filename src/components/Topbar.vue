@@ -11,13 +11,12 @@
                   ref="searchInput"
                   v-model="searchQuery"
                   @keyup.enter="handleSearch"
-                  style="padding-left: 35px; border-radius: 20px; border: 1px solid var(--border-color); width: 250px; transition: width 0.3s;"
               >
           </div>
       </div>
       <div class="topbar-actions" style="display: flex; align-items: center; gap: 15px;">
-          <button @click="$emit('toggle-theme')" class="btn btn-secondary btn-sm" style="border-radius: 20px; padding: 6px 16px;">🌙 Mode Gelap</button>
-          <div style="background: var(--card-bg); padding: 6px 16px; border-radius: 20px; font-weight: 500; font-size: 0.9rem; border: 1px solid var(--border-color); color: var(--text-color);">
+          <!-- Dark mode button (Currently not functional if style.css enforces dark, but we keep it) -->
+          <div class="badge" style="background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: var(--text-primary); font-weight: 500; font-size: 0.9rem; padding: 8px 16px;">
               🕒 {{ currentDateTime }}
           </div>
       </div>

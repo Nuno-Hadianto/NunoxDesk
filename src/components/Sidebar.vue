@@ -30,10 +30,10 @@
               <li :class="{ active: $route.name === 'Settings' }"><router-link to="/settings"><span style="margin-right: 8px;">⚙️</span> Pengaturan & Backup</router-link></li>
           </ul>
           <div style="margin-top: auto; padding: 20px;">
-              <div style="margin-bottom: 10px; font-size: 0.85rem; color: #94a3b8;">
-                Login sebagai: <strong style="color: white;">{{ currentUser ? currentUser.username : '-' }}</strong>
+              <div style="margin-bottom: 15px; font-size: 0.85rem; color: var(--text-muted);">
+                Login sebagai: <strong style="color: var(--text-primary);">{{ currentUser ? currentUser.username : '-' }}</strong>
               </div>
-              <button @click="$emit('logout')" class="btn btn-secondary" style="width: 100%; border: 1px solid #ef4444; color: #ef4444; background: transparent;">Logout</button>
+              <button @click="$emit('logout')" class="btn btn-danger" style="width: 100%;">Logout</button>
           </div>
       </nav>
   </aside>
