@@ -168,9 +168,9 @@ const saveCustomer = async () => {
           timer: 1500,
           showConfirmButton: false
       })
-  } catch (error) {
+  } catch (error: any) {
       console.error(error)
-      window.Swal.fire('Error', 'Gagal menyimpan data pelanggan.', 'error')
+      window.Swal.fire('Error', error.message || 'Gagal menyimpan data pelanggan.', 'error')
   }
 }
 

@@ -1,68 +1,79 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const { contextBridge, ipcRenderer } = require('electron');
+const invokeSafe = async (channel, ...args) => {
+    try {
+        return await ipcRenderer.invoke(channel, ...args);
+    }
+    catch (error) {
+        if (error && error.message) {
+            error.message = error.message.replace(/Error invoking remote method '.*?':\s*(Error:\s*)?/, '');
+        }
+        throw error;
+    }
+};
 contextBridge.exposeInMainWorld('api', {
     appReady: () => ipcRenderer.send('app-ready'),
-    getDashboardStats: () => ipcRenderer.invoke('get-dashboard-stats'),
+    getDashboardStats: () => invokeSafe('get-dashboard-stats'),
     // Customers
-    getCustomers: (searchQuery, page, limit) => ipcRenderer.invoke('get-customers', searchQuery, page, limit),
-    getCustomer: (id) => ipcRenderer.invoke('get-customer', id),
-    addCustomer: (data) => ipcRenderer.invoke('add-customer', data),
-    updateCustomer: (id, data) => ipcRenderer.invoke('update-customer', id, data),
-    deleteCustomer: (id) => ipcRenderer.invoke('delete-customer', id),
+    getCustomers: (searchQuery, page, limit) => invokeSafe('get-customers', searchQuery, page, limit),
+    getCustomer: (id) => invokeSafe('get-customer', id),
+    addCustomer: (data) => invokeSafe('add-customer', data),
+    updateCustomer: (id, data) => invokeSafe('update-customer', id, data),
+    deleteCustomer: (id) => invokeSafe('delete-customer', id),
     // Devices
-    getDevices: (searchQuery) => ipcRenderer.invoke('get-devices', searchQuery),
-    getDevice: (id) => ipcRenderer.invoke('get-device', id),
-    getDevicesByCustomer: (customerId) => ipcRenderer.invoke('get-devices-by-customer', customerId),
-    addDevice: (data) => ipcRenderer.invoke('add-device', data),
-    updateDevice: (id, data) => ipcRenderer.invoke('update-device', id, data),
-    deleteDevice: (id) => ipcRenderer.invoke('delete-device', id),
+    getDevices: (searchQuery) => invokeSafe('get-devices', searchQuery),
+    getDevice: (id) => invokeSafe('get-device', id),
+    getDevicesByCustomer: (customerId) => invokeSafe('get-devices-by-customer', customerId),
+    addDevice: (data) => invokeSafe('add-device', data),
+    updateDevice: (id, data) => invokeSafe('update-device', id, data),
+    deleteDevice: (id) => invokeSafe('delete-device', id),
     // Services
-    getServices: (searchQuery, page, limit) => ipcRenderer.invoke('get-services', searchQuery, page, limit),
-    getService: (id) => ipcRenderer.invoke('get-service', id),
-    getServiceHistory: (id) => ipcRenderer.invoke('get-service-history', id),
-    addService: (data) => ipcRenderer.invoke('add-service', data),
-    updateServiceStatus: (id, status, notes) => ipcRenderer.invoke('update-service-status', id, status, notes),
-    updateServiceDetails: (id, data) => ipcRenderer.invoke('update-service-details', id, data),
-    deleteService: (id) => ipcRenderer.invoke('delete-service', id),
+    getServices: (searchQuery, page, limit) => invokeSafe('get-services', searchQuery, page, limit),
+    getService: (id) => invokeSafe('get-service', id),
+    getServiceHistory: (id) => invokeSafe('get-service-history', id),
+    addService: (data) => invokeSafe('add-service', data),
+    updateServiceStatus: (id, status, notes) => invokeSafe('update-service-status', id, status, notes),
+    updateServiceDetails: (id, data) => invokeSafe('update-service-details', id, data),
+    deleteService: (id) => invokeSafe('delete-service', id),
     // Parts
-    getParts: (searchQuery) => ipcRenderer.invoke('get-parts', searchQuery),
-    getPart: (id) => ipcRenderer.invoke('get-part', id),
-    addPart: (data) => ipcRenderer.invoke('add-part', data),
-    updatePart: (id, data) => ipcRenderer.invoke('update-part', id, data),
-    updatePartStock: (id, change) => ipcRenderer.invoke('update-part-stock', id, change),
-    deletePart: (id) => ipcRenderer.invoke('delete-part', id),
-    importPartsExcel: () => ipcRenderer.invoke('import-parts-excel'),
+    getParts: (searchQuery) => invokeSafe('get-parts', searchQuery),
+    getPart: (id) => invokeSafe('get-part', id),
+    addPart: (data) => invokeSafe('add-part', data),
+    updatePart: (id, data) => invokeSafe('update-part', id, data),
+    updatePartStock: (id, change) => invokeSafe('update-part-stock', id, change),
+    deletePart: (id) => invokeSafe('delete-part', id),
+    importPartsExcel: () => invokeSafe('import-parts-excel'),
     // Service Items
-    getServiceItems: (serviceId) => ipcRenderer.invoke('get-service-items', serviceId),
-    addServiceItem: (data) => ipcRenderer.invoke('add-service-item', data),
-    deleteServiceItem: (id) => ipcRenderer.invoke('delete-service-item', id),
+    getServiceItems: (serviceId) => invokeSafe('get-service-items', serviceId),
+    addServiceItem: (data) => invokeSafe('add-service-item', data),
+    deleteServiceItem: (id) => invokeSafe('delete-service-item', id),
     // Payments
-    getPayments: (serviceId) => ipcRenderer.invoke('get-payments', serviceId),
-    addPayment: (data) => ipcRenderer.invoke('add-payment', data),
-    deletePayment: (id) => ipcRenderer.invoke('delete-payment', id),
+    getPayments: (serviceId) => invokeSafe('get-payments', serviceId),
+    addPayment: (data) => invokeSafe('add-payment', data),
+    deletePayment: (id) => invokeSafe('delete-payment', id),
     // Settings
-    getSettings: () => ipcRenderer.invoke('get-settings'),
-    updateSettings: (data) => ipcRenderer.invoke('update-settings', data),
+    getSettings: () => invokeSafe('get-settings'),
+    updateSettings: (data) => invokeSafe('update-settings', data),
     // Reports
-    getIncomeReport: (start, end) => ipcRenderer.invoke('get-income-report', start, end),
-    getCompletedServices: (start, end) => ipcRenderer.invoke('get-completed-services', start, end),
-    getTopSpareparts: (start, end) => ipcRenderer.invoke('get-top-spareparts', start, end),
+    getIncomeReport: (start, end) => invokeSafe('get-income-report', start, end),
+    getCompletedServices: (start, end) => invokeSafe('get-completed-services', start, end),
+    getTopSpareparts: (start, end) => invokeSafe('get-top-spareparts', start, end),
     // Backup & Restore
-    backupDatabase: () => ipcRenderer.invoke('backup-database'),
-    restoreDatabase: () => ipcRenderer.invoke('restore-database'),
+    backupDatabase: () => invokeSafe('backup-database'),
+    restoreDatabase: () => invokeSafe('restore-database'),
     // Export
-    exportExcel: (data) => ipcRenderer.invoke('export-excel', data),
-    exportPdf: (data) => ipcRenderer.invoke('export-pdf', data),
-    openExternalUrl: (url) => ipcRenderer.invoke('open-external-url', url),
-    getLogoBase64: () => ipcRenderer.invoke('get-logo-base64'),
+    exportExcel: (data) => invokeSafe('export-excel', data),
+    exportPdf: (data) => invokeSafe('export-pdf', data),
+    openExternalUrl: (url) => invokeSafe('open-external-url', url),
+    getLogoBase64: () => invokeSafe('get-logo-base64'),
     // Print Preview
-    printPreview: (options) => ipcRenderer.invoke('print-preview', options),
+    printPreview: (options) => invokeSafe('print-preview', options),
     // Users & Auth
-    login: (username, password) => ipcRenderer.invoke('login', username, password),
-    getUsers: () => ipcRenderer.invoke('get-users'),
-    getUser: (id) => ipcRenderer.invoke('get-user', id),
-    addUser: (data) => ipcRenderer.invoke('add-user', data),
-    updateUser: (id, data) => ipcRenderer.invoke('update-user', id, data),
-    deleteUser: (id) => ipcRenderer.invoke('delete-user', id)
+    login: (username, password) => invokeSafe('login', username, password),
+    getUsers: () => invokeSafe('get-users'),
+    getUser: (id) => invokeSafe('get-user', id),
+    addUser: (data) => invokeSafe('add-user', data),
+    updateUser: (id, data) => invokeSafe('update-user', id, data),
+    deleteUser: (id) => invokeSafe('delete-user', id)
 });

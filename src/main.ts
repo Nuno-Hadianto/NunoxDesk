@@ -1,8 +1,12 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
+import Swal from 'sweetalert2'
+import Chart from 'chart.js/auto'
 
-// Memasang properti global jika diperlukan, misal untuk window.api (meskipun bisa diakses langsung via window.api di komponen Vue)
+window.Swal = Swal
+window.Chart = Chart
+
 const app = createApp(App)
 
 app.config.globalProperties.$api = window.api

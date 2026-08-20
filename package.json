@@ -64,6 +64,7 @@
   "dependencies": {
     "bcryptjs": "^3.0.3",
     "better-sqlite3": "^13.0.3",
+    "chart.js": "^4.5.1",
     "electron-log": "^5.4.4",
     "electron-updater": "^6.8.9",
     "sweetalert2": "^11.26.25",
