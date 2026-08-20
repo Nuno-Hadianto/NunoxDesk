@@ -164,7 +164,7 @@
                           </div>
                           <div style="display:flex; justify-content:space-between; font-size:0.8rem; color:#64748b;">
                               <span>{{ new Date(p.payment_date + 'Z').toLocaleString('id-ID') }} - {{ p.payment_method }}</span>
-                              <button @click="deletePayment(p.id)" class="btn btn-danger" style="padding:2px 5px; font-size:0.7rem;" style="display: inline-flex; align-items: center; gap: 6px;"><Trash2 :size="14" /> Hapus</button>
+                              <button @click="deletePayment(p.id)" class="btn btn-danger" style="padding:2px 5px; font-size:0.7rem; display: inline-flex; align-items: center; gap: 6px;"><Trash2 :size="14" /> Hapus</button>
                           </div>
                       </li>
                   </ul>

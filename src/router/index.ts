@@ -1,4 +1,5 @@
-import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
+import type { RouteRecordRaw } from 'vue-router'
 import Dashboard from '../views/Dashboard.vue'
 import Customer from '../views/Customer.vue'
 
