@@ -1,4 +1,4 @@
-export const generateNotaHtml = (settings, service, logoBase64) => {
+export const generateNotaHtml = (settings: any, service: any, logoBase64: any) => {
     settings = settings || {};
     return `
         <div class="print-nota nota-wrapper">
@@ -70,7 +70,7 @@ export const generateNotaHtml = (settings, service, logoBase64) => {
     `;
 };
 
-export const generateInvoiceHtml = (settings, service, items, payments, logoBase64) => {
+export const generateInvoiceHtml = (settings: any, service: any, items: any, payments: any, logoBase64: any) => {
     settings = settings || {};
     const formatRp = (val) => new Intl.NumberFormat('id-ID', {
         style: 'currency', currency: 'IDR', minimumFractionDigits: 0
@@ -195,7 +195,7 @@ export const generateInvoiceHtml = (settings, service, items, payments, logoBase
     `;
 };
 
-export const generateBlankNotaHtml = (settings, logoBase64) => {
+export const generateBlankNotaHtml = (settings: any, logoBase64: any) => {
     settings = settings || {};
     return `
         <div class="print-nota nota-wrapper">
@@ -267,7 +267,7 @@ export const generateBlankNotaHtml = (settings, logoBase64) => {
     `;
 };
 
-export const generateBlankReceiptHtml = (settings, logoBase64) => {
+export const generateBlankReceiptHtml = (settings: any, logoBase64: any) => {
     settings = settings || {};
     return `
         <div class="print-receipt rcpt-wrapper">
@@ -330,7 +330,7 @@ export const generateBlankReceiptHtml = (settings, logoBase64) => {
     `;
 };
 
-export const generateReportHtml = (settings, services, startDate, endDate, totalOmset, totalModal, netProfit, logoBase64, topParts = []) => {
+export const generateReportHtml = (settings: any, services: any, startDate: any, endDate: any, totalOmset: any, totalModal: any, netProfit: any, logoBase64: any, topParts: any = []) => {
     settings = settings || {};
     const formatRp = (val) => new Intl.NumberFormat('id-ID', {
         style: 'currency', currency: 'IDR', minimumFractionDigits: 0
@@ -436,7 +436,7 @@ export const generateReportHtml = (settings, services, startDate, endDate, total
     `;
 }
 
-export const printHtml = async (html, landscape = false, isThermal = false) => {
+export const printHtml = async (html: string, landscape: boolean = false, isThermal: boolean = false) => {
     const printArea = document.getElementById('print-area');
     if (printArea) {
         printArea.innerHTML = html;
@@ -472,14 +472,14 @@ export const printHtml = async (html, landscape = false, isThermal = false) => {
     }
 };
 
-export const exportHtmlToPdf = async (html, filename) => {
+export const exportHtmlToPdf = async (html: string, filename: string) => {
     if (window.api && window.api.exportPdf) {
         return await window.api.exportPdf({ html, filename });
     }
     return { success: false, error: 'API exportPdf not found' };
 };
 
-export const generateThermalNotaHtml = (settings, service, logoBase64) => {
+export const generateThermalNotaHtml = (settings: any, service: any, logoBase64: any) => {
     settings = settings || {};
     return `
         <div class="print-thermal">
