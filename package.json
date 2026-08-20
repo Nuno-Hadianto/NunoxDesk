@@ -2,18 +2,21 @@
   "name": "nunox_servis",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist-electron/electron/main.js",
   "scripts": {
     "test": "set NODE_ENV=test&& jest",
     "test:e2e": "playwright test",
-    "start": "electron electron/main.js",
-    "dev": "electron-reload electron/main.js",
+    "start": "electron dist-electron/electron/main.js",
+    "dev": "electron-reload dist-electron/electron/main.js",
+    "dev:electron:watch": "tsc -p tsconfig.electron.json -w",
     "dev:vite": "vite",
-    "dev:all": "concurrently \"npm run dev:vite\" \"npm start\"",
+    "dev:all": "concurrently \"npm run dev:vite\" \"npm run dev:electron:watch\" \"npm start\"",
+    "build:electron": "tsc -p tsconfig.electron.json",
     "build:vite": "vite build",
-    "build": "electron-builder --win",
-    "build:mac": "electron-builder --mac",
-    "build:linux": "electron-builder --linux"
+    "build:all": "npm run build:electron && npm run build:vite",
+    "build": "npm run build:all && electron-builder --win",
+    "build:mac": "npm run build:all && electron-builder --mac",
+    "build:linux": "npm run build:all && electron-builder --linux"
   },
   "build": {
     "appId": "com.nunox_servis.app",
@@ -25,11 +28,8 @@
       "target": "nsis"
     },
     "files": [
-      "electron/**/*",
-      "controllers/**/*",
-      "database/**/*",
-      "public/**/*",
-      "views/**/*"
+      "dist-electron/**/*",
+      "public/**/*"
     ]
   },
   "repository": {
@@ -47,6 +47,8 @@
   "devDependencies": {
     "@playwright/test": "^1.62.1",
     "@tsconfig/node20": "^20.1.10",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/better-sqlite3": "^9.6.0",
     "@vitejs/plugin-vue": "^6.0.8",
     "@vue/tsconfig": "^0.9.1",
     "concurrently": "^10.0.5",
@@ -54,6 +56,7 @@
     "electron-builder": "^26.15.3",
     "electron-reload": "^2.0.0-alpha.1",
     "jest": "^30.4.2",
+    "ts-node": "^10.9.2",
     "typescript": "^7.0.2",
     "vite": "^8.2.0",
     "vue-tsc": "^3.3.10"
@@ -61,6 +64,8 @@
   "dependencies": {
     "bcryptjs": "^3.0.3",
     "better-sqlite3": "^13.0.3",
+    "electron-log": "^5.4.4",
+    "electron-updater": "^6.8.9",
     "sweetalert2": "^11.26.25",
     "vue": "^3.5.40",
     "vue-router": "^4.5.0",
