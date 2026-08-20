@@ -13,8 +13,8 @@ exports.SparepartSchema = zod_1.z.object({
     name: zod_1.z.string().min(1, 'Nama sparepart wajib diisi.').max(150, 'Nama terlalu panjang.'),
     category: zod_1.z.string().optional().nullable(),
     stock: zod_1.z.number().int('Stok harus berupa bilangan bulat.').min(0, 'Stok tidak boleh negatif.'),
-    buy_price: zod_1.z.number().min(0, 'Harga beli tidak boleh negatif.'),
-    sell_price: zod_1.z.number().min(0, 'Harga jual tidak boleh negatif.'),
+    buy_price: zod_1.z.number().min(0, 'Harga beli tidak boleh negatif.').optional().default(0),
+    sell_price: zod_1.z.number().min(0, 'Harga jual tidak boleh negatif.').optional().default(0),
     unit: zod_1.z.string().optional().nullable(),
     notes: zod_1.z.string().optional().nullable(),
 });
@@ -63,7 +63,7 @@ const validateData = (schema, data) => {
     catch (error) {
         if (error instanceof zod_1.z.ZodError) {
             // Flatten error messages to a single readable string
-            const errMessages = error.errors.map((err) => err.message).join(' | ');
+            const errMessages = error.issues.map((err) => err.message).join(' | ');
             throw new Error(`Validasi Gagal: ${errMessages}`);
         }
         throw error;
