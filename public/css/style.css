@@ -34,6 +34,14 @@
   
   /* Transitions */
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Component Inline Variables (Aliases) */
+  --border-color: var(--glass-border);
+  --card-bg: rgba(30, 41, 59, 0.6);
+  --bg-color: #0f172a;
+  --radius-sm: var(--border-radius-sm);
+  --radius-md: var(--border-radius);
+  --radius-lg: 24px;
 }
 
 /* Light mode overrides - Optional but keeping it fallback-ready */
@@ -45,6 +53,10 @@ body:not(.dark-mode) {
   --text-secondary: #475569;
   --text-muted: #94a3b8;
   --glass-shadow: 0 8px 32px 0 rgba(148, 163, 184, 0.2);
+
+  /* Component Inline Variables Overrides */
+  --card-bg: rgba(255, 255, 255, 0.9);
+  --bg-color: #f1f5f9;
 }
 
 /* --- Global Reset & Typography --- */
