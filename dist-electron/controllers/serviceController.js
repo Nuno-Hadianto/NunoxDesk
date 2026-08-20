@@ -18,8 +18,8 @@ function addService(data) {
     const validData = validateData(ServiceOrderSchema, data);
     return serviceRepository.addService(validData);
 }
-function updateServiceStatus(id, status, notes) {
-    return serviceRepository.updateServiceStatus(id, status, notes);
+function updateServiceStatus(id, status, notes, warrantyDays = 0) {
+    return serviceRepository.updateServiceStatus(id, status, notes, warrantyDays);
 }
 function updateServiceDetails(id, data) {
     // For update details, some fields might not be present (like customer_id), so we should use partial validation
@@ -29,6 +29,23 @@ function updateServiceDetails(id, data) {
 function deleteService(id) {
     return serviceRepository.deleteService(id);
 }
+function addPhoto(serviceOrderId, photoType, filepath) {
+    return serviceRepository.addPhoto(serviceOrderId, photoType, filepath);
+}
+function getPhotos(serviceOrderId) {
+    return serviceRepository.getPhotos(serviceOrderId);
+}
+function deletePhoto(id) {
+    // maybe we should delete the file from disk here too, or in IPC handler. 
+    // IPC handler will call deletePhoto from disk.
+    return serviceRepository.deletePhoto(id);
+}
+function getPhotoById(id) {
+    return serviceRepository.getPhotoById(id);
+}
+function checkWarranty(deviceId) {
+    return serviceRepository.checkWarranty(deviceId);
+}
 module.exports = {
     getServices,
     getServiceById,
@@ -36,5 +53,10 @@ module.exports = {
     addService,
     updateServiceStatus,
     updateServiceDetails,
-    deleteService
+    deleteService,
+    addPhoto,
+    getPhotos,
+    deletePhoto,
+    getPhotoById,
+    checkWarranty
 };

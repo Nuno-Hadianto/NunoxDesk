@@ -33,6 +33,9 @@
                           <span class="badge" :style="getStatusColor(s.service_status)">
                               {{ s.service_status }}
                           </span>
+                          <span v-if="isWarrantyActive(s.warranty_end_date)" style="display: inline-block; margin-top: 4px; padding: 2px 6px; border-radius: 4px; background: #10b981; color: white; font-size: 0.75rem; font-weight: bold;">
+                              🛡️ Garansi Aktif
+                          </span>
                       </td>
                       <td>{{ formatCurrency(s.total_cost) }}</td>
                       <td>
@@ -70,7 +73,7 @@
                       </div>
                       <div class="form-group">
                           <label>Perangkat</label>
-                          <select v-model="form.device_id" required :disabled="!form.customer_id" style="border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px; width: 100%;">
+                          <select v-model="form.device_id" @change="onDeviceChange" required :disabled="!form.customer_id" style="border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px; width: 100%;">
                               <option value="">-- Pilih Perangkat --</option>
                               <option v-for="d in customerDevices" :key="d.id" :value="d.id">
                                   {{ d.brand || '' }} {{ d.model || '' }} - {{ d.device_type }} (SN: {{ d.serial_number || '-' }})
@@ -155,6 +158,11 @@ const getStatusColor = (status: string) => {
   }
 }
 
+const isWarrantyActive = (dateStr?: string) => {
+    if (!dateStr) return false
+    return new Date(dateStr) >= new Date()
+}
+
 const loadServices = async (page: number = 1) => {
   if (window.api && window.api.getServices) {
       try {
@@ -181,6 +189,25 @@ const onCustomerChange = async () => {
   if (form.customer_id && window.api && window.api.getDevicesByCustomer) {
       customerDevices.value = (await window.api.getDevicesByCustomer(form.customer_id)) as Device[]
   }
+}
+
+const onDeviceChange = async () => {
+    if (form.device_id && window.api && window.api.checkWarranty) {
+        try {
+            const warranty = await window.api.checkWarranty(form.device_id)
+            if (warranty) {
+                const dateStr = new Date(warranty.warranty_end_date).toLocaleDateString('id-ID')
+                window.Swal.fire({
+                    icon: 'warning',
+                    title: 'Perhatian!',
+                    html: `Perangkat ini <b>masih dalam masa garansi</b> dari tiket <b>${warranty.ticket_number}</b> hingga tanggal <b>${dateStr}</b>.`,
+                    confirmButtonText: 'Tutup'
+                })
+            }
+        } catch (error) {
+            console.error("Gagal mengecek garansi", error)
+        }
+    }
 }
 
 const goToDetail = (id: number) => {

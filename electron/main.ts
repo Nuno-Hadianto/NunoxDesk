@@ -71,6 +71,21 @@ app.commandLine.appendSwitch('disable-gpu-shader-disk-cache');
 app.commandLine.appendSwitch('disable-http-cache');
 
 app.whenReady().then(() => {
+  // Auto-Migration
+  try {
+    db.prepare('ALTER TABLE service_orders ADD COLUMN warranty_end_date DATETIME').run();
+    log.info('Added warranty_end_date column to service_orders.');
+  } catch (e) {
+    // Column might already exist, ignore.
+  }
+  
+  // Create photos directory
+  const fs = require('fs');
+  const photosDir = path.join(app.getPath('userData'), 'photos');
+  if (!fs.existsSync(photosDir)) {
+    fs.mkdirSync(photosDir, { recursive: true });
+  }
+
   createWindow();
 
   // Check for updates

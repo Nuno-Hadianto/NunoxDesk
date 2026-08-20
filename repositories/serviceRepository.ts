@@ -90,7 +90,7 @@ function addService(data: ServiceOrder) {
     return tx();
 }
 
-function updateServiceStatus(id, status, notes) {
+function updateServiceStatus(id, status, notes, warrantyDays = 0) {
     const tx = db.transaction(() => {
         const stmt = db.prepare(`UPDATE service_orders SET service_status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?`);
         stmt.run(status, id);
@@ -105,6 +105,11 @@ function updateServiceStatus(id, status, notes) {
             if (!so.completed_date) {
                 const finishStmt = db.prepare(`UPDATE service_orders SET completed_date = CURRENT_TIMESTAMP WHERE id = ?`);
                 finishStmt.run(id);
+            }
+            
+            if (warrantyDays > 0) {
+                const wStmt = db.prepare(`UPDATE service_orders SET warranty_end_date = datetime('now', '+' || ? || ' days') WHERE id = ?`);
+                wStmt.run(warrantyDays, id);
             }
         }
         
@@ -145,6 +150,41 @@ function deleteService(id: number | string) {
     return tx();
 }
 
+// Photos logic
+function addPhoto(serviceOrderId, photoType, filepath) {
+    const stmt = db.prepare(`INSERT INTO service_photos (service_order_id, photo_type, filepath) VALUES (?, ?, ?)`);
+    const info = stmt.run(serviceOrderId, photoType, filepath);
+    return info.lastInsertRowid;
+}
+
+function getPhotos(serviceOrderId) {
+    const stmt = db.prepare(`SELECT * FROM service_photos WHERE service_order_id = ? ORDER BY id ASC`);
+    return stmt.all(serviceOrderId);
+}
+
+function getPhotoById(id) {
+    const stmt = db.prepare(`SELECT * FROM service_photos WHERE id = ?`);
+    return stmt.get(id);
+}
+
+function deletePhoto(id) {
+    const stmt = db.prepare(`DELETE FROM service_photos WHERE id = ?`);
+    stmt.run(id);
+    return true;
+}
+
+// Warranty Logic
+function checkWarranty(deviceId) {
+    const stmt = db.prepare(`
+        SELECT ticket_number, warranty_end_date 
+        FROM service_orders 
+        WHERE device_id = ? AND warranty_end_date IS NOT NULL AND warranty_end_date >= datetime('now') 
+        ORDER BY warranty_end_date DESC 
+        LIMIT 1
+    `);
+    return stmt.get(deviceId) || null;
+}
+
 module.exports = {
     generateTicketNumber,
     getServices,
@@ -153,5 +193,10 @@ module.exports = {
     addService,
     updateServiceStatus,
     updateServiceDetails,
-    deleteService
+    deleteService,
+    addPhoto,
+    getPhotos,
+    getPhotoById,
+    deletePhoto,
+    checkWarranty
 };

@@ -97,6 +97,31 @@
                       </ul>
                   </div>
               </div>
+
+              <!-- Photo Gallery -->
+              <div style="margin-top: 30px; border-top: 1px solid var(--border-color); padding-top: 20px;">
+                  <h3 style="margin-bottom: 15px; font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">📸 Dokumentasi Visual</h3>
+                  
+                  <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+                      <label class="btn btn-secondary" style="cursor: pointer; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem;">
+                          + Foto Sebelum
+                          <input type="file" style="display: none;" accept="image/*" @change="e => handlePhotoUpload(e, 'Sebelum')">
+                      </label>
+                      <label class="btn btn-secondary" style="cursor: pointer; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem;">
+                          + Foto Sesudah
+                          <input type="file" style="display: none;" accept="image/*" @change="e => handlePhotoUpload(e, 'Sesudah')">
+                      </label>
+                  </div>
+                  
+                  <div v-if="photos.length > 0" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px;">
+                      <div v-for="p in photos" :key="p.id" style="position: relative; border-radius: var(--radius-sm); overflow: hidden; border: 1px solid var(--glass-border); aspect-ratio: 1; background: var(--bg-color);">
+                          <img :src="'file:///' + p.filepath.replace(/\\\\/g, '/')" style="width: 100%; height: 100%; object-fit: cover; cursor: pointer; transition: transform 0.2s;" @click="previewImage = p.filepath" class="photo-thumbnail">
+                          <div style="position: absolute; bottom: 0; left: 0; width: 100%; background: rgba(0,0,0,0.6); color: white; font-size: 0.7rem; padding: 4px; text-align: center; backdrop-filter: blur(4px);">{{ p.photo_type }}</div>
+                          <button @click="deletePhoto(p.id)" style="position: absolute; top: 4px; right: 4px; background: rgba(239,68,68,0.9); color: white; border: none; border-radius: 50%; width: 22px; height: 22px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">&times;</button>
+                      </div>
+                  </div>
+                  <div v-else style="color: var(--text-muted); font-size: 0.85rem; font-style: italic;">Belum ada foto dokumentasi.</div>
+              </div>
           </div>
           
           <!-- Sebelah kanan untuk history dan sparepart -->
@@ -212,6 +237,14 @@
               </button>
           </div>
       </div>
+      
+      <!-- Image Preview Modal -->
+      <div v-if="previewImage" class="modal show" @click.self="previewImage = null" style="background: rgba(0,0,0,0.85);">
+          <div style="position: relative; max-width: 90vw; max-height: 90vh; display: flex; flex-direction: column; align-items: center;">
+              <span class="close-modal" @click="previewImage = null" style="position: absolute; top: -40px; right: 0; color: white; font-size: 2.5rem; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">&times;</span>
+              <img :src="'file:///' + previewImage.replace(/\\\\/g, '/')" style="max-width: 100%; max-height: 85vh; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); object-fit: contain;">
+          </div>
+      </div>
   </div>
 </template>
 
@@ -219,7 +252,7 @@
 import { Edit, Trash2 } from 'lucide-vue-next'
 import { ref, reactive, computed, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import type { ServiceOrder, ServiceHistory, ServiceItem, Payment, Part, Settings } from '../types'
+import type { ServiceOrder, ServiceHistory, ServiceItem, Payment, Part, Settings, Photo } from '../types'
 import { generateNotaHtml, generateInvoiceHtml, generateThermalNotaHtml, printHtml, exportHtmlToPdf } from '../utils/printUtils.js'
 
 const route = useRoute()
@@ -230,6 +263,8 @@ const history = ref<ServiceHistory[]>([])
 const items = ref<ServiceItem[]>([])
 const payments = ref<Payment[]>([])
 const parts = ref<Part[]>([])
+const photos = ref<Photo[]>([])
+const previewImage = ref<string | null>(null)
 
 const updateForm = reactive({
   status: '',
@@ -346,6 +381,47 @@ const loadParts = async () => {
   }
 }
 
+const loadPhotos = async () => {
+  const id = route.params.id as string
+  if (window.api && window.api.getPhotos) {
+      photos.value = (await window.api.getPhotos(id)) as Photo[]
+  }
+}
+
+const handlePhotoUpload = async (e: Event, type: string) => {
+    const target = e.target as HTMLInputElement
+    if (!target.files || target.files.length === 0) return
+    const file = target.files[0]
+    
+    // Convert to ArrayBuffer
+    const buffer = await file.arrayBuffer()
+    
+    try {
+        const result = await window.api.uploadPhoto(service.value?.id, type, buffer, file.name)
+        if (result.success) {
+            await loadPhotos()
+        } else {
+            window.Swal.fire('Error', 'Gagal mengunggah foto.', 'error')
+        }
+    } catch (error: any) {
+        window.Swal.fire('Error', error.message || 'Terjadi kesalahan.', 'error')
+    }
+    target.value = '' // reset input
+}
+
+const deletePhoto = async (id: number) => {
+    const result = await window.Swal.fire({
+        title: 'Hapus foto ini?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Ya, Hapus'
+    })
+    if (result.isConfirmed) {
+        await window.api.deletePhoto(id)
+        await loadPhotos()
+    }
+}
+
 const saveUpdate = async () => {
   if (!service.value) return
   try {
@@ -357,7 +433,22 @@ const saveUpdate = async () => {
       await window.api.updateServiceDetails(service.value.id, data)
       
       if (updateForm.status !== service.value.service_status) {
-          await window.api.updateServiceStatus(service.value.id, updateForm.status, updateForm.actions_taken || 'Status diupdate')
+          let warrantyDays = 0
+          if (updateForm.status.includes('Selesai')) {
+              const { value: days } = await window.Swal.fire({
+                  title: 'Atur Garansi',
+                  text: 'Berapa hari garansi untuk servis ini? (Isi 0 jika tidak ada)',
+                  input: 'number',
+                  inputValue: 0,
+                  showCancelButton: true,
+                  confirmButtonText: 'Simpan',
+                  cancelButtonText: 'Batal'
+              })
+              if (days) {
+                  warrantyDays = parseInt(days)
+              }
+          }
+          await window.api.updateServiceStatus(service.value.id, updateForm.status, updateForm.actions_taken || 'Status diupdate', warrantyDays)
       }
 
       window.Swal.fire({
@@ -596,6 +687,7 @@ onMounted(async () => {
   await loadItems()
   await loadPayments()
   await loadParts()
+  await loadPhotos()
   
   // Set default payment nominal
   if (remainingBill.value > 0) {

@@ -35,9 +35,17 @@ contextBridge.exposeInMainWorld('api', {
   getService: (id) => invokeSafe('get-service', id),
   getServiceHistory: (id) => invokeSafe('get-service-history', id),
   addService: (data) => invokeSafe('add-service', data),
-  updateServiceStatus: (id, status, notes) => invokeSafe('update-service-status', id, status, notes),
+  updateServiceStatus: (id, status, notes, warrantyDays = 0) => invokeSafe('update-service-status', id, status, notes, warrantyDays),
   updateServiceDetails: (id, data) => invokeSafe('update-service-details', id, data),
   deleteService: (id) => invokeSafe('delete-service', id),
+
+  // Warranty
+  checkWarranty: (deviceId) => invokeSafe('check-warranty', deviceId),
+
+  // Photos
+  uploadPhoto: (serviceId, type, buffer, fileName) => invokeSafe('upload-photo', serviceId, type, buffer, fileName),
+  getPhotos: (serviceId) => invokeSafe('get-photos', serviceId),
+  deletePhoto: (id) => invokeSafe('delete-photo', id),
 
   // Parts
   getParts: (searchQuery) => invokeSafe('get-parts', searchQuery),

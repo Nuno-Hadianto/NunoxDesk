@@ -99,6 +99,7 @@ export interface ServiceOrder {
   diagnosis_result?: string;
   actions_taken?: string;
   technician_notes?: string;
+  warranty_end_date?: string;
 }
 
 export interface ServiceHistory {
@@ -137,4 +138,12 @@ export interface Settings {
   whatsapp?: string;
   address: string;
   receipt_footer: string;
+}
+
+export interface Photo {
+  id: number;
+  service_order_id: number;
+  photo_type: string;
+  filepath: string;
+  created_at: string;
 }

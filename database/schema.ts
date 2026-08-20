@@ -129,6 +129,15 @@ CREATE INDEX IF NOT EXISTS idx_service_orders_customer ON service_orders(custome
 CREATE INDEX IF NOT EXISTS idx_service_orders_device ON service_orders(device_id);
 CREATE INDEX IF NOT EXISTS idx_service_items_order ON service_items(service_order_id);
 CREATE INDEX IF NOT EXISTS idx_payments_order ON payments(service_order_id);
+
+CREATE TABLE IF NOT EXISTS service_photos (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    service_order_id INTEGER NOT NULL,
+    photo_type TEXT NOT NULL,
+    filepath TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (service_order_id) REFERENCES service_orders(id) ON DELETE CASCADE
+);
 `;
 
 const insertDefaultSettings = `
