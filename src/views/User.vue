@@ -155,8 +155,9 @@ const saveUser = async () => {
               window.Swal.fire('Error', res.error || 'Gagal menyimpan.', 'error')
           }
       }
-  } catch (error) {
+  } catch (error: any) {
       console.error(error)
+      window.Swal.fire('Error', error.message || 'Gagal menyimpan data.', 'error')
   }
 }
 

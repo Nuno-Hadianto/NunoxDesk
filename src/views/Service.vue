@@ -220,9 +220,9 @@ const saveService = async () => {
           timer: 1500,
           showConfirmButton: false
       })
-  } catch (error) {
+  } catch (error: any) {
       console.error(error)
-      window.Swal.fire('Error', 'Gagal membuat tiket servis.', 'error')
+      window.Swal.fire('Error', error.message || 'Gagal membuat tiket servis.', 'error')
   }
 }
 

@@ -227,9 +227,9 @@ const savePart = async () => {
           timer: 1500,
           showConfirmButton: false
       })
-  } catch (error) {
+  } catch (error: any) {
       console.error(error)
-      window.Swal.fire('Error', 'Gagal menyimpan data sparepart.', 'error')
+      window.Swal.fire('Error', error.message || 'Gagal menyimpan data.', 'error')
   }
 }
 

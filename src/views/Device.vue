@@ -225,9 +225,9 @@ const saveDevice = async () => {
           timer: 1500,
           showConfirmButton: false
       })
-  } catch (error) {
+  } catch (error: any) {
       console.error(error)
-      window.Swal.fire('Error', 'Gagal menyimpan data perangkat.', 'error')
+      window.Swal.fire('Error', error.message || 'Gagal menyimpan perangkat.', 'error')
   }
 }
 
