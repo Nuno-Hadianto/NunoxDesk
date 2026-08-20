@@ -3,7 +3,7 @@
       <div class="topbar-title" style="display: flex; align-items: center; gap: 20px;">
           <h1>{{ title }}</h1>
           <div class="global-search-container" style="position: relative;">
-              <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); opacity: 0.5;">🔍</span>
+              <Search class="search-icon" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); opacity: 0.5; width: 18px; height: 18px; color: var(--text-primary);" />
               <input 
                   type="text" 
                   class="global-search-input" 
@@ -11,16 +11,17 @@
                   ref="searchInput"
                   v-model="searchQuery"
                   @keyup.enter="handleSearch"
+                  style="padding-left: 38px;"
               >
           </div>
       </div>
       <div class="topbar-actions" style="display: flex; align-items: center; gap: 15px;">
-          <div class="badge" style="background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: var(--text-primary); font-weight: 500; font-size: 0.9rem; padding: 8px 16px;">
-              🕒 {{ currentDateTime }}
+          <div class="badge" style="background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: var(--text-primary); font-weight: 500; font-size: 0.9rem; padding: 8px 16px; display: flex; align-items: center; gap: 8px;">
+              <Clock size="16" /> {{ currentDateTime }}
           </div>
-          <button @click="toggleTheme" class="btn" style="background: rgba(255,255,255,0.1); border: 1px solid var(--glass-border); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; color: var(--text-primary); font-size: 1.2rem; transition: var(--transition);">
-              <span v-if="isDark">☀️</span>
-              <span v-else>🌙</span>
+          <button @click="toggleTheme" class="btn" style="background: rgba(255,255,255,0.1); border: 1px solid var(--glass-border); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; color: var(--text-primary); transition: var(--transition);">
+              <Sun v-if="isDark" size="20" />
+              <Moon v-else size="20" />
           </button>
       </div>
   </header>
@@ -29,6 +30,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { Search, Clock, Sun, Moon } from 'lucide-vue-next'
 
 defineProps<{
   title?: string

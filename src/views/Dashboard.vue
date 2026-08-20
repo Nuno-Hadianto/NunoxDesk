@@ -2,27 +2,37 @@
   <div class="fade-in" style="padding-bottom: 20px;">
       <div class="stats-grid">
           <div class="stat-card">
-              <span class="icon">🛠️</span>
+              <div class="icon-wrapper" style="background: rgba(99,102,241,0.15); color: var(--primary); padding: 12px; border-radius: 50%; display: inline-flex; margin-bottom: 12px;">
+                  <Wrench size="28" stroke-width="2" />
+              </div>
               <h3>Servis Hari Ini</h3>
               <p class="stat-value">{{ stats.todayServices }}</p>
           </div>
           <div class="stat-card">
-              <span class="icon">⏳</span>
+              <div class="icon-wrapper" style="background: rgba(245,158,11,0.15); color: var(--warning); padding: 12px; border-radius: 50%; display: inline-flex; margin-bottom: 12px;">
+                  <Hourglass size="28" stroke-width="2" />
+              </div>
               <h3>Sedang Dikerjakan</h3>
               <p class="stat-value">{{ stats.inProgress }}</p>
           </div>
           <div class="stat-card">
-              <span class="icon">✅</span>
+              <div class="icon-wrapper" style="background: rgba(16,185,129,0.15); color: var(--success); padding: 12px; border-radius: 50%; display: inline-flex; margin-bottom: 12px;">
+                  <CheckCircle size="28" stroke-width="2" />
+              </div>
               <h3>Selesai</h3>
               <p class="stat-value">{{ stats.completed }}</p>
           </div>
           <div class="stat-card">
-              <span class="icon">💰</span>
+              <div class="icon-wrapper" style="background: rgba(59,130,246,0.15); color: var(--info); padding: 12px; border-radius: 50%; display: inline-flex; margin-bottom: 12px;">
+                  <Wallet size="28" stroke-width="2" />
+              </div>
               <h3>Pendapatan Bulan Ini</h3>
               <p class="stat-value">{{ formatCurrency(stats.incomeMonth) }}</p>
           </div>
           <div class="stat-card">
-              <span class="icon">📈</span>
+              <div class="icon-wrapper" style="background: rgba(16,185,129,0.15); color: var(--success); padding: 12px; border-radius: 50%; display: inline-flex; margin-bottom: 12px;">
+                  <TrendingUp size="28" stroke-width="2" />
+              </div>
               <h3>Laba Bersih Bulan Ini</h3>
               <p class="stat-value" :class="stats.labaBersih >= 0 ? 'text-success' : 'text-danger'">
                 {{ formatCurrency(stats.labaBersih) }}
@@ -41,8 +51,8 @@
       <div style="display: flex; flex-direction: column; gap: 25px;">
           <!-- Peringatan Barang Terlantar -->
           <div class="card warning-card">
-              <h2 style="margin-bottom: 15px; font-size: 1.2rem; display: flex; align-items: center; gap: 8px;">
-                  <span style="color: var(--danger);">🚨 Peringatan Follow-up Pelanggan</span>
+              <h2 style="margin-bottom: 15px; font-size: 1.2rem; display: flex; align-items: center; gap: 8px; color: var(--danger);">
+                  <AlertOctagon size="24" /> Peringatan Follow-up Pelanggan
               </h2>
               <div class="table-container" style="max-height: 250px;">
                   <table class="data-table">
@@ -73,8 +83,8 @@
 
           <!-- Peringatan Stok -->
           <div class="card warning-card">
-              <h2 style="margin-bottom: 15px; font-size: 1.2rem; display: flex; align-items: center; gap: 8px;">
-                  <span style="color: var(--warning);">⚠️ Peringatan Stok Sparepart Menipis</span>
+              <h2 style="margin-bottom: 15px; font-size: 1.2rem; display: flex; align-items: center; gap: 8px; color: var(--warning);">
+                  <AlertTriangle size="24" /> Peringatan Stok Sparepart Menipis
               </h2>
               <div class="table-container" style="max-height: 250px;">
                   <table class="data-table">
@@ -109,6 +119,9 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { Wrench, Hourglass, CheckCircle, Wallet, TrendingUp, AlertOctagon, AlertTriangle } from 'lucide-vue-next'
+import { Chart, registerables } from 'chart.js'
 import type { DashboardStats } from '../types'
 
 const stats = ref<DashboardStats>({
