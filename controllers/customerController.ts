@@ -1,5 +1,6 @@
 import { Customer } from '../src/types';
 const customerRepository = require('../repositories/customerRepository');
+const { CustomerSchema, validateData } = require('../src/utils/validators');
 
 function getCustomers(searchQuery: string = '', page: number = 1, limit: number = 50) {
     return customerRepository.getCustomers(searchQuery, page, limit);
@@ -10,11 +11,13 @@ function getCustomerById(id: number | string) {
 }
 
 function addCustomer(data: Customer) {
-    return customerRepository.addCustomer(data);
+    const validData = validateData(CustomerSchema, data);
+    return customerRepository.addCustomer(validData);
 }
 
 function updateCustomer(id: number | string, data: Customer) {
-    return customerRepository.updateCustomer(id, data);
+    const validData = validateData(CustomerSchema, data);
+    return customerRepository.updateCustomer(id, validData);
 }
 
 function deleteCustomer(id: number | string) {

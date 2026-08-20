@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const partRepository = require('../repositories/partRepository');
+const { SparepartSchema, validateData } = require('../src/utils/validators');
 function getParts(searchQuery = '') {
     return partRepository.getParts(searchQuery);
 }
@@ -8,10 +9,12 @@ function getPartById(id) {
     return partRepository.getPartById(id);
 }
 function addPart(data) {
-    return partRepository.addPart(data);
+    const validData = validateData(SparepartSchema, data);
+    return partRepository.addPart(validData);
 }
 function updatePart(id, data) {
-    return partRepository.updatePart(id, data);
+    const validData = validateData(SparepartSchema, data);
+    return partRepository.updatePart(id, validData);
 }
 function updatePartStock(id, change) {
     return partRepository.updatePartStock(id, change);

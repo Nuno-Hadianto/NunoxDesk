@@ -1,5 +1,6 @@
 import { Device } from '../src/types';
 const deviceRepository = require('../repositories/deviceRepository');
+const { DeviceSchema, validateData } = require('../src/utils/validators');
 
 function getDevices(searchQuery = '') {
     return deviceRepository.getDevices(searchQuery);
@@ -14,11 +15,13 @@ function getDevicesByCustomerId(customerId) {
 }
 
 function addDevice(data: Device) {
-    return deviceRepository.addDevice(data);
+    const validData = validateData(DeviceSchema, data);
+    return deviceRepository.addDevice(validData);
 }
 
 function updateDevice(id: number | string, data: Device) {
-    return deviceRepository.updateDevice(id, data);
+    const validData = validateData(DeviceSchema, data);
+    return deviceRepository.updateDevice(id, validData);
 }
 
 function deleteDevice(id: number | string) {

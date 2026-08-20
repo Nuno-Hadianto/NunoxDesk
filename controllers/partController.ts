@@ -1,5 +1,6 @@
 import { Part } from '../src/types';
 const partRepository = require('../repositories/partRepository');
+const { SparepartSchema, validateData } = require('../src/utils/validators');
 
 function getParts(searchQuery = '') {
     return partRepository.getParts(searchQuery);
@@ -10,11 +11,13 @@ function getPartById(id: number | string) {
 }
 
 function addPart(data: Part) {
-    return partRepository.addPart(data);
+    const validData = validateData(SparepartSchema, data);
+    return partRepository.addPart(validData);
 }
 
 function updatePart(id: number | string, data: Part) {
-    return partRepository.updatePart(id, data);
+    const validData = validateData(SparepartSchema, data);
+    return partRepository.updatePart(id, validData);
 }
 
 function updatePartStock(id, change) {

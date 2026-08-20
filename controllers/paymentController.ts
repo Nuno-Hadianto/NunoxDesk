@@ -1,12 +1,14 @@
 import { Payment } from '../src/types';
 const paymentRepository = require('../repositories/paymentRepository');
+const { PaymentSchema, validateData } = require('../src/utils/validators');
 
 function getPaymentsByServiceId(serviceOrderId) {
     return paymentRepository.getPaymentsByServiceId(serviceOrderId);
 }
 
 function addPayment(data: Payment) {
-    return paymentRepository.addPayment(data);
+    const validData = validateData(PaymentSchema, data);
+    return paymentRepository.addPayment(validData);
 }
 
 function deletePayment(id: number | string) {

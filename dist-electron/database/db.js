@@ -22,6 +22,7 @@ else {
     dbPath = path.join(__dirname, 'nunox_servis.db');
 }
 const db = new Database(dbPath);
+db.pragma('foreign_keys = ON');
 function initializeDB() {
     try {
         db.exec(schema.createTables);

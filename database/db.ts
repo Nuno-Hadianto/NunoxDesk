@@ -20,6 +20,7 @@ if (process.env.NODE_ENV === 'test') {
 }
 
 const db = new Database(dbPath);
+db.pragma('foreign_keys = ON');
 
 function initializeDB() {
     try {
