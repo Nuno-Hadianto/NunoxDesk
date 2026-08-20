@@ -138,7 +138,7 @@
                               </div>
                               <div style="display: flex; align-items: center; gap: 15px;">
                                   <span style="font-weight: 700; color: var(--primary-color);">{{ formatCurrency(item.subtotal) }}</span>
-                                  <button @click="deleteItem(item.id)" class="btn btn-danger" style="padding: 4px 8px; font-size: 0.75rem; border-radius: 4px; opacity: 0.8;" style="display: inline-flex; align-items: center; gap: 6px;"><Trash2 :size="14" /> Hapus</button>
+                                  <button @click="deleteItem(item.id)" class="btn btn-danger" style="padding: 4px 8px; font-size: 0.75rem; border-radius: 4px; opacity: 0.8; display: inline-flex; align-items: center; gap: 6px;"><Trash2 :size="14" /> Hapus</button>
                               </div>
                           </li>
                       </ul>
