@@ -1,7 +1,10 @@
 <template>
   <div v-if="!isLoggedIn" class="login-screen fade-in">
     <div class="login-card">
-        <img src="/img/logo.png" alt="nuNox_servis" style="max-width: 250px; margin-bottom: 20px;" />
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; margin-bottom: 30px;">
+            <img src="/img/logo.png" alt="nuNox_servis Logo" style="width: 100%; max-width: 320px; height: auto; object-fit: contain;" />
+            <h2 style="margin: 0; color: var(--text-primary); font-size: 2rem; font-weight: 800; letter-spacing: -0.5px;">nuNox_<span style="color: var(--primary);">servis</span></h2>
+        </div>
         <form @submit.prevent="handleLogin" style="display: flex; flex-direction: column; gap: 20px;">
             <div class="form-group" style="text-align: left;">
                 <label>Username</label>
