@@ -50,14 +50,25 @@ function getDashboardStats() {
         const yyyymm = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
         const monthName = d.toLocaleString('id-ID', { month: 'short' });
         
-        const row = chartDataRaw.find(r => r.month === yyyymm);
+        const row = chartDataRaw.find((r: any) => r.month === yyyymm);
         chartLabels.push(monthName);
         chartValues.push(row ? row.total : 0);
     }
 
-    // Peringatan Stok Menipis (Stok <= 5)
-    const lowStockParts = db.prepare(`SELECT * FROM spare_parts WHERE stock <= 5 ORDER BY stock ASC LIMIT 10`).all();
+    // Get threshold from settings
+    let threshold = 3; // default
+    try {
+        const settingsQuery = db.prepare(`SELECT value FROM settings WHERE key = 'low_stock_threshold'`);
+        const row = settingsQuery.get();
+        if (row && row.value !== undefined) {
+            threshold = Number(row.value);
+        }
+    } catch (e) {
+        // ignore
+    }
 
+    // Peringatan Stok Menipis (Stok <= threshold)
+    const lowStockParts = db.prepare(`SELECT * FROM spare_parts WHERE stock <= ? ORDER BY stock ASC LIMIT 20`).all(threshold);
     // Barang Terlantar / Follow Up
     // 1. Menunggu Sparepart > 7 hari
     const waitingQuery = db.prepare(`

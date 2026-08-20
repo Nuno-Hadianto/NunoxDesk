@@ -2,13 +2,14 @@ const { ipcMain, dialog } = require('electron');
 const xlsx = require('xlsx');
 const partController = require('../../controllers/partController');
 
-function registerPartIpc(mainWindow) {
-  ipcMain.handle('get-parts', (event, searchQuery) => partController.getParts(searchQuery));
-  ipcMain.handle('get-part', (event, id) => partController.getPartById(id));
-  ipcMain.handle('add-part', (event, data) => partController.addPart(data));
-  ipcMain.handle('update-part', (event, id, data) => partController.updatePart(id, data));
-  ipcMain.handle('update-part-stock', (event, id, change) => partController.updatePartStock(id, change));
-  ipcMain.handle('delete-part', (event, id) => partController.deletePart(id));
+function registerPartIpc(mainWindow: any) {
+  ipcMain.handle('get-parts', (event: any, searchQuery: any) => partController.getParts(searchQuery));
+  ipcMain.handle('get-part', (event: any, id: any) => partController.getPartById(id));
+  ipcMain.handle('add-part', (event: any, data: any) => partController.addPart(data));
+  ipcMain.handle('update-part', (event: any, id: any, data: any) => partController.updatePart(id, data));
+  ipcMain.handle('update-part-stock', (event: any, id: any, change: any) => partController.updatePartStock(id, change));
+  ipcMain.handle('delete-part', (event: any, id: any) => partController.deletePart(id));
+  ipcMain.handle('get-low-stock-parts', (event: any, threshold: any) => partController.getLowStockParts(threshold));
 
   ipcMain.handle('import-parts-excel', async () => {
     try {
@@ -31,7 +32,7 @@ function registerPartIpc(mainWindow) {
 
       const result = partController.importParts(data);
       return { success: true, result };
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error importing excel:', error);
       return { success: false, error: error.message };
     }

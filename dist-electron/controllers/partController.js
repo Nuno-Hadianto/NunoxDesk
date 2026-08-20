@@ -29,6 +29,9 @@ function deletePart(id) {
 function importParts(dataArray) {
     return partRepository.importParts(dataArray);
 }
+function getLowStockParts(threshold) {
+    return partRepository.getLowStockParts(threshold);
+}
 module.exports = {
     getParts,
     getPartById,
@@ -36,5 +39,6 @@ module.exports = {
     updatePart,
     updatePartStock,
     deletePart,
-    importParts
+    importParts,
+    getLowStockParts
 };

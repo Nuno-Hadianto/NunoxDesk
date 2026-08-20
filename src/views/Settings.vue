@@ -21,6 +21,11 @@
                       <label style="font-weight: 500; font-size: 0.9rem;">Catatan Bawah Kwitansi</label>
                       <textarea v-model="form.receipt_footer" rows="2" style="border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px; width: 100%; resize: vertical;"></textarea>
                   </div>
+                  <div class="form-group">
+                      <label style="font-weight: 500; font-size: 0.9rem;">Batas Peringatan Stok Tipis</label>
+                      <input type="number" v-model="form.low_stock_threshold" min="0" style="border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px; width: 100%;">
+                      <small style="color: var(--text-muted); display: block; margin-top: 4px;">Munculkan peringatan di Dasbor jika stok sparepart <= angka ini.</small>
+                  </div>
                   <div style="margin-top: 25px; text-align: right;">
                       <button type="submit" class="btn btn-primary" style="padding: 10px 24px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px;">💾 Simpan Pengaturan</button>
                   </div>
@@ -85,6 +90,7 @@ const loadSettings = async () => {
           form.address = settings.address || ''
           form.receipt_footer = settings.receipt_footer || ''
           form.auto_backup_path = settings.auto_backup_path || ''
+          form.low_stock_threshold = settings.low_stock_threshold !== undefined ? Number(settings.low_stock_threshold) : 3
       } catch (error) {
           console.error(error)
       }
@@ -99,7 +105,8 @@ const saveSettings = async () => {
           whatsapp: form.phone,
           address: form.address,
           receipt_footer: form.receipt_footer,
-          auto_backup_path: form.auto_backup_path
+          auto_backup_path: form.auto_backup_path,
+          low_stock_threshold: form.low_stock_threshold
       }
       await window.api.updateSettings(data)
       window.Swal.fire({

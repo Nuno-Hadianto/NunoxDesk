@@ -13,6 +13,10 @@ function getPartById(id) {
     const stmt = db.prepare(`SELECT * FROM spare_parts WHERE id = ?`);
     return stmt.get(id);
 }
+function getLowStockParts(threshold) {
+    const stmt = db.prepare(`SELECT * FROM spare_parts WHERE stock <= ? ORDER BY stock ASC`);
+    return stmt.all(threshold);
+}
 function addPart(data) {
     const { part_code, name, category, stock, buy_price, sell_price, unit, notes } = data;
     const stmt = db.prepare(`
@@ -96,5 +100,6 @@ module.exports = {
     updatePartStock,
     checkPartHasServiceItems,
     deletePart,
-    importParts
+    importParts,
+    getLowStockParts
 };

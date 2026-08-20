@@ -15,6 +15,11 @@ function getPartById(id: number | string) {
     return stmt.get(id);
 }
 
+function getLowStockParts(threshold: number) {
+    const stmt = db.prepare(`SELECT * FROM spare_parts WHERE stock <= ? ORDER BY stock ASC`);
+    return stmt.all(threshold);
+}
+
 function addPart(data: Part) {
     const { part_code, name, category, stock, buy_price, sell_price, unit, notes } = data;
     const stmt = db.prepare(`
@@ -37,14 +42,14 @@ function updatePart(id: number | string, data: Part) {
     return true;
 }
 
-function updatePartStock(id, change) {
+function updatePartStock(id: number | string, change: number) {
     // change can be positive (stok masuk) or negative (stok keluar)
     const stmt = db.prepare(`UPDATE spare_parts SET stock = stock + ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?`);
     stmt.run(change, id);
     return true;
 }
 
-function checkPartHasServiceItems(id) {
+function checkPartHasServiceItems(id: number | string) {
     const checkStmt = db.prepare(`SELECT COUNT(*) as count FROM service_items WHERE spare_part_id = ?`);
     const result = checkStmt.get(id);
     return result.count > 0;
@@ -56,7 +61,7 @@ function deletePart(id: number | string) {
     return true;
 }
 
-function importParts(dataArray) {
+function importParts(dataArray: any[]) {
     const tx = db.transaction(() => {
         let imported = 0;
         let updated = 0;
@@ -109,5 +114,6 @@ module.exports = {
     updatePartStock,
     checkPartHasServiceItems,
     deletePart,
-    importParts
+    importParts,
+    getLowStockParts
 };

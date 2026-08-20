@@ -20,7 +20,7 @@ function updatePart(id: number | string, data: Part) {
     return partRepository.updatePart(id, validData);
 }
 
-function updatePartStock(id, change) {
+function updatePartStock(id: number | string, change: number) {
     return partRepository.updatePartStock(id, change);
 }
 
@@ -32,8 +32,12 @@ function deletePart(id: number | string) {
     return partRepository.deletePart(id);
 }
 
-function importParts(dataArray) {
+function importParts(dataArray: any[]) {
     return partRepository.importParts(dataArray);
+}
+
+function getLowStockParts(threshold: number) {
+    return partRepository.getLowStockParts(threshold);
 }
 
 module.exports = {
@@ -43,5 +47,6 @@ module.exports = {
     updatePart,
     updatePartStock,
     deletePart,
-    importParts
+    importParts,
+    getLowStockParts
 };

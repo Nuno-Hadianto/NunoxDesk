@@ -13,6 +13,7 @@ interface Window {
     printPreview: (opts: any) => Promise<any>;
     exportPdf: (opts: any) => Promise<any>;
     selectDirectory: () => Promise<string | null>;
+    getLowStockParts: (threshold: number) => Promise<any>;
     // You can add more IPC methods here
     [key: string]: any;
   }

@@ -132,6 +132,7 @@ export interface Settings {
   address: string;
   receipt_footer: string;
   auto_backup_path?: string;
+  low_stock_threshold?: number;
 }
 
 export interface Photo {

@@ -10,6 +10,7 @@ function registerPartIpc(mainWindow) {
     ipcMain.handle('update-part', (event, id, data) => partController.updatePart(id, data));
     ipcMain.handle('update-part-stock', (event, id, change) => partController.updatePartStock(id, change));
     ipcMain.handle('delete-part', (event, id) => partController.deletePart(id));
+    ipcMain.handle('get-low-stock-parts', (event, threshold) => partController.getLowStockParts(threshold));
     ipcMain.handle('import-parts-excel', async () => {
         try {
             const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, {
