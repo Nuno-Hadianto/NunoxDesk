@@ -131,6 +131,7 @@ export interface Settings {
   whatsapp?: string;
   address: string;
   receipt_footer: string;
+  auto_backup_path?: string;
 }
 
 export interface Photo {

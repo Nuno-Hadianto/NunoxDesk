@@ -11,10 +11,11 @@ function getSettings() {
     return settings;
 }
 function updateSettings(data) {
-    const stmt = db.prepare(`UPDATE settings SET value = ?, updated_at = CURRENT_TIMESTAMP WHERE key = ?`);
+    const stmt = db.prepare(`INSERT INTO settings (key, value) VALUES (?, ?) 
+                             ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = CURRENT_TIMESTAMP`);
     const transaction = db.transaction((settingsData) => {
         for (const [key, value] of Object.entries(settingsData)) {
-            stmt.run(value, key);
+            stmt.run(key, value);
         }
     });
     transaction(data);

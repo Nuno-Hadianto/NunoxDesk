@@ -12,6 +12,7 @@ interface Window {
     login: (u: string, p: string) => Promise<any>;
     printPreview: (opts: any) => Promise<any>;
     exportPdf: (opts: any) => Promise<any>;
+    selectDirectory: () => Promise<string | null>;
     // You can add more IPC methods here
     [key: string]: any;
   }

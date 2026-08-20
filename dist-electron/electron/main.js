@@ -111,15 +111,28 @@ app.on('window-all-closed', async () => {
     try {
         const fs = require('fs');
         const dbPath = path.join(app.getPath('userData'), 'database', 'nunox_servis.db');
-        const backupDir = path.join(app.getPath('documents'), 'nuNox_servis_Backups');
+        const settingsRepo = require('../repositories/settingsRepository');
+        const settings = settingsRepo.getSettings();
+        let backupDir = settings.auto_backup_path;
+        // Fallback to default if no auto_backup_path is set
+        if (!backupDir) {
+            backupDir = path.join(app.getPath('documents'), 'nuNox_servis_Backups');
+        }
         if (!fs.existsSync(backupDir)) {
             fs.mkdirSync(backupDir, { recursive: true });
         }
         const today = new Date().toISOString().split('T')[0];
-        const backupPath = path.join(backupDir, `AutoBackup_${today}.db`);
+        const backupPath = path.join(backupDir, `AutoBackup_NuNox_${today}.db`);
         if (fs.existsSync(dbPath)) {
             await db.backup(backupPath);
             console.log('Auto backup saved to:', backupPath);
+            // Also backup photos if the directory exists
+            const photosDir = path.join(app.getPath('userData'), 'photos');
+            if (fs.existsSync(photosDir)) {
+                // simple copy for photos isn't exactly easy for directories without extra modules,
+                // but we can copy the whole folder or just let the user know photos aren't backed up in the DB.
+                // For now, let's keep it simple and just backup the DB. The DB is the most critical.
+            }
         }
     }
     catch (error) {

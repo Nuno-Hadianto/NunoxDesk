@@ -68,6 +68,7 @@ contextBridge.exposeInMainWorld('api', {
     // Backup & Restore
     backupDatabase: () => invokeSafe('backup-database'),
     restoreDatabase: () => invokeSafe('restore-database'),
+    selectDirectory: () => invokeSafe('select-directory'),
     // Export
     exportExcel: (data) => invokeSafe('export-excel', data),
     exportPdf: (data) => invokeSafe('export-pdf', data),

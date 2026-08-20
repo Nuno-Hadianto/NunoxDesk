@@ -28,26 +28,36 @@
           </div>
 
           <!-- Backup & Restore -->
-          <div class="card" style="flex: 1; min-width: 300px; padding: 25px;">
-              <h2 style="font-size: 1.2rem; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; color: var(--primary-color);">🗄️ Backup & Restore Data</h2>
-              <div style="background: rgba(99, 102, 241, 0.05); border: 1px solid rgba(99, 102, 241, 0.2); border-radius: var(--radius-md); padding: 20px; margin-bottom: 20px;">
-                  <h3 style="font-size: 1rem; margin-bottom: 8px;">Amankan Data Anda</h3>
-                  <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; margin-bottom: 15px;">
-                      Lakukan backup secara berkala untuk menghindari kehilangan data penting (pelanggan, tiket servis, keuangan). Data akan disimpan dalam format `.db` di folder dokumen Anda.
-                  </p>
-                  <button @click="backupData" class="btn btn-primary" style="display: flex; align-items: center; gap: 6px; border-radius: 20px; padding: 10px 20px;">
-                      ☁️ Backup Data Sekarang
-                  </button>
+          <div style="flex: 1; min-width: 300px; display: flex; flex-direction: column; gap: 20px;">
+              <div class="card" style="padding: 25px;">
+                  <h2 style="font-size: 1.2rem; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; color: var(--primary-color);">☁️ Auto-Backup (Cloud/Folder)</h2>
+                  <div style="background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: var(--radius-md); padding: 20px; margin-bottom: 15px;">
+                      <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; margin-bottom: 15px;">
+                          Pilih folder <strong>Google Drive</strong>, <strong>OneDrive</strong>, atau folder aman lainnya di komputer Anda. Aplikasi akan otomatis melakukan pencadangan setiap kali Anda menutup aplikasi.
+                      </p>
+                      <div style="display: flex; gap: 10px; align-items: center;">
+                          <input type="text" v-model="form.auto_backup_path" readonly placeholder="Belum ada folder yang dipilih..." style="flex: 1; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px; background: #f9fafb;">
+                          <button @click="selectBackupDir" class="btn btn-primary" style="padding: 10px 15px; border-radius: var(--radius-sm);">Pilih Folder</button>
+                      </div>
+                      <div style="margin-top: 15px; text-align: right;">
+                          <button @click="saveSettings" class="btn btn-primary" style="padding: 8px 16px; border-radius: 20px;">💾 Simpan Pengaturan Backup</button>
+                      </div>
+                  </div>
               </div>
-              
-              <div style="background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: var(--radius-md); padding: 20px;">
-                  <h3 style="font-size: 1rem; margin-bottom: 8px; color: #ef4444;">Pulihkan Data (Restore)</h3>
-                  <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; margin-bottom: 15px;">
-                      Perhatian: Mengembalikan (Restore) data akan menimpa <strong>seluruh</strong> data aplikasi Anda saat ini dengan data dari file backup. Pastikan Anda memilih file yang benar!
-                  </p>
-                  <button @click="restoreData" class="btn" style="background-color: white; color: #ef4444; border: 1px solid #ef4444; display: flex; align-items: center; gap: 6px; border-radius: 20px; padding: 10px 20px;">
-                      🔄 Pilih File Restore
-                  </button>
+
+              <div class="card" style="padding: 25px;">
+                  <h2 style="font-size: 1.2rem; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; color: var(--primary-color);">🗄️ Manual Backup & Restore</h2>
+                  <div style="background: rgba(99, 102, 241, 0.05); border: 1px solid rgba(99, 102, 241, 0.2); border-radius: var(--radius-md); padding: 20px; margin-bottom: 20px;">
+                      <button @click="backupData" class="btn btn-primary" style="display: flex; align-items: center; gap: 6px; border-radius: 20px; padding: 10px 20px; margin-bottom: 15px; width: 100%; justify-content: center;">
+                          ⬇️ Backup Data Sekarang
+                      </button>
+                      <button @click="restoreData" class="btn" style="background-color: white; color: #ef4444; border: 1px solid #ef4444; display: flex; align-items: center; gap: 6px; border-radius: 20px; padding: 10px 20px; width: 100%; justify-content: center;">
+                          🔄 Pulihkan Data (Restore)
+                      </button>
+                      <p style="color: var(--text-muted); font-size: 0.8rem; line-height: 1.4; margin-top: 10px; text-align: center;">
+                          Restore akan menimpa seluruh data aplikasi.
+                      </p>
+                  </div>
               </div>
           </div>
       </div>
@@ -62,7 +72,8 @@ const form = reactive<Settings>({
   business_name: '',
   phone: '',
   address: '',
-  receipt_footer: ''
+  receipt_footer: '',
+  auto_backup_path: ''
 })
 
 const loadSettings = async () => {
@@ -73,6 +84,7 @@ const loadSettings = async () => {
           form.phone = settings.phone || settings.whatsapp || ''
           form.address = settings.address || ''
           form.receipt_footer = settings.receipt_footer || ''
+          form.auto_backup_path = settings.auto_backup_path || ''
       } catch (error) {
           console.error(error)
       }
@@ -86,7 +98,8 @@ const saveSettings = async () => {
           phone: form.phone,
           whatsapp: form.phone,
           address: form.address,
-          receipt_footer: form.receipt_footer
+          receipt_footer: form.receipt_footer,
+          auto_backup_path: form.auto_backup_path
       }
       await window.api.updateSettings(data)
       window.Swal.fire({
@@ -112,6 +125,17 @@ const backupData = async () => {
       console.error(error)
       window.Swal.fire('Error', error.message || 'Gagal backup database.', 'error')
   }
+}
+
+const selectBackupDir = async () => {
+    try {
+        const path = await window.api.selectDirectory();
+        if (path) {
+            form.auto_backup_path = path;
+        }
+    } catch (e: any) {
+        console.error(e);
+    }
 }
 
 const restoreData = async () => {

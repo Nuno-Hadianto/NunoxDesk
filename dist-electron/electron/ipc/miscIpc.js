@@ -39,6 +39,16 @@ function registerMiscIpc(mainWindow) {
         }
         return false;
     });
+    ipcMain.handle('select-directory', async () => {
+        const { filePaths } = await dialog.showOpenDialog({
+            title: 'Pilih Folder',
+            properties: ['openDirectory']
+        });
+        if (filePaths && filePaths.length > 0) {
+            return filePaths[0];
+        }
+        return null;
+    });
     ipcMain.handle('restore-database', async () => {
         const { filePaths } = await dialog.showOpenDialog({
             title: 'Restore Database',
