@@ -1,7 +1,7 @@
 <template>
   <div v-if="!isLoggedIn" class="login-screen fade-in">
     <div class="login-card">
-        <h2>🔧 nuNox<span class="brand-accent">Servis</span></h2>
+        <img src="/img/logo.png" alt="nuNox_servis" style="max-width: 250px; margin-bottom: 20px;" />
         <form @submit.prevent="handleLogin" style="display: flex; flex-direction: column; gap: 20px;">
             <div class="form-group" style="text-align: left;">
                 <label>Username</label>
