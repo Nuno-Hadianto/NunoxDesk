@@ -15,10 +15,13 @@
           </div>
       </div>
       <div class="topbar-actions" style="display: flex; align-items: center; gap: 15px;">
-          <!-- Dark mode button (Currently not functional if style.css enforces dark, but we keep it) -->
           <div class="badge" style="background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: var(--text-primary); font-weight: 500; font-size: 0.9rem; padding: 8px 16px;">
               🕒 {{ currentDateTime }}
           </div>
+          <button @click="toggleTheme" class="btn" style="background: rgba(255,255,255,0.1); border: 1px solid var(--glass-border); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; color: var(--text-primary); font-size: 1.2rem; transition: var(--transition);">
+              <span v-if="isDark">☀️</span>
+              <span v-else>🌙</span>
+          </button>
       </div>
   </header>
 </template>
@@ -31,11 +34,12 @@ defineProps<{
   title?: string
 }>()
 
-defineEmits(['toggle-theme'])
+const emit = defineEmits(['toggle-theme'])
 
 const currentDateTime = ref<string>('')
 const searchQuery = ref<string>('')
 const searchInput = ref<HTMLInputElement | null>(null)
+const isDark = ref<boolean>(!document.body.classList.contains('light-mode'))
 const router = useRouter()
 let timer: ReturnType<typeof setInterval> | null = null
 
@@ -66,10 +70,22 @@ const handleKeydown = (e) => {
   }
 }
 
+const toggleTheme = () => {
+  // style.css uses body:not(.dark-mode) for light mode fallback. 
+  // Let's toggle .dark-mode explicitly on body.
+  document.body.classList.toggle('dark-mode')
+  isDark.value = !isDark.value
+  // Also notify parent if needed
+  emit('toggle-theme')
+}
+
 onMounted(() => {
   updateDateTime()
   timer = setInterval(updateDateTime, 1000)
   window.addEventListener('keydown', handleKeydown)
+  
+  // Set initial theme based on body class
+  isDark.value = document.body.classList.contains('dark-mode') || !document.body.classList.contains('light-mode')
 })
 
 onUnmounted(() => {

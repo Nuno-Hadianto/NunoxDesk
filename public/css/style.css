@@ -14,6 +14,7 @@
 
   /* Typography */
   --font-family: 'Inter', system-ui, sans-serif;
+  --font-heading: 'Outfit', 'Inter', system-ui, sans-serif;
   
   /* Glassmorphism settings */
   --glass-bg: rgba(30, 41, 59, 0.4);
@@ -66,9 +67,17 @@ body:not(.dark-mode) {
   box-sizing: border-box;
 }
 
+@keyframes gradientBG {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
 body {
   font-family: var(--font-family);
   background: var(--bg-gradient);
+  background-size: 200% 200%;
+  animation: gradientBG 15s ease infinite;
   background-attachment: fixed;
   color: var(--text-primary);
   min-height: 100vh;
@@ -78,6 +87,7 @@ body {
 
 /* Typography styles */
 h1, h2, h3, h4 {
+  font-family: var(--font-heading);
   font-weight: 700;
   color: var(--text-primary);
   letter-spacing: -0.02em;
@@ -196,15 +206,18 @@ a {
   transition: var(--transition);
 }
 
-.sidebar-nav a:hover, .sidebar-nav li.active a {
+.sidebar-nav a:hover {
   background: rgba(99, 102, 241, 0.1);
   color: var(--primary);
+  transform: translateX(5px);
 }
 
 .sidebar-nav li.active a {
   font-weight: 600;
-  background: linear-gradient(90deg, rgba(99, 102, 241, 0.15), transparent);
-  border-left: 3px solid var(--primary);
+  color: white;
+  background: linear-gradient(90deg, var(--primary), rgba(99, 102, 241, 0.4));
+  border-left: 4px solid #a5b4fc;
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
 }
 
 /* --- Topbar --- */

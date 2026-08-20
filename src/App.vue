@@ -27,7 +27,11 @@
 
         <div class="content-area">
             <!-- Router View render halaman yang aktif -->
-            <router-view></router-view>
+            <router-view v-slot="{ Component }">
+                <transition name="fade" mode="out-in">
+                    <component :is="Component" />
+                </transition>
+            </router-view>
         </div>
     </main>
   </div>
@@ -112,5 +116,15 @@ const toggleTheme = () => {
 </script>
 
 <style>
-/* Global styles handled by style.css which we'll copy to public */
+/* Global styles handled by style.css */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: translateY(10px);
+}
 </style>
