@@ -22,7 +22,7 @@
 
   <div v-else class="app-container show">
     <!-- Sidebar -->
-    <Sidebar :currentUser="currentUser || undefined" @logout="handleLogout" />
+    <Sidebar />
 
     <!-- Main Content -->
     <main class="main-content">
@@ -45,6 +45,8 @@
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import { storeToRefs } from 'pinia'
+import { useAuthStore } from './stores/auth'
 import Sidebar from './components/Sidebar.vue'
 import Topbar from './components/Topbar.vue'
 import type { User } from './types'
@@ -52,19 +54,8 @@ import type { User } from './types'
 const router = useRouter()
 const route = useRoute()
 
-let initialUser: User | null = null
-try {
-  const savedUser = localStorage.getItem('nunox_user')
-  if (savedUser && savedUser !== 'undefined' && savedUser !== 'null') {
-    initialUser = JSON.parse(savedUser) as User
-  }
-} catch (e) {
-  console.error('Failed to parse user from localStorage', e)
-  localStorage.removeItem('nunox_user')
-}
-
-const isLoggedIn = ref<boolean>(!!initialUser)
-const currentUser = ref<User | null>(initialUser)
+const authStore = useAuthStore()
+const { isLoggedIn, currentUser } = storeToRefs(authStore)
 
 const loginForm = reactive({
   username: '',
@@ -85,9 +76,7 @@ const handleLogin = async () => {
   try {
     const user = await window.api.login(loginForm.username, loginForm.password)
     if (user) {
-      currentUser.value = user
-      isLoggedIn.value = true
-      localStorage.setItem('nunox_user', JSON.stringify(user))
+      authStore.login(user)
       
       // Auto-login SweetAlert
       window.Swal.fire({
@@ -105,9 +94,7 @@ const handleLogin = async () => {
 }
 
 const handleLogout = () => {
-  localStorage.removeItem('nunox_user')
-  currentUser.value = null
-  isLoggedIn.value = false
+  authStore.logout()
   loginForm.username = ''
   loginForm.password = ''
   router.push('/')

@@ -29,7 +29,7 @@
               <div style="margin-bottom: 15px; font-size: 0.85rem; color: var(--text-muted);">
                 Login sebagai: <strong style="color: var(--text-primary);">{{ currentUser ? currentUser.username : '-' }}</strong>
               </div>
-              <button @click="$emit('logout')" class="btn btn-danger" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
+              <button @click="handleLogout" class="btn btn-danger" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
                   <LogOut :size="18" /> Logout
               </button>
           </div>
@@ -39,13 +39,18 @@
 
 <script setup lang="ts">
 import { LayoutDashboard, Users, Smartphone, Wrench, Package, BarChart3, UserCog, Settings, LogOut } from 'lucide-vue-next'
-import type { User } from '../types'
+import { useRouter } from 'vue-router'
+import { storeToRefs } from 'pinia'
+import { useAuthStore } from '../stores/auth'
 
-defineProps<{
-  currentUser?: User | null
-}>()
+const router = useRouter()
+const authStore = useAuthStore()
+const { currentUser } = storeToRefs(authStore)
 
-defineEmits(['logout'])
+const handleLogout = () => {
+  authStore.logout()
+  router.push('/')
+}
 </script>
 
 <style scoped>
