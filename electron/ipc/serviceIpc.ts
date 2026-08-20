@@ -5,6 +5,7 @@ const serviceItemController = require('../../controllers/serviceItemController')
 function registerServiceIpc() {
   ipcMain.handle('get-services', (event: any, searchQuery: any, page: any, limit: any) => serviceController.getServices(searchQuery, page, limit));
   ipcMain.handle('get-service', (event: any, id: any) => serviceController.getServiceById(id));
+  ipcMain.handle('get-service-by-ticket', (event: any, ticketNumber: string) => serviceController.getServiceByTicketNumber(ticketNumber));
   ipcMain.handle('get-service-history', (event: any, id: any) => serviceController.getServiceStatusHistory(id));
   ipcMain.handle('add-service', (event: any, data: any) => serviceController.addService(data));
   ipcMain.handle('update-service-status', (event: any, id: any, status: any, notes: any, warrantyDays: any = 0) => serviceController.updateServiceStatus(id, status, notes, warrantyDays));

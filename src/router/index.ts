@@ -47,6 +47,12 @@ const routes: Array<RouteRecordRaw> = [
     meta: { title: 'Laporan Keuangan' }
   },
   {
+    path: '/pos',
+    name: 'POS',
+    component: () => import('../views/Pos.vue'),
+    meta: { title: 'Kasir (POS)' }
+  },
+  {
     path: '/users',
     name: 'Users',
     component: () => import('../views/User.vue'),

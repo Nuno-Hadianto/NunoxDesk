@@ -8,6 +8,9 @@ function getServices(searchQuery = '', page = 1, limit = 50) {
 function getServiceById(id) {
     return serviceRepository.getServiceById(id);
 }
+function getServiceByTicketNumber(ticketNumber) {
+    return serviceRepository.getServiceByTicketNumber(ticketNumber);
+}
 function getServiceStatusHistory(serviceOrderId) {
     return serviceRepository.getServiceStatusHistory(serviceOrderId);
 }

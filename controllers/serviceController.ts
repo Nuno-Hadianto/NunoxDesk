@@ -10,6 +10,10 @@ function getServiceById(id: number | string) {
     return serviceRepository.getServiceById(id);
 }
 
+function getServiceByTicketNumber(ticketNumber: string) {
+    return serviceRepository.getServiceByTicketNumber(ticketNumber);
+}
+
 function getServiceStatusHistory(serviceOrderId: any) {
     return serviceRepository.getServiceStatusHistory(serviceOrderId);
 }

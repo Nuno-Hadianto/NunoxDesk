@@ -63,6 +63,13 @@ function getServiceById(id: number | string) {
     return stmt.get(id);
 }
 
+function getServiceByTicketNumber(ticketNumber: string) {
+    const stmt = db.prepare(`
+        SELECT id FROM service_orders WHERE ticket_number = ?
+    `);
+    return stmt.get(ticketNumber);
+}
+
 function getServiceStatusHistory(serviceOrderId: any) {
     const stmt = db.prepare(`SELECT * FROM service_status_history WHERE service_order_id = ? ORDER BY id ASC`);
     return stmt.all(serviceOrderId);
@@ -189,6 +196,7 @@ module.exports = {
     generateTicketNumber,
     getServices,
     getServiceById,
+    getServiceByTicketNumber,
     getServiceStatusHistory,
     addService,
     updateServiceStatus,

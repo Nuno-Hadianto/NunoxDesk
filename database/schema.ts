@@ -117,6 +117,26 @@ CREATE TABLE IF NOT EXISTS receipts (
     FOREIGN KEY (service_order_id) REFERENCES service_orders(id) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS sales (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    invoice_number TEXT NOT NULL UNIQUE,
+    customer_name TEXT,
+    total_amount REAL NOT NULL DEFAULT 0,
+    payment_method TEXT DEFAULT 'Tunai',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS sale_items (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    sale_id INTEGER NOT NULL,
+    spare_part_id INTEGER NOT NULL,
+    quantity INTEGER DEFAULT 1,
+    price REAL NOT NULL,
+    total REAL NOT NULL,
+    FOREIGN KEY (sale_id) REFERENCES sales(id) ON DELETE CASCADE,
+    FOREIGN KEY (spare_part_id) REFERENCES spare_parts(id)
+);
+
 CREATE TABLE IF NOT EXISTS settings (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     key TEXT NOT NULL UNIQUE,
@@ -129,6 +149,7 @@ CREATE INDEX IF NOT EXISTS idx_service_orders_customer ON service_orders(custome
 CREATE INDEX IF NOT EXISTS idx_service_orders_device ON service_orders(device_id);
 CREATE INDEX IF NOT EXISTS idx_service_items_order ON service_items(service_order_id);
 CREATE INDEX IF NOT EXISTS idx_payments_order ON payments(service_order_id);
+CREATE INDEX IF NOT EXISTS idx_sale_items_sale ON sale_items(sale_id);
 
 CREATE TABLE IF NOT EXISTS service_photos (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

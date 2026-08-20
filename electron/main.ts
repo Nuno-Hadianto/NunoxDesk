@@ -17,6 +17,7 @@ const { registerServiceIpc } = require('./ipc/serviceIpc');
 const { registerPartIpc } = require('./ipc/partIpc');
 const { registerUserIpc } = require('./ipc/userIpc');
 const { registerMiscIpc } = require('./ipc/miscIpc');
+const registerSaleIpc = require('./ipc/saleIpc');
 
 let mainWindow: any;
 
@@ -60,6 +61,7 @@ function createWindow() {
   registerPartIpc(mainWindow);
   registerUserIpc();
   registerMiscIpc(mainWindow);
+  registerSaleIpc(mainWindow);
 
   mainWindow.on('closed', () => {
     mainWindow = null;

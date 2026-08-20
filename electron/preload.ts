@@ -33,6 +33,7 @@ contextBridge.exposeInMainWorld('api', {
   // Services
   getServices: (searchQuery: any, page: any, limit: any) => invokeSafe('get-services', searchQuery, page, limit),
   getService: (id: any) => invokeSafe('get-service', id),
+  getServiceByTicket: (ticket: string) => invokeSafe('get-service-by-ticket', ticket),
   getServiceHistory: (id: any) => invokeSafe('get-service-history', id),
   addService: (data: any) => invokeSafe('add-service', data),
   updateServiceStatus: (id: any, status: any, notes: any, warrantyDays: any = 0) => invokeSafe('update-service-status', id, status, notes, warrantyDays),
@@ -75,6 +76,11 @@ contextBridge.exposeInMainWorld('api', {
   getIncomeReport: (start: any, end: any) => invokeSafe('get-income-report', start, end),
   getCompletedServices: (start: any, end: any) => invokeSafe('get-completed-services', start, end),
   getTopSpareparts: (start: any, end: any) => invokeSafe('get-top-spareparts', start, end),
+
+  // Sales (POS)
+  createSale: (saleData: any, items: any[]) => invokeSafe('create-sale', saleData, items),
+  getSales: (startDate?: string, endDate?: string) => invokeSafe('get-sales', startDate, endDate),
+  getSaleItems: (saleId: number | string) => invokeSafe('get-sale-items', saleId),
 
   // Backup & Restore
   backupDatabase: () => invokeSafe('backup-database'),

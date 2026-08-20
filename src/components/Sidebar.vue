@@ -11,6 +11,7 @@
                 </router-link>
               </li>
               <li class="nav-header">OPERASIONAL</li>
+              <li :class="{ active: $route.name === 'POS' }"><router-link to="/pos"><ShoppingCart class="menu-icon" /> Kasir (POS)</router-link></li>
               <li :class="{ active: $route.name === 'Customers' }"><router-link to="/customers"><Users class="menu-icon" /> Pelanggan</router-link></li>
               <li :class="{ active: $route.name === 'Devices' }"><router-link to="/devices"><Smartphone class="menu-icon" /> Perangkat</router-link></li>
               <li :class="{ active: $route.name === 'Services' || $route.name === 'ServiceDetail' }"><router-link to="/services"><Wrench class="menu-icon" /> Servis</router-link></li>
@@ -38,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-import { LayoutDashboard, Users, Smartphone, Wrench, Package, BarChart3, UserCog, Settings, LogOut } from 'lucide-vue-next'
+import { LayoutDashboard, Users, Smartphone, Wrench, Package, BarChart3, UserCog, Settings, LogOut, ShoppingCart } from 'lucide-vue-next'
 import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useAuthStore } from '../stores/auth'

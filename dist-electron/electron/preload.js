@@ -31,6 +31,7 @@ contextBridge.exposeInMainWorld('api', {
     // Services
     getServices: (searchQuery, page, limit) => invokeSafe('get-services', searchQuery, page, limit),
     getService: (id) => invokeSafe('get-service', id),
+    getServiceByTicket: (ticket) => invokeSafe('get-service-by-ticket', ticket),
     getServiceHistory: (id) => invokeSafe('get-service-history', id),
     addService: (data) => invokeSafe('add-service', data),
     updateServiceStatus: (id, status, notes, warrantyDays = 0) => invokeSafe('update-service-status', id, status, notes, warrantyDays),
@@ -66,6 +67,10 @@ contextBridge.exposeInMainWorld('api', {
     getIncomeReport: (start, end) => invokeSafe('get-income-report', start, end),
     getCompletedServices: (start, end) => invokeSafe('get-completed-services', start, end),
     getTopSpareparts: (start, end) => invokeSafe('get-top-spareparts', start, end),
+    // Sales (POS)
+    createSale: (saleData, items) => invokeSafe('create-sale', saleData, items),
+    getSales: (startDate, endDate) => invokeSafe('get-sales', startDate, endDate),
+    getSaleItems: (saleId) => invokeSafe('get-sale-items', saleId),
     // Backup & Restore
     backupDatabase: () => invokeSafe('backup-database'),
     restoreDatabase: () => invokeSafe('restore-database'),

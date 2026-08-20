@@ -1,4 +1,4 @@
-export const generateNotaHtml = (settings: any, service: any, logoBase64: any) => {
+export const generateNotaHtml = (settings: any, service: any, logoBase64: any, qrBase64: any = null) => {
     settings = settings || {};
     return `
         <div class="print-nota nota-wrapper">
@@ -14,6 +14,7 @@ export const generateNotaHtml = (settings: any, service: any, logoBase64: any) =
                     <h1 class="nota-title">TANDA TERIMA</h1>
                     <div class="nota-no"><strong>No:</strong> ${service ? service.ticket_number : '..............................'}</div>
                     <div class="nota-date">Tanggal: ${service ? new Date(service.created_at + 'Z').toLocaleDateString('id-ID') : '..............................'}</div>
+                    ${qrBase64 ? `<img src="${qrBase64}" alt="QR Code" style="width: 80px; height: 80px; margin-top: 5px;" />` : ''}
                 </div>
             </div>
             
@@ -479,7 +480,7 @@ export const exportHtmlToPdf = async (html: string, filename: string) => {
     return { success: false, error: 'API exportPdf not found' };
 };
 
-export const generateThermalNotaHtml = (settings: any, service: any, logoBase64: any) => {
+export const generateThermalNotaHtml = (settings: any, service: any, logoBase64: any, qrBase64: any = null) => {
     settings = settings || {};
     return `
         <div class="print-thermal">
@@ -541,6 +542,7 @@ export const generateThermalNotaHtml = (settings: any, service: any, logoBase64:
             <div class="thm-center thm-footer">
                 * Harap bawa struk ini saat mengambil barang.
             </div>
+            ${qrBase64 ? `<div class="thm-center" style="margin-top: 15px;"><img src="${qrBase64}" alt="QR" style="width: 100px; height: 100px;" /><div style="font-size: 8pt; margin-top: 5px;">Scan untuk detail</div></div>` : ''}
             <div class="thm-gap"></div> <!-- Extra space for tearing -->
         </div>
     `;

@@ -249,11 +249,15 @@
 </template>
 
 <script setup lang="ts">
-import { Edit, Trash2 } from 'lucide-vue-next'
 import { ref, reactive, computed, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { 
+  ArrowLeft, Edit, Save, Printer, Smartphone, Calendar, FileText, 
+  Wrench, CheckCircle, CreditCard, Camera, Trash2, PlusCircle, Paperclip
+} from 'lucide-vue-next'
+import QRCode from 'qrcode'
 import type { ServiceOrder, ServiceHistory, ServiceItem, Payment, Part, Settings, Photo } from '../types'
-import { generateNotaHtml, generateInvoiceHtml, generateThermalNotaHtml, printHtml, exportHtmlToPdf } from '../utils/printUtils.js'
+import { generateInvoiceHtml, generateNotaHtml, generateThermalNotaHtml, printHtml, exportHtmlToPdf } from '../utils/printUtils.js'
 
 const route = useRoute()
 const router = useRouter()
@@ -649,7 +653,11 @@ const printNota = async () => {
   if (!service.value) return
   try {
       const { settings, logoBase64 } = await getCommonData()
-      const html = generateNotaHtml(settings, service.value, logoBase64)
+      let qrBase64 = null
+      try {
+          qrBase64 = await QRCode.toDataURL(service.value.ticket_number)
+      } catch(e) { console.error("QR Code Error:", e) }
+      const html = generateNotaHtml(settings, service.value, logoBase64, qrBase64)
       await printHtml(html, true) // landscape for nota
   } catch (error: any) {
       console.error(error)
@@ -661,7 +669,11 @@ const printThermal = async () => {
   if (!service.value) return
   try {
       const { settings, logoBase64 } = await getCommonData()
-      const html = generateThermalNotaHtml(settings, service.value, logoBase64)
+      let qrBase64 = null
+      try {
+          qrBase64 = await QRCode.toDataURL(service.value.ticket_number)
+      } catch(e) { console.error("QR Code Error:", e) }
+      const html = generateThermalNotaHtml(settings, service.value, logoBase64, qrBase64)
       await printHtml(html, false, true) // portrait for thermal, isThermal = true
   } catch (error: any) {
       console.error(error)
