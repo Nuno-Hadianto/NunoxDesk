@@ -15,6 +15,7 @@
     "electron/**/*",
     "controllers/**/*",
     "repositories/**/*",
-    "database/**/*"
+    "database/**/*",
+    "src/utils/validators.ts"
   ]
 }
