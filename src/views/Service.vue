@@ -2,11 +2,11 @@
   <div class="view-section">
       <div class="action-bar" style="display: flex; gap: 15px; align-items: center; margin-bottom: 20px;">
           <div style="position: relative; flex: 1; max-width: 400px;">
-              <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); opacity: 0.5;">🔍</span>
-              <input type="text" v-model="searchQuery" @input="debounceSearch" placeholder="Cari tiket, pelanggan, perangkat..." class="search-input" style="width: 100%; padding-left: 35px; border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+              <Search class="search-icon" :size="18" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); opacity: 0.5; color: var(--text-primary);" />
+              <input type="text" v-model="searchQuery" @input="debounceSearch" placeholder="Cari tiket, pelanggan, perangkat..." class="form-control" style="width: 100%; padding-left: 38px; border-radius: 20px;">
           </div>
           <button @click="openAddModal" class="btn btn-primary" style="display: flex; align-items: center; gap: 8px;">
-              <span>➕</span> Buat Tiket Servis
+              <Plus :size="18" /> Buat Tiket Servis
           </button>
       </div>
       <div class="table-container">
@@ -103,6 +103,7 @@
 </template>
 
 <script setup lang="ts">
+import { Search, Plus } from 'lucide-vue-next'
 import { ref, reactive, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import type { ServiceOrder, Customer, Device } from '../types'

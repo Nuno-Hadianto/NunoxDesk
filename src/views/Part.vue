@@ -2,15 +2,15 @@
   <div class="view-section">
       <div class="action-bar" style="display: flex; gap: 15px; align-items: center; margin-bottom: 20px; flex-wrap: wrap; justify-content: space-between;">
           <div style="position: relative; flex: 1; min-width: 250px; max-width: 400px;">
-              <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); opacity: 0.5;">🔍</span>
-              <input type="text" v-model="searchQuery" @input="debounceSearch" placeholder="Cari sparepart (Kode / Nama)..." class="search-input" style="width: 100%; padding-left: 35px; border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+              <Search class="search-icon" :size="18" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); opacity: 0.5; color: var(--text-primary);" />
+              <input type="text" v-model="searchQuery" @input="debounceSearch" placeholder="Cari sparepart (Kode / Nama)..." class="form-control" style="width: 100%; padding-left: 38px; border-radius: 20px;">
           </div>
           <div style="display: flex; gap: 10px; flex-wrap: wrap;">
               <button @click="importExcel" class="btn btn-secondary" style="display: flex; align-items: center; gap: 6px; border-radius: 20px;">
                   <span>📥</span> Import Excel
               </button>
               <button @click="openAddModal" class="btn btn-primary" style="display: flex; align-items: center; gap: 6px; border-radius: 20px;">
-                  <span>➕</span> Tambah Sparepart
+                  <Plus :size="18" /> Tambah Sparepart
               </button>
           </div>
       </div>
@@ -111,6 +111,7 @@
 </template>
 
 <script setup lang="ts">
+import { Search, Plus } from 'lucide-vue-next'
 import { ref, reactive, onMounted } from 'vue'
 import type { Part } from '../types'
 

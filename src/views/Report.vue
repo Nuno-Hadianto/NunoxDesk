@@ -3,7 +3,7 @@
       <div class="action-bar" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 25px;">
           <div style="display: flex; gap: 10px; align-items: center;">
               <span style="font-weight: 500; color: var(--text-muted);">📅 Filter:</span>
-              <input type="date" v-model="startDate" class="search-input" style="border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 8px;">
+              <input type="date" v-model="startDate" class="form-control" style="width: 100%; padding-left: 38px; border-radius: 20px;">
               <span style="font-weight: 500; color: var(--text-muted);">s/d</span>
               <input type="date" v-model="endDate" class="search-input" style="border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 8px;">
               <button @click="generateReport" class="btn btn-primary" style="padding: 8px 16px; border-radius: 20px;">Terapkan</button>
@@ -68,6 +68,7 @@
 </template>
 
 <script setup lang="ts">
+import { Search } from 'lucide-vue-next'
 import { ref, onMounted } from 'vue'
 import { generateBlankNotaHtml, generateBlankReceiptHtml, generateReportHtml, printHtml, exportHtmlToPdf } from '../utils/printUtils.js'
 import type { ServiceOrder, Settings } from '../types'
