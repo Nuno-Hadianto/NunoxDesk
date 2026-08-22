@@ -1,3 +1,4 @@
+export {};
 const db = require('./db');
 const schema = require('./schema');
 const log = require('electron-log');
