@@ -1,7 +1,8 @@
 <template>
   <aside class="sidebar">
-      <div class="sidebar-header" style="justify-content: center; padding: 10px;">
-          <img src="/img/logo.png" alt="nuNox_servis" style="max-height: 120px; width: 100%; object-fit: contain;" />
+      <div class="sidebar-header" style="justify-content: center; flex-direction: column; padding: 20px 10px 10px; gap: 5px;">
+          <img src="/img/logo.png" alt="nuNox_servis" style="max-height: 140px; width: 100%; object-fit: contain;" />
+          <div style="margin: 0; font-size: 1.3rem; font-weight: 800; letter-spacing: -0.5px; color: var(--text-primary);">nuNox_<span style="color: var(--primary);">servis</span></div>
       </div>
       <nav class="sidebar-nav">
           <ul>
