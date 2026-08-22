@@ -1,6 +1,7 @@
 const { ipcMain, dialog } = require('electron');
 const xlsx = require('xlsx');
 const partController = require('../../controllers/partController');
+const log = require('electron-log');
 
 function registerPartIpc(mainWindow: any) {
   ipcMain.handle('get-parts', (event: any, searchQuery: any) => partController.getParts(searchQuery));
@@ -33,7 +34,7 @@ function registerPartIpc(mainWindow: any) {
       const result = partController.importParts(data);
       return { success: true, result };
     } catch (error: any) {
-      console.error('Error importing excel:', error);
+      log.error('Error importing excel:', error);
       return { success: false, error: error.message };
     }
   });

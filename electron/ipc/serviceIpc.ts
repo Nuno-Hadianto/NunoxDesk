@@ -1,6 +1,7 @@
 const { ipcMain } = require('electron');
 const serviceController = require('../../controllers/serviceController');
 const serviceItemController = require('../../controllers/serviceItemController');
+const log = require('electron-log');
 
 function registerServiceIpc() {
   ipcMain.handle('get-services', (event: any, searchQuery: any, page: any, limit: any) => serviceController.getServices(searchQuery, page, limit));
@@ -36,7 +37,7 @@ function registerServiceIpc() {
       const id = serviceController.addPhoto(serviceId, type, filepath);
       return { success: true, id, filepath };
     } catch (e: any) {
-      console.error(e);
+      log.error('Error in upload-photo:', e);
       return { success: false, error: e.message };
     }
   });
@@ -49,7 +50,7 @@ function registerServiceIpc() {
       try {
         fs.unlinkSync(photo.filepath);
       } catch (e) {
-        console.error("Failed to delete photo from disk:", e);
+        log.error("Failed to delete photo from disk:", e);
       }
     }
     return serviceController.deletePhoto(id);

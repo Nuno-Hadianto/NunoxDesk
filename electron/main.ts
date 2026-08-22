@@ -11,6 +11,14 @@ autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'info';
 log.info('App starting...');
 
+process.on('uncaughtException', (error) => {
+  log.error('Uncaught Exception:', error);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  log.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
 // Import IPC modules
 const { registerCustomerIpc } = require('./ipc/customerIpc');
 const { registerDeviceIpc } = require('./ipc/deviceIpc');
@@ -146,7 +154,7 @@ app.on('window-all-closed', async () => {
     
     if (fs.existsSync(dbPath)) {
       await db.backup(backupPath);
-      console.log('Auto backup saved to:', backupPath);
+      log.info('Auto backup saved to:', backupPath);
       
       // Also backup photos if the directory exists
       const photosDir = path.join(app.getPath('userData'), 'photos');
@@ -157,7 +165,7 @@ app.on('window-all-closed', async () => {
       }
     }
   } catch (error) {
-    console.error('Failed to perform auto backup:', error);
+    log.error('Failed to perform auto backup:', error);
   }
 
   if (process.platform !== 'darwin') {
