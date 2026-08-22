@@ -1,15 +1,15 @@
 <template>
   <div class="fade-in" style="padding-bottom: 20px;">
       <div class="stats-grid">
-          <StatCard title="Servis Hari Ini" :value="stats.todayServices" variant="primary">
+          <StatCard title="Servis Hari Ini" :value="stats.todayServices" variant="primary" clickable @click="$router.push('/services')">
               <template #icon><Wrench :size="28" :stroke-width="2" /></template>
           </StatCard>
           
-          <StatCard title="Sedang Dikerjakan" :value="stats.inProgress" variant="warning">
+          <StatCard title="Sedang Dikerjakan" :value="stats.inProgress" variant="warning" clickable @click="$router.push('/services?search=Proses')">
               <template #icon><Hourglass :size="28" :stroke-width="2" /></template>
           </StatCard>
           
-          <StatCard title="Selesai" :value="stats.completed" variant="success">
+          <StatCard title="Selesai" :value="stats.completed" variant="success" clickable @click="$router.push('/services?search=Selesai')">
               <template #icon><CheckCircle :size="28" :stroke-width="2" /></template>
           </StatCard>
           

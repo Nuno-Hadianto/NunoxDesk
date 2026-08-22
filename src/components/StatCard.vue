@@ -1,5 +1,5 @@
 <template>
-  <div class="stat-card" :class="[variant, { 'center-align': center, 'border-top': borderTop }]">
+  <div class="stat-card" :class="[variant, { 'center-align': center, 'border-top': borderTop, 'clickable': clickable }]">
       <div v-if="!center" class="stat-icon-wrapper">
           <slot name="icon"></slot>
       </div>
@@ -21,6 +21,7 @@ defineProps<{
   valueClass?: string
   center?: boolean
   borderTop?: boolean
+  clickable?: boolean
 }>()
 </script>
 
@@ -35,6 +36,10 @@ defineProps<{
   border-radius: var(--radius-md, 16px);
   box-shadow: var(--glass-shadow, 0 8px 32px 0 rgba(0, 0, 0, 0.2));
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.stat-card.clickable {
+  cursor: pointer;
 }
 
 .stat-card:hover {

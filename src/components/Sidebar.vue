@@ -28,8 +28,14 @@
               <li :class="{ active: $route.name === 'Settings' }"><router-link to="/settings"><Settings class="menu-icon" /> Pengaturan & Backup</router-link></li>
           </ul>
           <div style="margin-top: auto; padding: 20px;">
-              <div style="margin-bottom: 15px; font-size: 0.85rem; color: var(--text-muted);">
-                Login sebagai: <strong style="color: var(--text-primary);">{{ currentUser ? currentUser.username : '-' }}</strong>
+              <div style="margin-bottom: 15px; font-size: 0.85rem; color: var(--text-muted); display: flex; align-items: center; justify-content: space-between;">
+                <div>
+                  Login sebagai: <strong style="color: var(--text-primary);">{{ currentUser ? currentUser.username : '-' }}</strong>
+                </div>
+                <button @click="toggleTheme" class="btn btn-secondary" style="padding: 6px; border-radius: 50%; display: flex; align-items: center; justify-content: center; width: 32px; height: 32px;">
+                    <Moon v-if="!isDark" :size="16" />
+                    <Sun v-else :size="16" />
+                </button>
               </div>
               <button @click="handleLogout" class="btn btn-danger" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
                   <LogOut :size="18" /> Logout
@@ -40,7 +46,8 @@
 </template>
 
 <script setup lang="ts">
-import { LayoutDashboard, Users, Smartphone, Wrench, Package, BarChart3, UserCog, Settings, LogOut, ShoppingCart } from 'lucide-vue-next'
+import { LayoutDashboard, Users, Smartphone, Wrench, Package, BarChart3, UserCog, Settings, LogOut, ShoppingCart, Sun, Moon } from 'lucide-vue-next'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useAuthStore } from '../stores/auth'
@@ -48,6 +55,13 @@ import { useAuthStore } from '../stores/auth'
 const router = useRouter()
 const authStore = useAuthStore()
 const { currentUser } = storeToRefs(authStore)
+
+const isDark = ref<boolean>(document.body.classList.contains('dark-mode') || !document.body.classList.contains('light-mode'))
+
+const toggleTheme = () => {
+  document.body.classList.toggle('dark-mode')
+  isDark.value = !isDark.value
+}
 
 const handleLogout = () => {
   authStore.logout()
