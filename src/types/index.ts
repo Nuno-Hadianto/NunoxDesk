@@ -17,6 +17,7 @@ export interface AbandonedService {
   id: number;
   ticket_number: string;
   customer_name: string;
+  customer_phone?: string;
   service_status: string;
   days_pending: number;
 }

@@ -46,11 +46,12 @@
                               <th>No. Tiket</th>
                               <th>Status</th>
                               <th>Lama (Hari)</th>
+                              <th>Aksi</th>
                           </tr>
                       </thead>
                       <tbody>
                           <tr v-if="!stats.abandonedServices || stats.abandonedServices.length === 0">
-                              <td colspan="3" class="text-center" style="padding: 20px; color: #64748b;">Tidak ada barang tertunda/terlantar.</td>
+                              <td colspan="4" class="text-center" style="padding: 20px; color: #64748b;">Tidak ada barang tertunda/terlantar.</td>
                           </tr>
                           <tr v-for="srv in stats.abandonedServices" :key="srv.id" @click="$router.push('/services/' + srv.id)" style="cursor: pointer;" title="Klik untuk Buka Detail">
                               <td style="color: var(--primary); font-weight: bold;">{{ srv.ticket_number }}</td>
@@ -59,6 +60,11 @@
                                   <span class="badge badge-danger">
                                       {{ srv.days_pending }} Hari
                                   </span>
+                              </td>
+                              <td>
+                                  <button @click.stop="sendWaDashboard(srv)" class="btn btn-sm" style="background-color: #25D366; color: white; border: none; padding: 4px 10px; border-radius: 12px; display: inline-flex; align-items: center; gap: 4px;">
+                                      💬 WA
+                                  </button>
                               </td>
                           </tr>
                       </tbody>
@@ -78,11 +84,12 @@
                               <th>Kode</th>
                               <th>Nama</th>
                               <th>Stok</th>
+                              <th>Aksi</th>
                           </tr>
                       </thead>
                       <tbody>
                           <tr v-if="stats.lowStockParts.length === 0">
-                              <td colspan="3" class="text-center" style="padding: 20px; color: #64748b;">Semua stok sparepart aman.</td>
+                              <td colspan="4" class="text-center" style="padding: 20px; color: #64748b;">Semua stok sparepart aman.</td>
                           </tr>
                           <tr v-for="part in stats.lowStockParts" :key="part.id">
                               <td>{{ part.part_code || '-' }}</td>
@@ -91,6 +98,11 @@
                                   <span class="badge badge-danger">
                                       {{ part.stock }}
                                   </span>
+                              </td>
+                              <td>
+                                  <button @click="$router.push('/parts?search=' + (part.part_code || part.name))" class="btn btn-sm btn-primary" style="padding: 4px 10px; border-radius: 12px; display: inline-flex; align-items: center; gap: 4px;">
+                                      + Isi Stok
+                                  </button>
                               </td>
                           </tr>
                       </tbody>
@@ -108,7 +120,7 @@ import { useRouter } from 'vue-router'
 import { Wrench, Hourglass, CheckCircle, Wallet, TrendingUp, AlertOctagon, AlertTriangle } from 'lucide-vue-next'
 import { Chart, registerables } from 'chart.js'
 import StatCard from '../components/StatCard.vue'
-import type { DashboardStats } from '../types'
+import type { DashboardStats, AbandonedService } from '../types'
 
 const stats = ref<DashboardStats>({
   todayServices: 0,
@@ -125,6 +137,28 @@ let chartInstance: any = null
 
 const formatCurrency = (amount: number | string | undefined | null) => {
   return 'Rp ' + parseInt(String(amount || 0)).toLocaleString('id-ID')
+}
+
+const sendWaDashboard = (srv: AbandonedService) => {
+    if (!srv.customer_phone) {
+        // @ts-ignore
+        if (window.Swal) window.Swal.fire('Info', 'Pelanggan tidak memiliki nomor telepon', 'info')
+        return
+    }
+    
+    let targetPhone = srv.customer_phone.replace(/^0/, '62')
+    const text = `Halo Kak ${srv.customer_name},
+Mengingatkan bahwa perangkat Anda dengan No Tiket *${srv.ticket_number}* saat ini berstatus: *${srv.service_status}*.
+Mohon konfirmasinya. Terima kasih.`
+    
+    const url = `https://wa.me/${targetPhone}?text=${encodeURIComponent(text)}`
+    // @ts-ignore
+    if (window.api && window.api.openExternalUrl) {
+        // @ts-ignore
+        window.api.openExternalUrl(url)
+    } else {
+        window.open(url, '_blank')
+    }
 }
 
 const loadDashboard = async () => {

@@ -72,7 +72,7 @@ function getDashboardStats() {
     // Barang Terlantar / Follow Up
     // 1. Menunggu Sparepart > 7 hari
     const waitingQuery = db.prepare(`
-        SELECT so.id, so.ticket_number, c.name as customer_name, so.service_status, 
+        SELECT so.id, so.ticket_number, c.name as customer_name, c.phone as customer_phone, so.service_status, 
                CAST(julianday('now', 'localtime') - julianday(so.created_at, 'localtime') AS INTEGER) as days_pending
         FROM service_orders so
         JOIN customers c ON so.customer_id = c.id
@@ -82,7 +82,7 @@ function getDashboardStats() {
     
     // 2. Selesai (Belum Diambil) > 14 hari
     const completedNotPickedQuery = db.prepare(`
-        SELECT so.id, so.ticket_number, c.name as customer_name, so.service_status, 
+        SELECT so.id, so.ticket_number, c.name as customer_name, c.phone as customer_phone, so.service_status, 
                CAST(julianday('now', 'localtime') - julianday(so.completed_date, 'localtime') AS INTEGER) as days_pending
         FROM service_orders so
         JOIN customers c ON so.customer_id = c.id

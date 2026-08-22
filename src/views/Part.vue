@@ -112,11 +112,20 @@
 
 <script setup lang="ts">
 import { Search, Plus, Edit, Trash2 } from 'lucide-vue-next'
-import { ref, reactive, onMounted, onUnmounted } from 'vue'
+import { ref, reactive, onMounted, onUnmounted, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import type { Part } from '../types'
 
+const route = useRoute()
 const parts = ref<Part[]>([])
-const searchQuery = ref<string>('')
+const searchQuery = ref<string>((route.query.search as string) || '')
+
+watch(() => route.query.search, (newSearch) => {
+    if (newSearch !== undefined) {
+        searchQuery.value = newSearch as string
+        loadParts()
+    }
+})
 
 let searchTimeout: ReturnType<typeof setTimeout> | null = null
 const debounceSearch = () => {
