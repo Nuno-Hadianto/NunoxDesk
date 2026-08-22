@@ -400,12 +400,12 @@ a {
 }
 
 .data-table th {
-  font-weight: 600;
+  font-weight: 700;
   font-size: 0.85rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: var(--text-muted);
-  background: rgba(0, 0, 0, 0.2);
+  color: white;
+  background: var(--primary);
 }
 
 .data-table tbody tr {
@@ -601,12 +601,12 @@ a {
 }
 
 .data-table th {
-  background: rgba(0, 0, 0, 0.2);
-  color: var(--text-secondary);
-  font-weight: 600;
+  background: var(--primary);
+  color: white;
+  font-weight: 700;
   text-transform: uppercase;
-  font-size: 0.8rem;
-  letter-spacing: 0.05em;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
 }
 
 .data-table tr {
