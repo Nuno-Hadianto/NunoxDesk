@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const { ipcMain, dialog } = require('electron');
 const xlsx = require('xlsx');
 const partController = require('../../controllers/partController');
+const log = require('electron-log');
 function registerPartIpc(mainWindow) {
     ipcMain.handle('get-parts', (event, searchQuery) => partController.getParts(searchQuery));
     ipcMain.handle('get-part', (event, id) => partController.getPartById(id));
@@ -31,7 +32,7 @@ function registerPartIpc(mainWindow) {
             return { success: true, result };
         }
         catch (error) {
-            console.error('Error importing excel:', error);
+            log.error('Error importing excel:', error);
             return { success: false, error: error.message };
         }
     });

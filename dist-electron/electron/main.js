@@ -10,6 +10,12 @@ log.transports.file.level = 'info';
 autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'info';
 log.info('App starting...');
+process.on('uncaughtException', (error) => {
+    log.error('Uncaught Exception:', error);
+});
+process.on('unhandledRejection', (reason, promise) => {
+    log.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
 // Import IPC modules
 const { registerCustomerIpc } = require('./ipc/customerIpc');
 const { registerDeviceIpc } = require('./ipc/deviceIpc');
@@ -66,13 +72,15 @@ function createWindow() {
 app.commandLine.appendSwitch('disable-gpu-shader-disk-cache');
 app.commandLine.appendSwitch('disable-http-cache');
 app.whenReady().then(() => {
-    // Auto-Migration
+    // Database Migration
     try {
-        db.prepare('ALTER TABLE service_orders ADD COLUMN warranty_end_date DATETIME').run();
-        log.info('Added warranty_end_date column to service_orders.');
+        const runMigrations = require('../database/migrate');
+        runMigrations();
     }
-    catch (e) {
-        // Column might already exist, ignore.
+    catch (err) {
+        dialog.showErrorBox("Database Error", "Gagal memperbarui database. Aplikasi tidak dapat dilanjutkan.");
+        app.quit();
+        return;
     }
     // Create photos directory
     const fs = require('fs');
@@ -127,7 +135,7 @@ app.on('window-all-closed', async () => {
         const backupPath = path.join(backupDir, `AutoBackup_NuNox_${today}.db`);
         if (fs.existsSync(dbPath)) {
             await db.backup(backupPath);
-            console.log('Auto backup saved to:', backupPath);
+            log.info('Auto backup saved to:', backupPath);
             // Also backup photos if the directory exists
             const photosDir = path.join(app.getPath('userData'), 'photos');
             if (fs.existsSync(photosDir)) {
@@ -138,7 +146,7 @@ app.on('window-all-closed', async () => {
         }
     }
     catch (error) {
-        console.error('Failed to perform auto backup:', error);
+        log.error('Failed to perform auto backup:', error);
     }
     if (process.platform !== 'darwin') {
         app.quit();

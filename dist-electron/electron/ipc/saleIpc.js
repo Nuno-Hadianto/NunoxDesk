@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const { ipcMain } = require('electron');
 const saleController = require('../../controllers/saleController');
+const log = require('electron-log');
 function registerSaleIpc(mainWindow) {
     ipcMain.handle('create-sale', (event, saleData, items) => {
         try {
@@ -9,7 +10,7 @@ function registerSaleIpc(mainWindow) {
             return { success: true, saleId };
         }
         catch (error) {
-            console.error('Error in createSale:', error);
+            log.error('Error in createSale:', error);
             return { success: false, error: error.message };
         }
     });
@@ -18,7 +19,7 @@ function registerSaleIpc(mainWindow) {
             return saleController.getSales(startDate, endDate);
         }
         catch (error) {
-            console.error('Error in getSales:', error);
+            log.error('Error in getSales:', error);
             return [];
         }
     });
@@ -27,7 +28,7 @@ function registerSaleIpc(mainWindow) {
             return saleController.getSaleItems(saleId);
         }
         catch (error) {
-            console.error('Error in getSaleItems:', error);
+            log.error('Error in getSaleItems:', error);
             return [];
         }
     });

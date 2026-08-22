@@ -23,22 +23,4 @@ else {
 }
 const db = new Database(dbPath);
 db.pragma('foreign_keys = ON');
-function initializeDB() {
-    try {
-        db.exec(schema.createTables);
-        db.exec(schema.insertDefaultSettings);
-        // Migration: Add cost_price to service_items if it doesn't exist
-        try {
-            db.exec("ALTER TABLE service_items ADD COLUMN cost_price REAL DEFAULT 0;");
-        }
-        catch (e) {
-            // Column already exists or other error, ignore
-        }
-        console.log("Database initialized successfully at", dbPath);
-    }
-    catch (err) {
-        console.error("Failed to initialize database:", err);
-    }
-}
-initializeDB();
 module.exports = db;

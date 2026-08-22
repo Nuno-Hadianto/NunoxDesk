@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const { ipcMain } = require('electron');
 const serviceController = require('../../controllers/serviceController');
 const serviceItemController = require('../../controllers/serviceItemController');
+const log = require('electron-log');
 function registerServiceIpc() {
     ipcMain.handle('get-services', (event, searchQuery, page, limit) => serviceController.getServices(searchQuery, page, limit));
     ipcMain.handle('get-service', (event, id) => serviceController.getServiceById(id));
@@ -32,7 +33,7 @@ function registerServiceIpc() {
             return { success: true, id, filepath };
         }
         catch (e) {
-            console.error(e);
+            log.error('Error in upload-photo:', e);
             return { success: false, error: e.message };
         }
     });
@@ -44,7 +45,7 @@ function registerServiceIpc() {
                 fs.unlinkSync(photo.filepath);
             }
             catch (e) {
-                console.error("Failed to delete photo from disk:", e);
+                log.error("Failed to delete photo from disk:", e);
             }
         }
         return serviceController.deletePhoto(id);

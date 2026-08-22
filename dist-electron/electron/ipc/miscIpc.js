@@ -10,6 +10,7 @@ const dashboardController = require('../../controllers/dashboardController');
 const paymentController = require('../../controllers/paymentController');
 const settingsController = require('../../controllers/settingsController');
 const reportController = require('../../controllers/reportController');
+const log = require('electron-log');
 function registerMiscIpc(mainWindow) {
     // Dashboard
     ipcMain.handle('get-dashboard-stats', () => dashboardController.getDashboardStats());
@@ -86,7 +87,7 @@ function registerMiscIpc(mainWindow) {
             return { success: true, filePath };
         }
         catch (error) {
-            console.error('Error exporting excel:', error);
+            log.error('Error exporting excel:', error);
             return { success: false, error: error.message };
         }
     });
@@ -108,7 +109,7 @@ function registerMiscIpc(mainWindow) {
             return { success: true, filePath };
         }
         catch (error) {
-            console.error('Error generating PDF:', error);
+            log.error('Error generating PDF:', error);
             return { success: false, error: error.message };
         }
     });
@@ -129,7 +130,7 @@ function registerMiscIpc(mainWindow) {
             return true;
         }
         catch (error) {
-            console.error('Error generating print preview:', error);
+            log.error('Error generating print preview:', error);
             throw error;
         }
     });
@@ -139,7 +140,7 @@ function registerMiscIpc(mainWindow) {
             return true;
         }
         catch (error) {
-            console.error('Failed to open external url:', error);
+            log.error('Failed to open external url:', error);
             return false;
         }
     });
@@ -155,7 +156,7 @@ function registerMiscIpc(mainWindow) {
             return null;
         }
         catch (error) {
-            console.error('Failed to read logo:', error);
+            log.error('Failed to read logo:', error);
             return null;
         }
     });

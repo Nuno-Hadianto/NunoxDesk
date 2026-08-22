@@ -82,12 +82,14 @@ app.commandLine.appendSwitch('disable-gpu-shader-disk-cache');
 app.commandLine.appendSwitch('disable-http-cache');
 
 app.whenReady().then(() => {
-  // Auto-Migration
+  // Database Migration
   try {
-    db.prepare('ALTER TABLE service_orders ADD COLUMN warranty_end_date DATETIME').run();
-    log.info('Added warranty_end_date column to service_orders.');
-  } catch (e) {
-    // Column might already exist, ignore.
+    const runMigrations = require('../database/migrate');
+    runMigrations();
+  } catch (err) {
+    dialog.showErrorBox("Database Error", "Gagal memperbarui database. Aplikasi tidak dapat dilanjutkan.");
+    app.quit();
+    return;
   }
   
   // Create photos directory

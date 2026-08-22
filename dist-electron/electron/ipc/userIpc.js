@@ -2,12 +2,14 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const { ipcMain } = require('electron');
 const userController = require('../../controllers/userController');
+const log = require('electron-log');
 function registerUserIpc() {
     ipcMain.handle('login', (event, username, password) => {
         try {
             return { success: true, user: userController.login(username, password) };
         }
         catch (err) {
+            log.error('Error in login:', err);
             return { success: false, error: err.message };
         }
     });
@@ -18,6 +20,7 @@ function registerUserIpc() {
             return { success: true, id: userController.addUser(data) };
         }
         catch (err) {
+            log.error('Error in add-user:', err);
             return { success: false, error: err.message };
         }
     });
@@ -26,6 +29,7 @@ function registerUserIpc() {
             return { success: true, result: userController.updateUser(id, data) };
         }
         catch (err) {
+            log.error('Error in update-user:', err);
             return { success: false, error: err.message };
         }
     });
@@ -34,6 +38,7 @@ function registerUserIpc() {
             return { success: true, result: userController.deleteUser(id) };
         }
         catch (err) {
+            log.error('Error in delete-user:', err);
             return { success: false, error: err.message };
         }
     });
