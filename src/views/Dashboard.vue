@@ -62,7 +62,7 @@
                                   </span>
                               </td>
                               <td>
-                                  <button @click.stop="sendWaDashboard(srv)" class="btn btn-sm" style="background-color: #25D366; color: white; border: none; padding: 4px 10px; border-radius: 12px; display: inline-flex; align-items: center; gap: 4px;">
+                                  <button @click.stop="sendWaDashboard(srv)" class="btn btn-sm" style="background-color: #25D366; color: white; border: none; padding: 4px 10px; border-radius: 12px; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap;">
                                       💬 WA
                                   </button>
                               </td>
@@ -100,7 +100,7 @@
                                   </span>
                               </td>
                               <td>
-                                  <button @click="$router.push('/parts?search=' + (part.part_code || part.name))" class="btn btn-sm btn-primary" style="padding: 4px 10px; border-radius: 12px; display: inline-flex; align-items: center; gap: 4px;">
+                                  <button @click="$router.push('/parts?search=' + (part.part_code || part.name))" class="btn btn-sm btn-primary" style="padding: 4px 10px; border-radius: 12px; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap;">
                                       + Isi Stok
                                   </button>
                               </td>
